@@ -2,15 +2,26 @@ import { type NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
 
-// Stripeクライアントの初期化
+// Stripeクライアントの初期化（エラーハンドリング強化）
 function getStripeInstance() {
   const secretKey = process.env.STRIPE_SECRET_KEY
+
   if (!secretKey) {
+    console.error("STRIPE_SECRET_KEY is not set in environment variables")
+    console.error(
+      "Available env vars:",
+      Object.keys(process.env).filter((key) => key.includes("STRIPE")),
+    )
     throw new Error("STRIPE_SECRET_KEY is not configured")
   }
 
+  if (!secretKey.startsWith("sk_")) {
+    console.error("Invalid STRIPE_SECRET_KEY format")
+    throw new Error("Invalid STRIPE_SECRET_KEY format")
+  }
+
   return new Stripe(secretKey, {
-    apiVersion: "2025-05-28.basil", // 修正: 最新のAPIバージョンを使用
+    apiVersion: "2025-05-28.basil",
   })
 }
 
@@ -20,6 +31,9 @@ function getSupabaseInstance() {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!url || !serviceKey) {
+    console.error("Supabase configuration missing:")
+    console.error("NEXT_PUBLIC_SUPABASE_URL exists:", !!url)
+    console.error("SUPABASE_SERVICE_ROLE_KEY exists:", !!serviceKey)
     throw new Error("Supabase configuration is missing")
   }
 
@@ -28,6 +42,11 @@ function getSupabaseInstance() {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log("Webhook received - Environment check:")
+    console.log("NODE_ENV:", process.env.NODE_ENV)
+    console.log("STRIPE_SECRET_KEY exists:", !!process.env.STRIPE_SECRET_KEY)
+    console.log("STRIPE_WEBHOOK_SECRET exists:", !!process.env.STRIPE_WEBHOOK_SECRET)
+
     const stripe = getStripeInstance()
     const supabase = getSupabaseInstance()
 
@@ -40,6 +59,7 @@ export async function POST(request: NextRequest) {
 
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
     if (!webhookSecret) {
+      console.error("STRIPE_WEBHOOK_SECRET is not configured")
       return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 })
     }
 
@@ -76,6 +96,8 @@ export async function POST(request: NextRequest) {
 
           if (error) {
             console.error("Failed to update user subscription:", error)
+          } else {
+            console.log("Successfully updated user subscription for:", userId)
           }
         }
         break
@@ -101,6 +123,8 @@ export async function POST(request: NextRequest) {
               subscription_status: status,
             })
             .eq("id", profile.id)
+
+          console.log("Updated subscription status for user:", profile.id)
         }
         break
       }
@@ -128,6 +152,8 @@ export async function POST(request: NextRequest) {
               stripe_subscription_id: null,
             })
             .eq("id", profile.id)
+
+          console.log("Reset user to free tier:", profile.id)
         }
         break
       }
@@ -139,6 +165,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true })
   } catch (error) {
     console.error("Webhook error:", error)
+
+    // より詳細なエラー情報をログに出力
+    if (error instanceof Error) {
+      console.error("Error message:", error.message)
+      console.error("Error stack:", error.stack)
+    }
+
     return NextResponse.json({ error: "Webhook handler failed" }, { status: 500 })
   }
 }

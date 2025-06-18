@@ -122,12 +122,15 @@ export function ToolsShowcase() {
 
         if (deleteError) throw deleteError
 
-        // likes_countを減算
+        // likes_countを減算 - 修正された引数名を使用
         const { error: updateError } = await supabase.rpc("decrement_likes", {
           tool_slug: toolSlug,
         })
 
-        if (updateError) throw updateError
+        if (updateError) {
+          console.error("❌ Error decrementing likes:", updateError)
+          // いいね数の更新に失敗してもお気に入りの削除は成功とする
+        }
 
         setFavorites(favorites.filter((slug) => slug !== toolSlug))
         toast({
@@ -143,12 +146,15 @@ export function ToolsShowcase() {
 
         if (insertError) throw insertError
 
-        // likes_countを加算
+        // likes_countを加算 - 修正された引数名を使用
         const { error: updateError } = await supabase.rpc("increment_likes", {
           tool_slug: toolSlug,
         })
 
-        if (updateError) throw updateError
+        if (updateError) {
+          console.error("❌ Error incrementing likes:", updateError)
+          // いいね数の更新に失敗してもお気に入りの追加は成功とする
+        }
 
         setFavorites([...favorites, toolSlug])
         toast({

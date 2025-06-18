@@ -6,83 +6,35 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Check } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useAuth } from "@/hooks/use-auth"
-import { useToast } from "@/hooks/use-toast"
-import { getPriceId, type PlanKey, type BillingCycle } from "@/lib/stripe-config"
 
 export function PremiumPlans() {
-  const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly")
+  const [billingCycle, setBillingCycle] = useState("monthly")
   const [isLoading, setIsLoading] = useState(false)
-  const { user, isLoggedIn } = useAuth()
-  const { toast } = useToast()
   const router = useRouter()
 
-  const handleSubscribe = async (planKey: PlanKey, planName: string) => {
-    if (!isLoggedIn) {
-      toast({
-        title: "ログインが必要です",
-        description: "サブスクリプションを開始するにはログインしてください。",
-        variant: "destructive",
-      })
-      router.push("/login")
-      return
-    }
-
+  const handleSubscribe = async (plan: string) => {
     setIsLoading(true)
 
     try {
-      // 型安全なPrice ID取得
-      const priceId = getPriceId(planKey, billingCycle)
+      // 実際のアプリではここで決済処理を行います
+      // デモ用にローカルストレージに保存
+      localStorage.setItem("isLoggedIn", "true")
+      localStorage.setItem("isPremium", "true")
 
-      // Stripe Checkout Sessionを作成
-      const response = await fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          priceId,
-          planName,
-          billingCycle,
-          userId: user?.id,
-        }),
-      })
-
-      const { url, error } = await response.json()
-
-      if (error) {
-        throw new Error(error)
-      }
-
-      // Stripeのチェックアウトページにリダイレクト
-      window.location.href = url
+      // 成功したら遅延してリダイレクト
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      router.push("/")
     } catch (error) {
       console.error("Subscription error:", error)
-      toast({
-        title: "エラー",
-        description: "決済処理でエラーが発生しました。もう一度お試しください。",
-        variant: "destructive",
-      })
     } finally {
       setIsLoading(false)
     }
   }
 
-  // プラン情報（型安全）
-  const plans: Array<{
-    name: string
-    key: PlanKey
-    description: string
-    monthlyPrice: string
-    quarterlyPrice: string
-    yearlyPrice: string
-    features: string[]
-    popular: boolean
-    color: string
-  }> = [
+  // 新しいプラン情報
+  const plans = [
     {
-      name: "プロ",
-      key: "pro",
+      name: "ベーシック",
       description: "個人利用に最適",
       monthlyPrice: "¥250",
       quarterlyPrice: "¥675",
@@ -92,14 +44,13 @@ export function PremiumPlans() {
       color: "blue-100",
     },
     {
-      name: "プレミアム",
-      key: "premium",
+      name: "プロ",
       description: "ビジネス利用に最適",
       monthlyPrice: "¥500",
       quarterlyPrice: "¥1,350",
       yearlyPrice: "¥4,800",
       features: [
-        "プロプランのすべての機能",
+        "ベーシックプランのすべての機能",
         "プレミアムツールのアクセス権",
         "ツール要望の優先開発対応",
         "優先サポート",
@@ -109,24 +60,24 @@ export function PremiumPlans() {
     },
     {
       name: "エンタープライズ",
-      key: "enterprise",
       description: "大規模組織向け",
-      monthlyPrice: "¥2,800",
-      quarterlyPrice: "¥7,560",
-      yearlyPrice: "¥26,880",
+      monthlyPrice: "¥2,800〜",
+      quarterlyPrice: "¥7,560〜",
+      yearlyPrice: "¥26,880〜",
       features: [
-        "プレミアムプランのすべての機能",
+        "プロプランのすべての機能",
         "YokaUnitサイト内外での大規模専用ツール開発権利",
         "複数ユーザーアカウント管理",
-        "専任担当者による個別対応",
+        "専任担当者による個別対応（応相談）",
       ],
       popular: false,
       color: "blue-100",
+      isEnterprise: true,
     },
   ]
 
   // 選択された課金サイクルに基づいて価格を取得
-  const getPrice = (plan: (typeof plans)[0]) => {
+  const getPrice = (plan) => {
     switch (billingCycle) {
       case "monthly":
         return plan.monthlyPrice
@@ -154,7 +105,7 @@ export function PremiumPlans() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex justify-center">
         <Tabs defaultValue="monthly" className="w-full max-w-[300px]">
           <TabsList className="grid w-full grid-cols-3">
@@ -185,52 +136,45 @@ export function PremiumPlans() {
         </Tabs>
       </div>
 
-      {/* 環境表示（開発時のみ） */}
-      {process.env.NODE_ENV === "development" && (
-        <div className="text-center">
-          <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
-            開発環境（テスト決済）
-          </span>
-        </div>
-      )}
-
       {/* モバイル表示 */}
-      <div className="md:hidden space-y-4">
+      <div className="md:hidden">
         {plans.map((plan, index) => (
           <Card
             key={index}
-            className={`${plan.popular ? "bg-gradient-to-b from-blue-50 to-white relative border-blue-300" : "border-gray-200"}`}
+            className={`border-${plan.color} mb-3 ${plan.popular ? "bg-gradient-to-b from-blue-50 to-white relative" : ""}`}
           >
             {plan.popular && (
               <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-2 py-0.5 rounded-bl-lg rounded-tr-lg">
                 人気
               </div>
             )}
-            <div className="p-4">
-              <div className="text-center mb-4">
-                <h3 className="font-bold text-lg">{plan.name}</h3>
-                <p className="text-sm text-gray-500 mb-2">{plan.description}</p>
-                <div className="mb-3">
-                  <div className="font-bold text-2xl text-blue-600">{getPrice(plan)}</div>
-                  <div className="text-sm text-gray-500">/{getPeriod()}</div>
+            <div className="p-3">
+              <div className="flex justify-between items-center mb-2">
+                <div>
+                  <h3 className="font-bold text-base">{plan.name}</h3>
+                  <p className="text-xs text-gray-500">{plan.description}</p>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-lg">{getPrice(plan)}</div>
+                  <div className="text-xs text-gray-500">/{getPeriod()}</div>
                 </div>
               </div>
 
-              <div className="space-y-2 mb-4">
+              <div className="space-y-1 mb-3">
                 {plan.features.map((feature, i) => (
-                  <div key={i} className="flex items-start text-sm">
-                    <Check className="h-4 w-4 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <div key={i} className="flex items-center text-xs">
+                    <Check className="h-3 w-3 text-blue-500 mr-1 flex-shrink-0" />
                     <span>{feature}</span>
                   </div>
                 ))}
               </div>
 
               <Button
-                className={`w-full ${plan.popular ? "bg-blue-600 hover:bg-blue-700" : ""}`}
-                onClick={() => handleSubscribe(plan.key, plan.name)}
+                className={`w-full text-sm py-1 h-8 ${plan.popular ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                onClick={() => handleSubscribe(plan.name.toLowerCase())}
                 disabled={isLoading}
               >
-                {isLoading ? "処理中..." : "登録する"}
+                {isLoading ? "処理中..." : plan.isEnterprise ? "お問い合わせ" : "登録する"}
               </Button>
             </div>
           </Card>
@@ -242,38 +186,38 @@ export function PremiumPlans() {
         {plans.map((plan, index) => (
           <Card
             key={index}
-            className={`${plan.popular ? "bg-gradient-to-b from-blue-50 to-white relative border-blue-300 scale-105" : "border-gray-200"} flex flex-col`}
+            className={`border-${plan.color} ${plan.popular ? "bg-gradient-to-b from-blue-50 to-white relative" : ""}`}
           >
             {plan.popular && (
-              <div className="absolute top-0 right-0 bg-blue-600 text-white text-sm px-3 py-1 rounded-bl-lg rounded-tr-lg">
+              <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-3 py-1 rounded-bl-lg rounded-tr-lg">
                 人気
               </div>
             )}
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-xl">{plan.name}</CardTitle>
-              <CardDescription className="text-sm">{plan.description}</CardDescription>
-              <div className="mt-4">
-                <span className="text-3xl font-bold text-blue-600">{getPrice(plan)}</span>
-                <span className="text-gray-500 ml-1">/{getPeriod()}</span>
+            <CardHeader>
+              <CardTitle className="text-lg">{plan.name}</CardTitle>
+              <CardDescription>{plan.description}</CardDescription>
+              <div className="mt-2">
+                <span className="text-2xl font-bold">{getPrice(plan)}</span>
+                <span className="text-gray-500 ml-1 text-sm">/{getPeriod()}</span>
               </div>
             </CardHeader>
-            <CardContent className="flex-1">
-              <ul className="space-y-3">
+            <CardContent>
+              <ul className="space-y-2">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start">
-                    <Check className="h-4 w-4 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <Check className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
                     <span className="text-sm">{feature}</span>
                   </li>
                 ))}
               </ul>
             </CardContent>
-            <CardFooter className="pt-4">
+            <CardFooter>
               <Button
                 className={`w-full ${plan.popular ? "bg-blue-600 hover:bg-blue-700" : ""}`}
-                onClick={() => handleSubscribe(plan.key, plan.name)}
+                onClick={() => handleSubscribe(plan.name.toLowerCase())}
                 disabled={isLoading}
               >
-                {isLoading ? "処理中..." : "登録する"}
+                {isLoading ? "処理中..." : plan.isEnterprise ? "お問い合わせ" : "登録する"}
               </Button>
             </CardFooter>
           </Card>
@@ -281,7 +225,7 @@ export function PremiumPlans() {
       </div>
 
       {/* 広告に関する説明 */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-6">
         <h3 className="font-semibold text-gray-800 mb-2">広告表示について</h3>
         <p className="text-sm text-gray-600">
           有料プランでは一般的な広告表示を大幅に軽減いたします。ただし、企業様との提携によるPR情報や、
@@ -289,10 +233,10 @@ export function PremiumPlans() {
         </p>
       </div>
 
-      <div className="text-center text-sm text-gray-500">
+      <div className="text-center text-xs text-gray-500 mt-4">
         <p>すべてのプランは、いつでもキャンセル可能です。</p>
         <p className="mt-1">
-          ご不明な点は
+          エンタープライズプランの詳細や、ご不明な点は
           <a href="/contact" className="text-blue-600 hover:underline">
             お問い合わせ
           </a>

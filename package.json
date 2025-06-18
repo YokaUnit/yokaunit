@@ -41,9 +41,8 @@
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
     "@react-three/rapier": "latest",
-    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "latest",
-    "@supabase/supabase-js": "^2.50.0",
+    "@supabase/supabase-js": "latest",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -68,7 +67,6 @@
     "react-resizable-panels": "latest",
     "recharts": "latest",
     "sonner": "latest",
-    "stripe": "^18.2.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "three": "latest",
@@ -76,12 +74,11 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/node": "^22.15.32",
-    "@types/react": "^18.3.23",
+    "@types/node": "^22",
+    "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/stripe": "^8.0.416",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.8.3"
+    "typescript": "^5"
   }
 }

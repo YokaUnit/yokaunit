@@ -8,19 +8,16 @@ import { useRouter } from "next/navigation"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/hooks/use-toast"
-import { getPriceIds } from "@/lib/stripe-config"
+import { getPriceId, type PlanKey, type BillingCycle } from "@/lib/stripe-config"
 
 export function PremiumPlans() {
-  const [billingCycle, setBillingCycle] = useState("monthly")
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly")
   const [isLoading, setIsLoading] = useState(false)
   const { user, isLoggedIn } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
 
-  // 現在の環境に応じたPrice IDを取得
-  const priceIds = getPriceIds()
-
-  const handleSubscribe = async (planName: string, priceId: string) => {
+  const handleSubscribe = async (planKey: PlanKey, planName: string) => {
     if (!isLoggedIn) {
       toast({
         title: "ログインが必要です",
@@ -34,6 +31,9 @@ export function PremiumPlans() {
     setIsLoading(true)
 
     try {
+      // 型安全なPrice ID取得
+      const priceId = getPriceId(planKey, billingCycle)
+
       // Stripe Checkout Sessionを作成
       const response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
@@ -68,8 +68,18 @@ export function PremiumPlans() {
     }
   }
 
-  // プラン情報
-  const plans = [
+  // プラン情報（型安全）
+  const plans: Array<{
+    name: string
+    key: PlanKey
+    description: string
+    monthlyPrice: string
+    quarterlyPrice: string
+    yearlyPrice: string
+    features: string[]
+    popular: boolean
+    color: string
+  }> = [
     {
       name: "プロ",
       key: "pro",
@@ -116,7 +126,7 @@ export function PremiumPlans() {
   ]
 
   // 選択された課金サイクルに基づいて価格を取得
-  const getPrice = (plan) => {
+  const getPrice = (plan: (typeof plans)[0]) => {
     switch (billingCycle) {
       case "monthly":
         return plan.monthlyPrice
@@ -126,21 +136,6 @@ export function PremiumPlans() {
         return plan.yearlyPrice
       default:
         return plan.monthlyPrice
-    }
-  }
-
-  // 選択された課金サイクルに基づいてPrice IDを取得
-  const getPriceId = (plan) => {
-    const planPrices = priceIds[plan.key]
-    switch (billingCycle) {
-      case "monthly":
-        return planPrices.monthly
-      case "quarterly":
-        return planPrices.quarterly
-      case "yearly":
-        return planPrices.yearly
-      default:
-        return planPrices.monthly
     }
   }
 
@@ -232,7 +227,7 @@ export function PremiumPlans() {
 
               <Button
                 className={`w-full ${plan.popular ? "bg-blue-600 hover:bg-blue-700" : ""}`}
-                onClick={() => handleSubscribe(plan.name, getPriceId(plan))}
+                onClick={() => handleSubscribe(plan.key, plan.name)}
                 disabled={isLoading}
               >
                 {isLoading ? "処理中..." : "登録する"}
@@ -275,7 +270,7 @@ export function PremiumPlans() {
             <CardFooter className="pt-4">
               <Button
                 className={`w-full ${plan.popular ? "bg-blue-600 hover:bg-blue-700" : ""}`}
-                onClick={() => handleSubscribe(plan.name, getPriceId(plan))}
+                onClick={() => handleSubscribe(plan.key, plan.name)}
                 disabled={isLoading}
               >
                 {isLoading ? "処理中..." : "登録する"}

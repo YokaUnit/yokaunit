@@ -10,7 +10,7 @@ function getStripeInstance() {
   }
 
   return new Stripe(secretKey, {
-    apiVersion: "2024-12-18.acacia",
+    apiVersion: "2025-05-28.basil", // 修正: 最新のAPIバージョンを使用
   })
 }
 

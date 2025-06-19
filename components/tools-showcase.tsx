@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { getTools, type Tool } from "@/lib/actions/tools"
-import { supabase } from "@/lib/supabase"
+import { toggleFavorite, getUserFavorites } from "@/lib/actions/favorites"
 import { useAuth } from "@/hooks/use-auth"
 import { AuthDebugPanel } from "@/components/auth-debug-panel"
 
@@ -25,7 +25,7 @@ export function ToolsShowcase() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const { toast } = useToast()
-  const { isLoggedIn, user } = useAuth()
+  const { isLoggedIn } = useAuth()
 
   // 画面サイズに応じて表示数を調整
   useEffect(() => {
@@ -51,12 +51,10 @@ export function ToolsShowcase() {
   // お気に入りを取得
   useEffect(() => {
     const fetchFavorites = async () => {
-      if (isLoggedIn && user) {
+      if (isLoggedIn) {
         try {
-          const { data, error } = await supabase.from("user_favorites").select("tool_slug").eq("user_id", user.id)
-
-          if (error) throw error
-          setFavorites(data?.map((fav) => fav.tool_slug) || [])
+          const userFavorites = await getUserFavorites()
+          setFavorites(userFavorites)
         } catch (error) {
           console.error("お気に入り取得エラー:", error)
         }
@@ -64,7 +62,7 @@ export function ToolsShowcase() {
     }
 
     fetchFavorites()
-  }, [isLoggedIn, user])
+  }, [isLoggedIn])
 
   // ツールデータを取得
   useEffect(() => {
@@ -100,7 +98,7 @@ export function ToolsShowcase() {
     e.preventDefault()
     e.stopPropagation()
 
-    if (!isLoggedIn || !user) {
+    if (!isLoggedIn) {
       toast({
         title: "ログインが必要です",
         description: "お気に入り機能を使用するにはログインしてください",
@@ -110,69 +108,32 @@ export function ToolsShowcase() {
     }
 
     try {
-      const isFavorited = favorites.includes(toolSlug)
+      const result = await toggleFavorite(toolSlug)
 
-      if (isFavorited) {
-        // お気に入りから削除
-        const { error: deleteError } = await supabase
-          .from("user_favorites")
-          .delete()
-          .eq("user_id", user.id)
-          .eq("tool_slug", toolSlug)
-
-        if (deleteError) throw deleteError
-
-        // likes_countを減算 - 修正された引数名を使用
-        const { error: updateError } = await supabase.rpc("decrement_likes", {
-          tool_slug: toolSlug,
-        })
-
-        if (updateError) {
-          console.error("❌ Error decrementing likes:", updateError)
-          // いいね数の更新に失敗してもお気に入りの削除は成功とする
+      if (result.success) {
+        if (result.isFavorited) {
+          setFavorites([...favorites, toolSlug])
+        } else {
+          setFavorites(favorites.filter((slug) => slug !== toolSlug))
         }
 
-        setFavorites(favorites.filter((slug) => slug !== toolSlug))
         toast({
-          title: "お気に入りから削除しました",
-          description: "マイページのお気に入りリストから削除されました",
-        })
-      } else {
-        // お気に入りに追加
-        const { error: insertError } = await supabase.from("user_favorites").insert({
-          user_id: user.id,
-          tool_slug: toolSlug,
+          title: result.message,
+          description: result.isFavorited
+            ? "マイページのお気に入りリストから確認できます"
+            : "マイページのお気に入りリストから削除されました",
         })
 
-        if (insertError) throw insertError
-
-        // likes_countを加算 - 修正された引数名を使用
-        const { error: updateError } = await supabase.rpc("increment_likes", {
-          tool_slug: toolSlug,
-        })
-
-        if (updateError) {
-          console.error("❌ Error incrementing likes:", updateError)
-          // いいね数の更新に失敗してもお気に入りの追加は成功とする
+        // ツールデータを再取得してlikes_countを更新
+        const options = {
+          limit: displayCount,
+          ...(activeCategory === "popular" && { isPopular: true }),
+          ...(activeCategory === "new" && { isNew: true }),
         }
-
-        setFavorites([...favorites, toolSlug])
-        toast({
-          title: "お気に入りに追加しました",
-          description: "マイページのお気に入りリストから確認できます",
-        })
+        const { tools: updatedTools } = await getTools(options)
+        setTools(updatedTools)
       }
-
-      // ツールデータを再取得してlikes_countを更新
-      const options = {
-        limit: displayCount,
-        ...(activeCategory === "popular" && { isPopular: true }),
-        ...(activeCategory === "new" && { isNew: true }),
-      }
-      const { tools: updatedTools } = await getTools(options)
-      setTools(updatedTools)
     } catch (error) {
-      console.error("お気に入り更新エラー:", error)
       toast({
         title: "エラー",
         description: "お気に入りの更新に失敗しました",
@@ -242,17 +203,20 @@ export function ToolsShowcase() {
         </Link>
       </div>
 
-      <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mb-4">
+      <Tabs defaultValue="popular" className="w-full mb-4">
         <div className="overflow-x-auto pb-2">
           <TabsList className="inline-flex min-w-max">
-            <TabsTrigger value="popular">人気のツール</TabsTrigger>
-            <TabsTrigger value="new">新着ツール</TabsTrigger>
+            <TabsTrigger value="popular" onClick={() => setActiveCategory("popular")}>
+              人気のツール
+            </TabsTrigger>
+            <TabsTrigger value="new" onClick={() => setActiveCategory("new")}>
+              新着ツール
+            </TabsTrigger>
           </TabsList>
         </div>
 
         <TabsContent value={activeCategory} className="mt-0">
           <motion.div
-            key={activeCategory}
             variants={container}
             initial="hidden"
             animate="show"

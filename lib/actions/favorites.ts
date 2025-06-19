@@ -75,9 +75,9 @@ export async function toggleFavorite(
         throw new Error("お気に入りの削除に失敗しました")
       }
 
-      // いいね数を減らす - 修正された引数名を使用
+      // いいね数を減らす
       const { error: updateError } = await supabase.rpc("decrement_likes", {
-        tool_slug: toolSlug,
+        slug_to_update: toolSlug,
       })
 
       if (updateError) {
@@ -99,9 +99,9 @@ export async function toggleFavorite(
         throw new Error("お気に入りの追加に失敗しました")
       }
 
-      // いいね数を増やす - 修正された引数名を使用
+      // いいね数を増やす
       const { error: updateError } = await supabase.rpc("increment_likes", {
-        tool_slug: toolSlug,
+        slug_to_update: toolSlug,
       })
 
       if (updateError) {

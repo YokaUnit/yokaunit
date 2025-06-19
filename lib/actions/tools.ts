@@ -20,29 +20,6 @@ export interface Tool {
   updated_at: string
 }
 
-// カタカナ・ひらがな変換関数
-function convertKanaHira(str: string): string[] {
-  const variations = [str]
-
-  // ひらがな → カタカナ
-  const hiraganaToKatakana = str.replace(/[\u3041-\u3096]/g, (match) => {
-    return String.fromCharCode(match.charCodeAt(0) + 0x60)
-  })
-  if (hiraganaToKatakana !== str) {
-    variations.push(hiraganaToKatakana)
-  }
-
-  // カタカナ → ひらがな
-  const katakanaToHiragana = str.replace(/[\u30a1-\u30f6]/g, (match) => {
-    return String.fromCharCode(match.charCodeAt(0) - 0x60)
-  })
-  if (katakanaToHiragana !== str) {
-    variations.push(katakanaToHiragana)
-  }
-
-  return [...new Set(variations)]
-}
-
 export async function getTools(options?: {
   category?: string
   isPopular?: boolean
@@ -78,17 +55,10 @@ export async function getTools(options?: {
     query = query.eq("is_private", options.isPrivate)
   }
 
-  // 検索（カタカナ・ひらがな対応）
-  if (options?.search && options.search.trim()) {
-    const searchVariations = convertKanaHira(options.search.trim())
-    const searchConditions = searchVariations
-      .map((variation) => {
-        const searchTerm = `%${variation}%`
-        return `title.ilike.${searchTerm},description.ilike.${searchTerm}`
-      })
-      .join(",")
-
-    query = query.or(searchConditions)
+  // 検索
+  if (options?.search) {
+    const searchTerm = `%${options.search}%`
+    query = query.or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
   }
 
   // ソート（人気順がデフォルト）

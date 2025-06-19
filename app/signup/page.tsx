@@ -10,6 +10,10 @@ export default function SignupPage() {
       <SiteHeader />
       <main className="flex-1 flex items-center justify-center py-8 px-4 relative z-10">
         <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">新規登録</h1>
+            <p className="text-gray-600">アカウントを作成してYokaUnitを始めましょう</p>
+          </div>
           <SignupForm />
         </div>
       </main>

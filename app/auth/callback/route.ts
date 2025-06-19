@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createServerSupabaseClient } from "@/lib/supabase"
+import { createClient } from "@supabase/supabase-js"
+import type { Database } from "@/types/database"
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
@@ -15,7 +16,16 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabase = createServerSupabaseClient()
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://zphkclbhhouulgfsfawi.supabase.co"
+    const supabaseAnonKey =
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwaGtjbGJoaG91dWxnZnNmYXdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMTg5NTAsImV4cCI6MjA2MjY5NDk1MH0.uHVMG9BAg0thmzFqlliTUbI7vJwbPzE_uZGy9q-Lcyw"
+
+    const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false,
+      },
+    })
 
     // コードをセッションに交換
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)

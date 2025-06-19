@@ -1,10 +1,20 @@
 import { createClient } from "@supabase/supabase-js"
 import type { Database } from "@/types/database"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+// Environment variables with fallbacks for next-lite
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://zphkclbhhouulgfsfawi.supabase.co"
+const supabaseAnonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwaGtjbGJoaG91dWxnZnNmYXdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMTg5NTAsImV4cCI6MjA2MjY5NDk1MH0.uHVMG9BAg0thmzFqlliTUbI7vJwbPzE_uZGy9q-Lcyw"
+
+console.log("🔧 Supabase Config:", {
+  url: supabaseUrl,
+  hasAnonKey: !!supabaseAnonKey,
+  keyLength: supabaseAnonKey?.length,
+})
 
 if (!supabaseUrl || !supabaseAnonKey) {
+  console.error("❌ Missing Supabase environment variables:", { supabaseUrl, hasAnonKey: !!supabaseAnonKey })
   throw new Error("Missing Supabase environment variables")
 }
 

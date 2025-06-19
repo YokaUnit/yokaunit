@@ -16,8 +16,8 @@ import { Loader2 } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
 
 const REDIRECT_URL = process.env.NEXT_PUBLIC_SITE_URL
-  ? `${process.env.NEXT_PUBLIC_SITE_URL}/`
-  : "http://localhost:3000/"
+  ? `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
+  : "http://localhost:3000/auth/callback"
 
 export function LoginForm() {
   const [email, setEmail] = useState("")
@@ -49,7 +49,8 @@ export function LoginForm() {
         description: "おかえりなさい！",
       })
 
-      window.location.href = "/"
+      router.push("/")
+      router.refresh()
     } catch (err: any) {
       console.error("ログインエラー:", err)
       if (err.message === "Invalid login credentials") {

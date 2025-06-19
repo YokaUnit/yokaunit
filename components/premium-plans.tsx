@@ -31,48 +31,37 @@ export function PremiumPlans() {
     }
   }
 
-  // 新しいプラン情報
+  // プラン情報を定義
   const plans = [
     {
       name: "ベーシック",
       description: "個人利用に最適",
-      monthlyPrice: "¥250",
-      quarterlyPrice: "¥675",
-      yearlyPrice: "¥2,400",
-      features: ["広告表示を大幅軽減", "メールサポート"],
+      monthlyPrice: "¥500",
+      quarterlyPrice: "¥1,350",
+      yearlyPrice: "¥4,800",
+      features: ["プレミアムツールへのアクセス", "広告非表示", "メールサポート"],
       popular: false,
       color: "blue-100",
     },
     {
       name: "プロ",
       description: "ビジネス利用に最適",
-      monthlyPrice: "¥500",
-      quarterlyPrice: "¥1,350",
-      yearlyPrice: "¥4,800",
-      features: [
-        "ベーシックプランのすべての機能",
-        "プレミアムツールのアクセス権",
-        "ツール要望の優先開発対応",
-        "優先サポート",
-      ],
+      monthlyPrice: "¥1,200",
+      quarterlyPrice: "¥3,240",
+      yearlyPrice: "¥11,520",
+      features: ["ベーシックプランのすべての機能", "高度なプレミアムツール", "優先サポート", "要望の優先開発"],
       popular: true,
       color: "blue-200",
     },
     {
       name: "エンタープライズ",
       description: "大規模組織向け",
-      monthlyPrice: "¥2,800〜",
-      quarterlyPrice: "¥7,560〜",
-      yearlyPrice: "¥26,880〜",
-      features: [
-        "プロプランのすべての機能",
-        "YokaUnitサイト内外での大規模専用ツール開発権利",
-        "複数ユーザーアカウント管理",
-        "専任担当者による個別対応（応相談）",
-      ],
+      monthlyPrice: "¥3,000",
+      quarterlyPrice: "¥8,100",
+      yearlyPrice: "¥28,800",
+      features: ["プロプランのすべての機能", "カスタムツール開発", "専任サポート担当者", "複数ユーザーアカウント"],
       popular: false,
       color: "blue-100",
-      isEnterprise: true,
     },
   ]
 
@@ -174,7 +163,7 @@ export function PremiumPlans() {
                 onClick={() => handleSubscribe(plan.name.toLowerCase())}
                 disabled={isLoading}
               >
-                {isLoading ? "処理中..." : plan.isEnterprise ? "お問い合わせ" : "登録する"}
+                {isLoading ? "処理中..." : "登録する"}
               </Button>
             </div>
           </Card>
@@ -217,26 +206,17 @@ export function PremiumPlans() {
                 onClick={() => handleSubscribe(plan.name.toLowerCase())}
                 disabled={isLoading}
               >
-                {isLoading ? "処理中..." : plan.isEnterprise ? "お問い合わせ" : "登録する"}
+                {isLoading ? "処理中..." : "登録する"}
               </Button>
             </CardFooter>
           </Card>
         ))}
       </div>
 
-      {/* 広告に関する説明 */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-6">
-        <h3 className="font-semibold text-gray-800 mb-2">広告表示について</h3>
-        <p className="text-sm text-gray-600">
-          有料プランでは一般的な広告表示を大幅に軽減いたします。ただし、企業様との提携によるPR情報や、
-          ユーザー様にとって有益なサービス紹介は、適切な形で表示される場合があります。
-        </p>
-      </div>
-
       <div className="text-center text-xs text-gray-500 mt-4">
         <p>すべてのプランは、いつでもキャンセル可能です。</p>
         <p className="mt-1">
-          エンタープライズプランの詳細や、ご不明な点は
+          ご不明な点は
           <a href="/contact" className="text-blue-600 hover:underline">
             お問い合わせ
           </a>

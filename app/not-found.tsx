@@ -12,7 +12,6 @@ import { BackgroundAnimation } from "@/components/background-animation"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { Home, Search, ArrowLeft, Wrench, Calculator, Key, Sparkles } from "lucide-react"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 
 const popularTools = [
   { name: "パスワード生成", href: "/tools/password", icon: Key },
@@ -23,12 +22,12 @@ const popularTools = [
 
 export default function NotFound() {
   const [searchQuery, setSearchQuery] = useState("")
-  const router = useRouter()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      router.push(`/tools?search=${encodeURIComponent(searchQuery.trim())}`)
+      // Client-side navigation without useRouter
+      window.location.href = `/tools?search=${encodeURIComponent(searchQuery.trim())}`
     }
   }
 
@@ -109,13 +108,12 @@ export default function NotFound() {
           {/* Illustration */}
           <motion.div className="mb-8" variants={floatingVariants} animate="animate">
             <div className="relative w-64 h-64 mx-auto">
-              <Image
-                src="/404-illustration.png"
-                alt="404 - ページが見つかりません"
-                fill
-                className="object-contain rounded-2xl"
-                priority
-              />
+              <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl flex items-center justify-center border-2 border-dashed border-blue-300 dark:border-blue-700">
+                <div className="text-center">
+                  <Wrench className="h-16 w-16 mx-auto mb-4 text-blue-500 dark:text-blue-400" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400">ツールが見つかりません</p>
+                </div>
+              </div>
             </div>
           </motion.div>
 
@@ -165,7 +163,18 @@ export default function NotFound() {
                 ツール一覧を見る
               </Link>
             </Button>
-            <Button variant="ghost" size="lg" onClick={() => window.history.back()} className="group">
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={() => {
+                if (typeof window !== "undefined" && window.history.length > 1) {
+                  window.history.back()
+                } else {
+                  window.location.href = "/"
+                }
+              }}
+              className="group"
+            >
               <ArrowLeft className="mr-2 h-5 w-5 group-hover:-translate-x-1 transition-transform" />
               前のページに戻る
             </Button>

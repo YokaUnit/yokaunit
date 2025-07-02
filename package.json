@@ -54,7 +54,7 @@
     "expo-asset": "latest",
     "expo-file-system": "latest",
     "expo-gl": "latest",
-    "framer-motion": "latest",
+    "framer-motion": "^12.23.0",
     "input-otp": "latest",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.454.0",

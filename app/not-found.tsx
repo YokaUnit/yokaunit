@@ -1,17 +1,10 @@
-"use client"
+export const dynamic = "force-dynamic"
 
-import type React from "react"
-
-import { motion } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { BackgroundAnimation } from "@/components/background-animation"
-import { ScrollToTop } from "@/components/scroll-to-top"
-import { Home, Search, ArrowLeft, Wrench, Calculator, Key, Sparkles } from "lucide-react"
-import { useState } from "react"
+import { Home, Wrench, Calculator, Key, Sparkles } from "lucide-react"
 
 const popularTools = [
   { name: "パスワード生成", href: "/tools/password", icon: Key },
@@ -21,61 +14,19 @@ const popularTools = [
 ]
 
 export default function NotFound() {
-  const [searchQuery, setSearchQuery] = useState("")
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      // Client-side navigation without useRouter
-      window.location.href = `/tools?search=${encodeURIComponent(searchQuery.trim())}`
-    }
-  }
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  }
-
-  const floatingVariants = {
-    animate: {
-      y: [-10, 10, -10],
-      rotate: [-2, 2, -2],
-      transition: {
-        duration: 4,
-        repeat: Number.POSITIVE_INFINITY,
-        ease: "easeInOut",
-      },
-    },
-  }
-
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <BackgroundAnimation />
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(147,51,234,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(59,130,246,0.1),transparent_50%)]" />
+      </div>
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <motion.div
-          className="max-w-4xl mx-auto text-center"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        <div className="max-w-4xl mx-auto text-center">
           {/* Logo */}
-          <motion.div className="mb-8" variants={itemVariants}>
+          <div className="mb-8">
             <Link href="/" className="inline-block">
               <Image
                 src="/logo.png"
@@ -85,28 +36,17 @@ export default function NotFound() {
                 className="mx-auto hover:scale-110 transition-transform duration-300"
               />
             </Link>
-          </motion.div>
+          </div>
 
-          {/* 404 Number with Animation */}
-          <motion.div className="mb-8" variants={itemVariants}>
-            <motion.h1
-              className="text-8xl md:text-9xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent"
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "linear",
-              }}
-              style={{ backgroundSize: "200% 200%" }}
-            >
+          {/* 404 Number */}
+          <div className="mb-8">
+            <h1 className="text-8xl md:text-9xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
               404
-            </motion.h1>
-          </motion.div>
+            </h1>
+          </div>
 
           {/* Illustration */}
-          <motion.div className="mb-8" variants={floatingVariants} animate="animate">
+          <div className="mb-8">
             <div className="relative w-64 h-64 mx-auto">
               <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl flex items-center justify-center border-2 border-dashed border-blue-300 dark:border-blue-700">
                 <div className="text-center">
@@ -115,10 +55,10 @@ export default function NotFound() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Error Message */}
-          <motion.div className="mb-8" variants={itemVariants}>
+          <div className="mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
               おっと！ページが見つかりませんでした
             </h2>
@@ -127,30 +67,10 @@ export default function NotFound() {
               <br />
               でも大丈夫！他にも便利なツールがたくさんあります。
             </p>
-          </motion.div>
-
-          {/* Search Bar */}
-          <motion.div className="mb-8" variants={itemVariants}>
-            <Card className="max-w-md mx-auto backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-xl">
-              <CardContent className="p-4">
-                <form onSubmit={handleSearch} className="flex gap-2">
-                  <Input
-                    type="text"
-                    placeholder="ツールを検索..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1"
-                  />
-                  <Button type="submit" size="icon">
-                    <Search className="h-4 w-4" />
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
+          </div>
 
           {/* Action Buttons */}
-          <motion.div className="mb-8 flex flex-col sm:flex-row gap-4 justify-center" variants={itemVariants}>
+          <div className="mb-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="group">
               <Link href="/">
                 <Home className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -163,57 +83,33 @@ export default function NotFound() {
                 ツール一覧を見る
               </Link>
             </Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              onClick={() => {
-                if (typeof window !== "undefined" && window.history.length > 1) {
-                  window.history.back()
-                } else {
-                  window.location.href = "/"
-                }
-              }}
-              className="group"
-            >
-              <ArrowLeft className="mr-2 h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-              前のページに戻る
-            </Button>
-          </motion.div>
+          </div>
 
           {/* Popular Tools */}
-          <motion.div variants={itemVariants}>
+          <div className="mb-8">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">人気のツール</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-              {popularTools.map((tool, index) => {
+              {popularTools.map((tool) => {
                 const Icon = tool.icon
                 return (
-                  <motion.div
+                  <Card
                     key={tool.name}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.8 + index * 0.1 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    className="backdrop-blur-sm bg-white/60 dark:bg-gray-800/60 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                   >
-                    <Card className="backdrop-blur-sm bg-white/60 dark:bg-gray-800/60 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                      <CardContent className="p-4 text-center">
-                        <Link href={tool.href} className="block">
-                          <Icon className="h-8 w-8 mx-auto mb-2 text-blue-600 dark:text-blue-400" />
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">{tool.name}</p>
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
+                    <CardContent className="p-4 text-center">
+                      <Link href={tool.href} className="block">
+                        <Icon className="h-8 w-8 mx-auto mb-2 text-blue-600 dark:text-blue-400" />
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{tool.name}</p>
+                      </Link>
+                    </CardContent>
+                  </Card>
                 )
               })}
             </div>
-          </motion.div>
+          </div>
 
           {/* Fun Fact */}
-          <motion.div
-            className="mt-12 p-4 rounded-2xl backdrop-blur-sm bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200/50 dark:border-blue-700/50"
-            variants={itemVariants}
-          >
+          <div className="mt-12 p-4 rounded-2xl backdrop-blur-sm bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200/50 dark:border-blue-700/50">
             <div className="flex items-center justify-center gap-2 mb-2">
               <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               <span className="text-sm font-medium text-blue-800 dark:text-blue-300">豆知識</span>
@@ -222,11 +118,9 @@ export default function NotFound() {
               404エラーの「404」は、HTTPステータスコードの一つで、 「Not Found（見つかりません）」を意味します。
               インターネットの歴史と共に歩んできた、ちょっと有名な数字なんです！
             </p>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
-
-      <ScrollToTop />
     </div>
   )
 }

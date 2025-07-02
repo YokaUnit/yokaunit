@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
-import { Copy, RefreshCw, Check, Save, List, Grid2X2, Info, Shield, Lightbulb } from "lucide-react"
+import { Copy, RefreshCw, Check, Info, Shield, Lightbulb, Share2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
@@ -25,32 +25,8 @@ export function PasswordGenerator() {
   const [passwordStrength, setPasswordStrength] = useState(0)
   const [copied, setCopied] = useState(false)
   const [copiedIndexes, setCopiedIndexes] = useState<number[]>([])
-  const [favorites, setFavorites] = useState<string[]>([])
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [activeTab, setActiveTab] = useState("single")
   const { toast } = useToast()
-
-  // ログイン状態の確認
-  useEffect(() => {
-    const checkAuth = () => {
-      const loggedIn = localStorage.getItem("isLoggedIn") === "true"
-      setIsLoggedIn(loggedIn)
-
-      if (loggedIn) {
-        const savedPasswords = localStorage.getItem("savedPasswords")
-        if (savedPasswords) {
-          setFavorites(JSON.parse(savedPasswords))
-        }
-      }
-    }
-
-    checkAuth()
-    window.addEventListener("storage", checkAuth)
-
-    return () => {
-      window.removeEventListener("storage", checkAuth)
-    }
-  }, [])
 
   // 初回レンダリング時にパスワードを生成
   useEffect(() => {
@@ -169,61 +145,45 @@ export function PasswordGenerator() {
     }, 3000)
   }
 
-  const savePassword = () => {
-    if (!isLoggedIn) {
-      toast({
-        title: "ログインが必要です",
-        description: "パスワードを保存するにはログインしてください",
-        variant: "destructive",
-      })
-      return
+  const sharePassword = async () => {
+    const shareData = {
+      title: "YokaUnit - パスワード生成ツール",
+      text: "安全で強力なパスワードを簡単に生成！YokaUnitの無料パスワード生成ツールをチェック！",
+      url: "https://yokaunit.com/tools/password",
     }
 
-    if (favorites.includes(password)) {
-      toast({
-        title: "既に保存済みです",
-        description: "このパスワードは既に保存されています",
-      })
-      return
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData)
+        toast({
+          title: "シェアしました",
+          description: "友達にツールを共有しました！",
+        })
+      } else {
+        // フォールバック: URLをクリップボードにコピー
+        await navigator.clipboard.writeText(shareData.url)
+        toast({
+          title: "URLをコピーしました",
+          description: "リンクがクリップボードにコピーされました",
+        })
+      }
+    } catch (error) {
+      console.error("Share failed:", error)
+      // エラー時のフォールバック
+      try {
+        await navigator.clipboard.writeText(shareData.url)
+        toast({
+          title: "URLをコピーしました",
+          description: "リンクがクリップボードにコピーされました",
+        })
+      } catch (clipboardError) {
+        toast({
+          title: "シェアに失敗しました",
+          description: "もう一度お試しください",
+          variant: "destructive",
+        })
+      }
     }
-
-    const newFavorites = [...favorites, password]
-    setFavorites(newFavorites)
-    localStorage.setItem("savedPasswords", JSON.stringify(newFavorites))
-
-    toast({
-      title: "保存しました",
-      description: "パスワードがマイページに保存されました",
-    })
-  }
-
-  const saveMultiplePassword = (index: number) => {
-    if (!isLoggedIn) {
-      toast({
-        title: "ログインが必要です",
-        description: "パスワードを保存するにはログインしてください",
-        variant: "destructive",
-      })
-      return
-    }
-
-    const passwordToSave = multiplePasswords[index]
-    if (favorites.includes(passwordToSave)) {
-      toast({
-        title: "既に保存済みです",
-        description: "このパスワードは既に保存されています",
-      })
-      return
-    }
-
-    const newFavorites = [...favorites, passwordToSave]
-    setFavorites(newFavorites)
-    localStorage.setItem("savedPasswords", JSON.stringify(newFavorites))
-
-    toast({
-      title: "保存しました",
-      description: "パスワードがマイページに保存されました",
-    })
   }
 
   const getStrengthColor = () => {
@@ -253,103 +213,109 @@ export function PasswordGenerator() {
               <Shield className="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
             </div>
             <div>
-              <CardTitle className="text-xl">パスワード生成ツール</CardTitle>
-              <CardDescription>安全なパスワードを簡単に作成</CardDescription>
+              <CardTitle className="text-lg sm:text-xl">パスワード生成ツール</CardTitle>
+              <CardDescription className="text-sm">安全なパスワードを簡単に作成</CardDescription>
             </div>
           </div>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Info className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-xs">
-                安全なパスワードを生成します。必要に応じて単一または複数のパスワードを作成できます。
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={sharePassword}
+              className="text-blue-600 border-blue-200 bg-blue-50/50 hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 shadow-sm"
+            >
+              <Share2 className="h-4 w-4 mr-1" />
+              <span className="hidden sm:inline">シェア</span>
+            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Info className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  安全なパスワードを生成します。必要に応じて単一または複数のパスワードを作成できます。
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="p-5">
+      <CardContent className="p-4 sm:p-5">
         <Tabs defaultValue="single" value={activeTab} onValueChange={setActiveTab} className="mb-6">
           <TabsList className="grid w-full grid-cols-2 h-10 mb-4 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
             <TabsTrigger
               value="single"
-              className="rounded-md flex items-center gap-2 h-8 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700"
+              className="rounded-md flex items-center gap-2 h-8 text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700"
             >
-              <Grid2X2 className="h-4 w-4" />
-              <span>単一パスワード</span>
+              <Shield className="h-4 w-4" />
+              <span>単一</span>
             </TabsTrigger>
             <TabsTrigger
               value="multiple"
-              className="rounded-md flex items-center gap-2 h-8 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700"
+              className="rounded-md flex items-center gap-2 h-8 text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700"
             >
-              <List className="h-4 w-4" />
-              <span>一括生成</span>
+              <RefreshCw className="h-4 w-4" />
+              <span>一括</span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="single" className="space-y-4">
             <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-              <div className="flex items-center mb-3">
-                <Input
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="font-mono text-base h-12 border-2 focus:border-indigo-500"
-                  readOnly
-                />
-                <div className="flex ml-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-12 w-12 border-2 hover:bg-indigo-50 dark:hover:bg-gray-700"
-                    onClick={copyToClipboard}
-                    title="クリップボードにコピー"
-                  >
-                    {copied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-12 w-12 ml-2 border-2 hover:bg-indigo-50 dark:hover:bg-gray-700"
-                    onClick={generatePassword}
-                    title="新しいパスワードを生成"
-                  >
-                    <RefreshCw className="h-5 w-5" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-12 w-12 ml-2 border-2 hover:bg-indigo-50 dark:hover:bg-gray-700"
-                    onClick={savePassword}
-                    title="パスワードを保存"
-                  >
-                    <Save className="h-5 w-5" />
-                  </Button>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="font-mono text-base sm:text-lg h-14 sm:h-12 border-2 focus:border-indigo-500 text-center sm:text-left"
+                    readOnly
+                  />
+                  <div className="flex gap-2 justify-center sm:justify-start">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-14 w-14 sm:h-12 sm:w-12 border-2 hover:bg-indigo-50 dark:hover:bg-gray-700"
+                      onClick={copyToClipboard}
+                      title="クリップボードにコピー"
+                    >
+                      {copied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-14 w-14 sm:h-12 sm:w-12 border-2 hover:bg-indigo-50 dark:hover:bg-gray-700"
+                      onClick={generatePassword}
+                      title="新しいパスワードを生成"
+                    >
+                      <RefreshCw className="h-5 w-5" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <Shield className={`h-5 w-5 ${getStrengthIcon()}`} />
-                  <span className="font-medium">パスワード強度:</span>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Shield className={`h-5 w-5 ${getStrengthIcon()}`} />
+                      <span className="font-medium text-sm sm:text-base">パスワード強度:</span>
+                    </div>
+                    <span className={`font-bold text-sm sm:text-base ${getStrengthIcon()}`}>{getStrengthText()}</span>
+                  </div>
+
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 h-3 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full ${getStrengthColor()} transition-all duration-300`}
+                      style={{ width: `${(passwordStrength / 7) * 100}%` }}
+                    ></div>
+                  </div>
                 </div>
-                <span className={`font-bold ${getStrengthIcon()}`}>{getStrengthText()}</span>
-              </div>
-
-              <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
-                <div
-                  className={`h-full ${getStrengthColor()} transition-all duration-300`}
-                  style={{ width: `${(passwordStrength / 7) * 100}%` }}
-                ></div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-3">
+            <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="font-medium">長さ: {length}</label>
+                  <label className="font-medium text-sm sm:text-base">長さ: {length}</label>
                 </div>
                 <Slider
                   value={[length]}
@@ -366,10 +332,10 @@ export function PasswordGenerator() {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <label className="font-medium">含める文字</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center space-x-2">
+              <div className="space-y-4">
+                <label className="font-medium text-sm sm:text-base">含める文字</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center space-x-3">
                     <Checkbox
                       id="uppercase"
                       checked={includeUppercase}
@@ -379,7 +345,7 @@ export function PasswordGenerator() {
                       大文字 (A-Z)
                     </label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <Checkbox
                       id="lowercase"
                       checked={includeLowercase}
@@ -389,7 +355,7 @@ export function PasswordGenerator() {
                       小文字 (a-z)
                     </label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <Checkbox
                       id="numbers"
                       checked={includeNumbers}
@@ -399,7 +365,7 @@ export function PasswordGenerator() {
                       数字 (0-9)
                     </label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <Checkbox
                       id="symbols"
                       checked={includeSymbols}
@@ -411,22 +377,22 @@ export function PasswordGenerator() {
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex items-center space-x-2 mt-2">
-              <Checkbox
-                id="exclude-similar"
-                checked={excludeSimilar}
-                onCheckedChange={(checked) => setExcludeSimilar(checked as boolean)}
-              />
-              <label htmlFor="exclude-similar" className="text-sm">
-                似た文字を除外 (0, O, 1, l, I)
-              </label>
+              <div className="flex items-center space-x-3">
+                <Checkbox
+                  id="exclude-similar"
+                  checked={excludeSimilar}
+                  onCheckedChange={(checked) => setExcludeSimilar(checked as boolean)}
+                />
+                <label htmlFor="exclude-similar" className="text-sm">
+                  似た文字を除外 (0, O, 1, l, I)
+                </label>
+              </div>
             </div>
 
             <Button
               size="lg"
-              className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="w-full h-12 sm:h-10 bg-indigo-600 hover:bg-indigo-700 text-white text-base sm:text-sm"
               onClick={generatePassword}
             >
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -436,36 +402,42 @@ export function PasswordGenerator() {
 
           <TabsContent value="multiple" className="space-y-4">
             <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="font-medium">生成数:</span>
+                  <span className="font-medium text-sm sm:text-base">生成数:</span>
                   <Badge variant="outline" className="text-sm px-2 py-1 bg-white dark:bg-gray-700">
                     {passwordCount}
                   </Badge>
                 </div>
-                <Button variant="outline" onClick={copyAllPasswords} className="h-9 text-sm">
+                <Button variant="outline" onClick={copyAllPasswords} className="h-10 text-sm">
                   <Copy className="h-4 w-4 mr-2" />
                   すべてコピー
                 </Button>
               </div>
 
-              <Slider
-                value={[passwordCount]}
-                min={1}
-                max={20}
-                step={1}
-                onValueChange={(value) => setPasswordCount(value[0])}
-                className="mb-3"
-              />
+              <div className="space-y-3 mb-4">
+                <Slider
+                  value={[passwordCount]}
+                  min={1}
+                  max={20}
+                  step={1}
+                  onValueChange={(value) => setPasswordCount(value[0])}
+                />
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>1</span>
+                  <span>10</span>
+                  <span>20</span>
+                </div>
+              </div>
 
-              <div className="border rounded-lg divide-y max-h-48 overflow-y-auto bg-white dark:bg-gray-700">
+              <div className="border rounded-lg divide-y max-h-64 overflow-y-auto bg-white dark:bg-gray-700">
                 {multiplePasswords.map((pwd, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                    <code className="font-mono flex-1 truncate text-sm">{pwd}</code>
-                    <div className="flex gap-2 ml-2">
+                    <code className="font-mono flex-1 truncate text-sm mr-2">{pwd}</code>
+                    <div className="flex gap-2">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -479,34 +451,18 @@ export function PasswordGenerator() {
                           <Copy className="h-4 w-4" />
                         )}
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => saveMultiplePassword(index)}
-                        title="パスワードを保存"
-                      >
-                        <Save className="h-4 w-4" />
-                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-3">
+            <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="font-medium">長さ: {length}</label>
+                  <label className="font-medium text-sm sm:text-base">長さ: {length}</label>
                 </div>
-                <Slider
-                  value={[length]}
-                  min={4}
-                  max={32}
-                  step={1}
-                  onValueChange={(value) => setLength(value[0])}
-                  className="mb-1"
-                />
+                <Slider value={[length]} min={4} max={32} step={1} onValueChange={(value) => setLength(value[0])} />
                 <div className="flex justify-between text-xs text-gray-500">
                   <span>4</span>
                   <span>16</span>
@@ -514,10 +470,10 @@ export function PasswordGenerator() {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <label className="font-medium">含める文字</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center space-x-2">
+              <div className="space-y-4">
+                <label className="font-medium text-sm sm:text-base">含める文字</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center space-x-3">
                     <Checkbox
                       id="uppercase-multi"
                       checked={includeUppercase}
@@ -527,7 +483,7 @@ export function PasswordGenerator() {
                       大文字 (A-Z)
                     </label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <Checkbox
                       id="lowercase-multi"
                       checked={includeLowercase}
@@ -537,7 +493,7 @@ export function PasswordGenerator() {
                       小文字 (a-z)
                     </label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <Checkbox
                       id="numbers-multi"
                       checked={includeNumbers}
@@ -547,7 +503,7 @@ export function PasswordGenerator() {
                       数字 (0-9)
                     </label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <Checkbox
                       id="symbols-multi"
                       checked={includeSymbols}
@@ -559,22 +515,22 @@ export function PasswordGenerator() {
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex items-center space-x-2 mt-2">
-              <Checkbox
-                id="exclude-similar-multi"
-                checked={excludeSimilar}
-                onCheckedChange={(checked) => setExcludeSimilar(checked as boolean)}
-              />
-              <label htmlFor="exclude-similar-multi" className="text-sm">
-                似た文字を除外 (0, O, 1, l, I)
-              </label>
+              <div className="flex items-center space-x-3">
+                <Checkbox
+                  id="exclude-similar-multi"
+                  checked={excludeSimilar}
+                  onCheckedChange={(checked) => setExcludeSimilar(checked as boolean)}
+                />
+                <label htmlFor="exclude-similar-multi" className="text-sm">
+                  似た文字を除外 (0, O, 1, l, I)
+                </label>
+              </div>
             </div>
 
             <Button
               size="lg"
-              className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="w-full h-12 sm:h-10 bg-indigo-600 hover:bg-indigo-700 text-white text-base sm:text-sm"
               onClick={generateMultiplePasswords}
             >
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -586,26 +542,26 @@ export function PasswordGenerator() {
         <div className="mt-6 bg-indigo-50 dark:bg-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-3">
             <Lightbulb className="h-5 w-5 text-amber-500" />
-            <h3 className="font-medium">パスワード作成のヒント</h3>
+            <h3 className="font-medium text-sm sm:text-base">パスワード作成のヒント</h3>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-3 text-sm">
             <div className="flex items-start gap-2">
-              <Badge variant="outline" className="mt-0.5 bg-white dark:bg-gray-700">
+              <Badge variant="outline" className="mt-0.5 bg-white dark:bg-gray-700 text-xs">
                 安全性
               </Badge>
               <p>16文字以上で大文字・小文字・数字・記号を含むパスワードが最も安全です。</p>
             </div>
             <div className="flex items-start gap-2">
-              <Badge variant="outline" className="mt-0.5 bg-white dark:bg-gray-700">
+              <Badge variant="outline" className="mt-0.5 bg-white dark:bg-gray-700 text-xs">
                 活用法
               </Badge>
               <p>一括生成機能で複数のアカウント用パスワードを作成できます。</p>
             </div>
             <div className="flex items-start gap-2">
-              <Badge variant="outline" className="mt-0.5 bg-white dark:bg-gray-700">
-                保存
+              <Badge variant="outline" className="mt-0.5 bg-white dark:bg-gray-700 text-xs">
+                セキュリティ
               </Badge>
-              <p>ログインするとパスワードを保存して後で確認できます。</p>
+              <p>生成されたパスワードはブラウザ内で作成され、サーバーには送信されません。</p>
             </div>
           </div>
         </div>

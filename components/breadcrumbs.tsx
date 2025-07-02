@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { ChevronRight, Home } from "lucide-react"
+import { motion } from "framer-motion"
 
 interface BreadcrumbItem {
   label: string
@@ -14,34 +15,41 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
-    <nav className="flex" aria-label="Breadcrumb">
-      <ol className="inline-flex items-center space-x-1 md:space-x-2">
-        {items.map((item, index) => (
-          <li key={index} className="inline-flex items-center">
-            {index === 0 ? (
-              <Link
-                href={item.href}
-                className="inline-flex items-center text-sm text-gray-500 hover:text-blue-600"
-                onClick={() => window.scrollTo(0, 0)}
-              >
-                <Home className="w-4 h-4 mr-1" />
-                {item.label}
-              </Link>
-            ) : (
-              <>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-                <Link
-                  href={item.href}
-                  className="ml-1 md:ml-2 text-sm text-gray-500 hover:text-blue-600"
-                  onClick={() => window.scrollTo(0, 0)}
-                >
-                  {item.label}
-                </Link>
-              </>
-            )}
-          </li>
-        ))}
-      </ol>
-    </nav>
+    <motion.nav
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex items-center space-x-1 text-sm text-gray-500 mb-4"
+      aria-label="パンくずリスト"
+    >
+      <Link
+        href="/"
+        className="flex items-center hover:text-blue-600 transition-colors duration-200"
+        aria-label="ホームページに戻る"
+      >
+        <Home className="h-4 w-4" />
+      </Link>
+
+      {items.map((item, index) => (
+        <motion.div
+          key={item.href}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.1 }}
+          className="flex items-center space-x-1"
+        >
+          <ChevronRight className="h-4 w-4 text-gray-400" />
+          {index === items.length - 1 ? (
+            <span className="font-medium text-gray-900" aria-current="page">
+              {item.label}
+            </span>
+          ) : (
+            <Link href={item.href} className="hover:text-blue-600 transition-colors duration-200">
+              {item.label}
+            </Link>
+          )}
+        </motion.div>
+      ))}
+    </motion.nav>
   )
 }

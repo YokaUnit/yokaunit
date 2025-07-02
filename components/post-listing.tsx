@@ -23,7 +23,7 @@ const popularPosts: Post[] = [
   {
     id: 1,
     title: "MP4からMP3に変換できる無料ツール",
-    description: "YouTubeの音声だけを抽出して保存したいです。シンプルで使いやすいUIが希望です。",
+    description: "YouTubeの音声だけを抽出して保存したいです。シンプルで使いやすいUIが希少的です。",
     likes: 124,
     comments: 18,
     status: "作成中",

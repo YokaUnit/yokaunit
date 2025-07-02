@@ -33,6 +33,8 @@ export default function SettingsPage() {
   const router = useRouter()
   const { isLoggedIn, user, profile, isPremium, refreshProfile, ensureProfileExists } = useAuth()
   const { toast } = useToast()
+  const [showCancelSection, setShowCancelSection] = useState(false)
+  const [isCancelling, setIsCancelling] = useState(false)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -138,6 +140,54 @@ export default function SettingsPage() {
       })
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleCancelSubscription = async () => {
+    if (!confirm("本当にサブスクリプションを解約しますか？期間終了まで引き続きご利用いただけます。")) {
+      return
+    }
+
+    setIsCancelling(true)
+    try {
+      // 現在のセッションからアクセストークンを取得
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session?.access_token) {
+        throw new Error("認証トークンが見つかりません")
+      }
+
+      const response = await fetch("/api/stripe/cancel-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`, // 👈 重要：認証トークンを送信
+        },
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        toast({
+          title: "解約手続き完了",
+          description: data.message,
+        })
+        await refreshProfile()
+        setShowCancelSection(false)
+      } else {
+        throw new Error(data.error || "解約処理に失敗しました")
+      }
+    } catch (error) {
+      console.error("Cancellation error:", error)
+      toast({
+        title: "エラー",
+        description: error instanceof Error ? error.message : "解約処理に失敗しました",
+        variant: "destructive",
+      })
+    } finally {
+      setIsCancelling(false)
     }
   }
 
@@ -261,7 +311,7 @@ export default function SettingsPage() {
                           >
                             <Badge className="mt-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 flex items-center gap-1 px-3 py-1">
                               <Crown className="h-3 w-3" />
-                              <span>プレミアム会員</span>
+                              <span>{profile?.subscription_plan || "プレミアム会員"}</span>
                             </Badge>
                           </motion.div>
                         )}
@@ -451,6 +501,74 @@ export default function SettingsPage() {
                             <Link href="/account">キャンセル</Link>
                           </Button>
                         </motion.div>
+
+                        {/* サブスクリプション管理セクション */}
+                        {isPremium && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 1.0 }}
+                            className="mt-12 pt-8 border-t border-gray-100"
+                          >
+                            <div className="text-center">
+                              <button
+                                type="button"
+                                onClick={() => setShowCancelSection(!showCancelSection)}
+                                className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                              >
+                                サブスクリプション管理
+                              </button>
+                            </div>
+
+                            {showCancelSection && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                className="mt-4 p-4 bg-gray-50/50 rounded-lg"
+                              >
+                                <div className="text-center space-y-3">
+                                  <p className="text-sm text-gray-600">
+                                    現在のプラン: <span className="font-medium">{profile?.subscription_plan}</span>
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    ステータス: <span className="font-medium">{profile?.subscription_status}</span>
+                                  </p>
+                                  {profile?.subscription_status === "cancel_at_period_end" ? (
+                                    <div className="text-sm text-orange-600">
+                                      <p>
+                                        解約予定:{" "}
+                                        {profile?.subscription_end_date
+                                          ? new Date(profile.subscription_end_date).toLocaleDateString("ja-JP")
+                                          : "未定"}
+                                      </p>
+                                      <p className="text-xs text-gray-500 mt-1">
+                                        期間終了まではプレミアム機能をご利用いただけます
+                                      </p>
+                                    </div>
+                                  ) : (
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={handleCancelSubscription}
+                                      disabled={isCancelling}
+                                      className="text-xs text-gray-500 hover:text-red-600 hover:bg-red-50"
+                                    >
+                                      {isCancelling ? (
+                                        <>
+                                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                          処理中...
+                                        </>
+                                      ) : (
+                                        "解約する"
+                                      )}
+                                    </Button>
+                                  )}
+                                </div>
+                              </motion.div>
+                            )}
+                          </motion.div>
+                        )}
                       </form>
                     </CardContent>
                   </Card>

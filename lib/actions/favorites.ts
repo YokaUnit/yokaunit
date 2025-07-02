@@ -22,8 +22,11 @@ export async function getUserFavorites(): Promise<string[]> {
       return []
     }
 
-    console.log("✅ Favorites fetched:", data.length, "items")
-    return data.map((item) => item.tool_slug)
+    console.log("✅ Favorites fetched:", data?.length || 0, "items")
+
+    // 必ず配列を返す
+    const favoritesList = Array.isArray(data) ? data.map((item) => item.tool_slug) : []
+    return favoritesList
   } catch (error) {
     console.error("❌ Error in getUserFavorites:", error)
     return []

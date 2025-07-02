@@ -16,6 +16,20 @@ export interface Database {
           is_active: boolean
           created_at: string
           updated_at: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_status:
+            | "active"
+            | "canceled"
+            | "past_due"
+            | "unpaid"
+            | "incomplete"
+            | "incomplete_expired"
+            | "trialing"
+            | null
+          subscription_start_date: string | null
+          subscription_end_date: string | null
+          subscription_plan: "プロ" | "プレミアム" | "エンタープライズ" | null
         }
         Insert: {
           id: string
@@ -29,6 +43,20 @@ export interface Database {
           is_active?: boolean
           created_at?: string
           updated_at?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_status?:
+            | "active"
+            | "canceled"
+            | "past_due"
+            | "unpaid"
+            | "incomplete"
+            | "incomplete_expired"
+            | "trialing"
+            | null
+          subscription_start_date?: string | null
+          subscription_end_date?: string | null
+          subscription_plan?: "プロ" | "プレミアム" | "エンタープライズ" | null
         }
         Update: {
           id?: string
@@ -42,6 +70,20 @@ export interface Database {
           is_active?: boolean
           created_at?: string
           updated_at?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_status?:
+            | "active"
+            | "canceled"
+            | "past_due"
+            | "unpaid"
+            | "incomplete"
+            | "incomplete_expired"
+            | "trialing"
+            | null
+          subscription_start_date?: string | null
+          subscription_end_date?: string | null
+          subscription_plan?: "プロ" | "プレミアム" | "エンタープライズ" | null
         }
       }
       tools: {

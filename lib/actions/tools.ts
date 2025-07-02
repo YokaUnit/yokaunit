@@ -29,6 +29,7 @@ export async function getTools(options?: {
   search?: string
   limit?: number
   offset?: number
+  userRole?: "basic" | "premium" | "admin"
 }): Promise<{ tools: Tool[]; total: number }> {
   const supabase = createServerSupabaseClient()
 
@@ -60,6 +61,16 @@ export async function getTools(options?: {
     const searchTerm = `%${options.search}%`
     query = query.or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
   }
+
+  // ユーザーロールに基づくフィルタリング
+  if (options?.userRole === "basic") {
+    // 基本ユーザーはプレミアムツールと非公開ツールを除外
+    query = query.eq("is_premium", false).eq("is_private", false)
+  } else if (options?.userRole === "premium") {
+    // プレミアムユーザーは非公開ツールのみ除外
+    query = query.eq("is_private", false)
+  }
+  // adminは全てのツールにアクセス可能
 
   // ソート（人気順がデフォルト）
   query = query.order("likes_count", { ascending: false })

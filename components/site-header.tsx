@@ -1,12 +1,9 @@
 "use client"
-
-import type React from "react"
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search, Menu, X, User, LogOut, Crown, Settings, LayoutDashboard, Heart, ChevronDown } from "lucide-react"
+import { Menu, X, User, LogOut, Crown, Settings, LayoutDashboard, Heart, ChevronDown } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useRouter, usePathname } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
@@ -15,22 +12,12 @@ import { useAuth } from "@/hooks/use-auth"
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
 
   const { isLoggedIn, profile, isPremium, isAdmin, isDeveloper, signOut } = useAuth()
   const username = profile?.username || "ユーザー"
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/tools?search=${encodeURIComponent(searchQuery)}`)
-      setIsSearchOpen(false)
-    }
-  }
 
   const handleSignOut = async () => {
     await signOut()
@@ -51,7 +38,7 @@ export function SiteHeader() {
     { href: "/contact", title: "お問い合わせ" },
   ]
 
-  // ログイン後のナビゲーション項目
+  // ログイン後のナビゲーション項目（プレミアムツールを削除）
   const privateNavigationItems = [
     { href: "/tools", title: "ツール一覧" },
     { href: "/premium", title: "有料会員" },
@@ -93,23 +80,6 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center space-x-3">
-            {/* デスクトップ検索フォーム */}
-            <form onSubmit={handleSearch} className="relative hidden md:block">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-              <Input
-                type="search"
-                placeholder="ツールを検索..."
-                className="pl-9 w-[180px] h-9 bg-gray-50 text-sm"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </form>
-
-            {/* モバイル検索アイコン */}
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsSearchOpen(!isSearchOpen)}>
-              <Search className="h-5 w-5" />
-            </Button>
-
             {isLoggedIn ? (
               /* ユーザードロップダウンメニュー */
               <div className="relative">
@@ -203,15 +173,7 @@ export function SiteHeader() {
 
                           <div className="border-t border-gray-100 my-1" />
 
-                          {isPremium ? (
-                            <button
-                              onClick={() => handleUserDropdownItemClick("/tools/premium-tool")}
-                              className="flex items-center w-full px-3 py-2 text-sm hover:bg-yellow-50 transition-colors"
-                            >
-                              <Crown className="h-4 w-4 mr-2 text-yellow-500" />
-                              <span className="text-yellow-700">プレミアムツール</span>
-                            </button>
-                          ) : (
+                          {!isPremium && (
                             <button
                               onClick={() => handleUserDropdownItemClick("/premium")}
                               className="flex items-center w-full px-3 py-2 text-sm hover:bg-gray-50 transition-colors"
@@ -255,35 +217,6 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* モバイル検索フォーム */}
-      <AnimatePresence>
-        {isSearchOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-gray-200 bg-white/80 backdrop-blur-md"
-          >
-            <div className="container mx-auto px-4 py-3">
-              <form onSubmit={handleSearch} className="flex gap-2">
-                <div className="relative flex-1">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                  <Input
-                    type="search"
-                    placeholder="ツールを検索..."
-                    className="pl-9 w-full bg-gray-50 text-sm"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    autoFocus
-                  />
-                </div>
-                <Button type="submit">検索</Button>
-              </form>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* モバイルメニュー */}
       <AnimatePresence>
         {isMenuOpen && (
@@ -309,91 +242,7 @@ export function SiteHeader() {
                 ))}
 
                 {isLoggedIn ? (
-                  <>
-                    <div className="pt-2 border-t border-gray-100">
-                      <div className="text-sm font-medium text-gray-900 mb-1.5">
-                        {isDeveloper ? (
-                          <span className="flex items-center">
-                            開発者 <Badge className="ml-2 bg-amber-200 text-amber-800">管理者</Badge>
-                          </span>
-                        ) : (
-                          `${username} さん`
-                        )}
-                      </div>
-                    </div>
-                    <Link
-                      href="/account"
-                      className="text-gray-700 hover:text-blue-600 transition-colors py-1.5 text-sm flex items-center"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <User className="h-3.5 w-3.5 mr-1.5" />
-                      マイページ
-                    </Link>
-                    <Link
-                      href="/account/favorites"
-                      className="text-gray-700 hover:text-blue-600 transition-colors py-1.5 text-sm flex items-center"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <Heart className="h-3.5 w-3.5 mr-1.5" />
-                      お気に入り
-                    </Link>
-                    <Link
-                      href="/account/settings"
-                      className="text-gray-700 hover:text-blue-600 transition-colors py-1.5 text-sm flex items-center"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <Settings className="h-3.5 w-3.5 mr-1.5" />
-                      設定
-                    </Link>
-
-                    {(isAdmin || isDeveloper) && (
-                      <>
-                        <Link
-                          href="/admin/dashboard"
-                          className="text-amber-700 hover:text-amber-800 transition-colors py-1.5 text-sm flex items-center"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <LayoutDashboard className="h-3.5 w-3.5 mr-1.5 text-amber-600" />
-                          管理ダッシュボード
-                        </Link>
-                        <Link
-                          href="/admin/tools"
-                          className="text-amber-700 hover:text-amber-800 transition-colors py-1.5 text-sm flex items-center"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <Settings className="h-3.5 w-3.5 mr-1.5 text-amber-600" />
-                          ツール管理
-                        </Link>
-                      </>
-                    )}
-
-                    {isPremium ? (
-                      <Link
-                        href="/tools/premium-tool"
-                        className="text-gray-700 hover:text-blue-600 transition-colors py-1.5 text-sm flex items-center"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        <Crown className="h-3.5 w-3.5 mr-1.5 text-yellow-500" />
-                        プレミアムツール
-                      </Link>
-                    ) : (
-                      <Link
-                        href="/premium"
-                        className="text-gray-700 hover:text-blue-600 transition-colors py-1.5 text-sm flex items-center"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        <Crown className="h-3.5 w-3.5 mr-1.5 text-gray-400" />
-                        有料会員になる
-                      </Link>
-                    )}
-                    <button
-                      className="text-left text-red-600 hover:text-red-700 transition-colors py-1.5 text-sm flex items-center"
-                      onClick={handleSignOut}
-                    >
-                      <LogOut className="h-3.5 w-3.5 mr-1.5" />
-                      ログアウト
-                    </button>
-                  </>
+                  <></>
                 ) : (
                   <div className="pt-2 border-t border-gray-100 space-y-2">
                     <Button

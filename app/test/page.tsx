@@ -1,181 +1,218 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { supabase } from "@/lib/supabase"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { CheckCircle, ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
-interface TestData {
-  id: number
-  name: string | null
-  created_at: string
-}
+export default function FakePayPayPage() {
+  const [passwordVerified, setPasswordVerified] = useState(false)
+  const [passwordInput, setPasswordInput] = useState("")
+  const [agreed, setAgreed] = useState(false)
+  const [stage, setStage] = useState<"initial" | "loading" | "received">("initial")
+  const [amount, setAmount] = useState(5000)
+  const [sender, setSender] = useState("ヤマダ タロウ")
+  const [showSettings, setShowSettings] = useState(false)
+  const router = useRouter()
 
-export default function TestPage() {
-  const [testData, setTestData] = useState<TestData[]>([])
-  const [loading, setLoading] = useState(true)
-  const [newName, setNewName] = useState("")
-  const [adding, setAdding] = useState(false)
-  const { toast } = useToast()
-
-  const fetchTestData = async () => {
-    try {
-      setLoading(true)
-      const { data, error } = await supabase.from("test").select("*").order("created_at", { ascending: false })
-
-      if (error) {
-        console.error("Error fetching test data:", error)
-        toast({
-          title: "エラー",
-          description: `データの取得に失敗しました: ${error.message}`,
-          variant: "destructive",
-        })
-      } else {
-        setTestData(data || [])
-        toast({
-          title: "成功",
-          description: "データを正常に取得しました",
-        })
-      }
-    } catch (err) {
-      console.error("Unexpected error:", err)
-      toast({
-        title: "エラー",
-        description: "予期しないエラーが発生しました",
-        variant: "destructive",
-      })
-    } finally {
-      setLoading(false)
-    }
+  const handleReceive = () => {
+    setStage("loading")
+    setTimeout(() => {
+      setStage("received")
+    }, 1600)
   }
 
-  const addTestData = async () => {
-    if (!newName.trim()) return
-
-    try {
-      setAdding(true)
-      const { error } = await supabase.from("test").insert([{ name: newName }])
-
-      if (error) {
-        console.error("Error adding test data:", error)
-        toast({
-          title: "エラー",
-          description: `データの追加に失敗しました: ${error.message}`,
-          variant: "destructive",
-        })
-      } else {
-        setNewName("")
-        fetchTestData()
-        toast({
-          title: "成功",
-          description: "データを追加しました",
-        })
-      }
-    } catch (err) {
-      console.error("Unexpected error:", err)
-      toast({
-        title: "エラー",
-        description: "予期しないエラーが発生しました",
-        variant: "destructive",
-      })
-    } finally {
-      setAdding(false)
-    }
+  if (!passwordVerified) {
+    return (
+      <div className="w-full min-h-screen bg-white flex flex-col items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-sm w-full bg-white rounded-xl shadow-xl p-6 text-center"
+        >
+          <h1 className="text-xl font-bold mb-2 text-[#ff2d55]">注意と同意</h1>
+          <p className="text-sm text-gray-600 mb-4">
+            これはPayPayの本物のアプリではなく、ジョーク用途の模倣ツールです。
+            詐欺・悪用を目的とした使用は禁止されています。
+          </p>
+          <div className="mb-4 flex items-center justify-center gap-2">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="w-4 h-4"
+            />
+            <label className="text-sm text-gray-700">上記の内容に同意します</label>
+          </div>
+          <input
+            type="password"
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value)}
+            placeholder="パスワードを入力"
+            className="w-full border rounded-lg px-4 py-2 mb-4"
+          />
+          <Button
+            className="w-full bg-[#ff2d55] text-white rounded-full py-2 font-semibold"
+            onClick={() => {
+              if (passwordInput === "hisashi" && agreed) {
+                setPasswordVerified(true)
+              } else if (!agreed) {
+                alert("同意が必要です")
+              } else {
+                alert("パスワードが違います")
+              }
+            }}
+          >
+            同意して開始
+          </Button>
+          <div className="mt-4">
+            <Button
+              variant="ghost"
+              className="text-gray-500 text-sm"
+              onClick={() => router.push("/")}
+            >
+              トップページに戻る
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    )
   }
-
-  useEffect(() => {
-    fetchTestData()
-  }, [])
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>データベース接続テスト</CardTitle>
-            <CardDescription>Supabaseデータベースの接続状況とtestテーブルのデータを確認します</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex space-x-2">
-              <div className="flex-1">
-                <Label htmlFor="name">新しいテストデータ</Label>
-                <Input
-                  id="name"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="テストデータの名前を入力"
-                  disabled={adding}
-                />
+    <div className="w-full min-h-screen bg-gradient-to-br from-[#fff5f5] to-[#ffeaea] text-black font-sans relative overflow-hidden">
+      <div className="bg-[#ff2d55] px-4 py-3 flex items-center justify-between text-white shadow-md">
+        <div className="flex items-center">
+          <ChevronLeft className="w-6 h-6 mr-2 cursor-pointer" onClick={() => setStage("initial")} />
+          <h1 className="text-base font-semibold cursor-pointer" onClick={() => setPasswordVerified(false)}>
+            PayPay 受け取り
+          </h1>
+        </div>
+        <div className="text-sm underline cursor-pointer" onClick={() => setShowSettings(!showSettings)}>
+          設定
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {showSettings && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-16 left-0 right-0 mx-auto max-w-sm bg-white shadow-lg rounded-b-xl px-6 py-4 z-20"
+          >
+            <label className="block mb-2 text-sm font-semibold">受け取る金額</label>
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
+              className="w-full px-4 py-2 mb-4 border rounded-lg text-right"
+            />
+            <label className="block mb-2 text-sm font-semibold">送信元</label>
+            <input
+              type="text"
+              value={sender}
+              onChange={(e) => setSender(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+            <Button
+              onClick={() => setShowSettings(false)}
+              className="mt-4 w-full bg-[#ff2d55] hover:bg-[#e60039] text-white font-semibold rounded-full py-2"
+            >
+              決定
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-12 pb-24 relative">
+        <AnimatePresence mode="wait">
+          {stage === "loading" ? (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full max-w-sm text-center"
+            >
+              <div className="rounded-2xl bg-white px-6 py-10 shadow-xl">
+                <div className="w-12 h-12 border-4 border-[#ff2d55] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+                <p className="text-[#ff2d55] text-lg font-semibold">受け取り処理中...</p>
               </div>
-              <div className="flex items-end">
-                <Button onClick={addTestData} disabled={adding || !newName.trim()}>
-                  {adding ? "追加中..." : "追加"}
+            </motion.div>
+          ) : stage === "initial" ? (
+            <motion.div
+              key="receive-card"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -40 }}
+              transition={{ duration: 0.5 }}
+              className="w-full max-w-sm bg-white text-black rounded-2xl shadow-2xl py-10 px-6"
+            >
+              <h2 className="text-xl font-bold text-center text-[#ff2d55] mb-4">受け取り内容確認</h2>
+              <div className="text-center mb-6">
+                <p className="text-sm text-gray-500">送金元: {sender}</p>
+                <p className="text-sm text-gray-500">日付: {new Date().toLocaleDateString()}</p>
+                <p className="text-5xl font-extrabold text-black mt-4">¥{amount.toLocaleString()}</p>
+              </div>
+              <Button
+                onClick={handleReceive}
+                className="w-full bg-[#ff2d55] hover:bg-[#e60039] text-white font-bold text-lg py-3 rounded-full"
+              >
+                受け取る
+              </Button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="received"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white text-black rounded-t-3xl shadow-2xl py-10 px-6 z-30"
+            >
+              <div className="flex flex-col items-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                  className="bg-[#00c853]/10 rounded-full p-4"
+                >
+                  <CheckCircle className="w-16 h-16 text-[#00c853] mb-2 animate-bounce" />
+                </motion.div>
+                <h2 className="text-xl font-bold text-[#00c853] mt-4">受け取り完了</h2>
+                <p className="text-4xl font-extrabold mt-2">¥{amount.toLocaleString()}</p>
+                <p className="text-sm text-gray-500 mt-2">PayPay残高にチャージされました</p>
+                <p className="text-sm text-gray-400 mt-1">送信元: {sender}</p>
+              </div>
+              <div className="mt-6">
+                <Button
+                  className="w-full bg-[#f5f5f5] text-black hover:bg-[#ebebeb] font-medium py-2 rounded-full"
+                  onClick={() => setStage("initial")}
+                >
+                  戻る
                 </Button>
               </div>
-            </div>
-            <Button onClick={fetchTestData} disabled={loading} variant="outline">
-              {loading ? "読み込み中..." : "データを再読み込み"}
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>testテーブルのデータ</CardTitle>
-            <CardDescription>
-              {loading ? "データを読み込み中..." : `${testData.length}件のデータが見つかりました`}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <div className="text-center py-8">
-                <p>データを読み込み中...</p>
-              </div>
-            ) : testData.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500">データがありません</p>
-                <p className="text-sm text-gray-400 mt-2">上記のフォームから新しいデータを追加してください</p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {testData.map((item) => (
-                  <div key={item.id} className="p-3 border rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="font-medium">ID: {item.id}</p>
-                        <p className="text-gray-600">名前: {item.name || "未設定"}</p>
-                      </div>
-                      <div className="text-sm text-gray-500">{new Date(item.created_at).toLocaleString("ja-JP")}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>接続情報</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2 text-sm">
-              <p>
-                <strong>Supabase URL:</strong> {process.env.NEXT_PUBLIC_SUPABASE_URL ? "設定済み" : "未設定"}
-              </p>
-              <p>
-                <strong>Supabase Anon Key:</strong> {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "設定済み" : "未設定"}
-              </p>
-              <p>
-                <strong>現在時刻:</strong> {new Date().toLocaleString("ja-JP")}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+
+      <div className="absolute inset-0 -z-10">
+        <motion.div
+          className="absolute w-[300px] h-[300px] bg-[#ff2d55] opacity-10 rounded-full blur-3xl top-[30%] left-[20%]"
+          animate={{ x: [0, 30, -30, 0], y: [0, 30, -30, 0] }}
+          transition={{ duration: 15, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute w-[200px] h-[200px] bg-[#ff2d55] opacity-10 rounded-full blur-2xl bottom-[10%] right-[10%]"
+          animate={{ x: [0, -20, 20, 0], y: [0, -20, 20, 0] }}
+          transition={{ duration: 18, repeat: Infinity }}
+        />
+      </div>
+
+      <div className="text-center py-2 text-xs text-gray-400">PayPay株式会社</div>
     </div>
   )
 }

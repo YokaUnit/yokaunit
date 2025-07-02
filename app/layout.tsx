@@ -11,12 +11,36 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: {
-    default: "YokaUnit - ユーザーの「あったらいいな」を実現するツール集",
+    default: "YokaUnit - 毎日の作業がラクになる無料便利ツール集",
     template: "%s | YokaUnit",
   },
-  description: "SEO対策済みの便利なWebツールを多数公開中。あなたの「あったらいいな」も実現します。",
-  keywords: ["Webツール", "無料ツール", "オンラインツール", "便利ツール", "YokaUnit"],
-  authors: [{ name: "YokaUnit Team" }],
+  description:
+    "面倒な作業を一瞬で解決！完全無料で使える便利ツールが勢揃い。ブラウザですぐ使える、登録不要の高品質ツールで、あなたの「困った」を「簡単」に変えます。",
+  keywords: [
+    "無料ツール",
+    "便利ツール",
+    "作業効率化",
+    "時短ツール",
+    "オンラインツール",
+    "ブラウザツール",
+    "登録不要",
+    "簡単操作",
+    "YokaUnit",
+    "ヨカユニット",
+    "無料アプリ",
+    "作業支援",
+    "効率アップ",
+    "便利サイト",
+    "ワンクリック",
+    "即座に使える",
+    "手軽",
+    "シンプル",
+    "使いやすい",
+    "高機能",
+    "安全",
+    "信頼性",
+  ],
+  authors: [{ name: "YokaUnit開発チーム", url: "https://yokaunit.com" }],
   creator: "YokaUnit",
   publisher: "YokaUnit",
   formatDetection: {
@@ -29,16 +53,17 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "YokaUnit - ユーザーの「あったらいいな」を実現するツール集",
-    description: "SEO対策済みの便利なWebツールを多数公開中。あなたの「あったらいいな」も実現します。",
+    title: "YokaUnit - 毎日の作業がラクになる無料便利ツール集",
+    description:
+      "面倒な作業を一瞬で解決！完全無料で使える便利ツールが勢揃い。ブラウザですぐ使える、登録不要の高品質ツールで、あなたの「困った」を「簡単」に変えます。",
     url: "https://yokaunit.com",
     siteName: "YokaUnit",
     images: [
       {
-        url: "/ogp/site-default.png",
+        url: "/ogp/yokaunit-common.png",
         width: 1200,
         height: 630,
-        alt: "YokaUnit - ユーザーの「あったらいいな」を実現するツール集",
+        alt: "YokaUnit - 無料で使える便利なWebツール集",
       },
     ],
     locale: "ja_JP",
@@ -46,9 +71,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YokaUnit - ユーザーの「あったらいいな」を実現するツール集",
-    description: "SEO対策済みの便利なWebツールを多数公開中。あなたの「あったらいいな」も実現します。",
-    images: ["/ogp/site-default.png"],
+    title: "YokaUnit - 毎日の作業がラクになる無料便利ツール集🛠️",
+    description:
+      "面倒な作業を一瞬で解決✨ 完全無料で使える便利ツールが勢揃い！登録不要ですぐ使える高品質ツールで、あなたの「困った」を「簡単」に🚀",
+    images: ["/ogp/yokaunit-common.png"],
     creator: "@yokaunit",
     site: "@yokaunit",
   },
@@ -64,12 +90,33 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    other: [
+      {
+        rel: "android-chrome-192x192",
+        url: "/android-chrome-192x192.png",
+      },
+      {
+        rel: "android-chrome-512x512",
+        url: "/android-chrome-512x512.png",
+      },
+    ],
   },
   manifest: "/site.webmanifest",
-    generator: 'v0.dev'
+  generator: "Next.js",
+  applicationName: "YokaUnit",
+  referrer: "origin-when-cross-origin",
+  category: "technology",
+  classification: "Web Tools",
+  other: {
+    "google-site-verification": "your-google-verification-code",
+  },
 }
 
 export default function RootLayout({
@@ -79,6 +126,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
+        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="YokaUnit" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#3b82f6" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>

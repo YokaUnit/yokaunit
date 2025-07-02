@@ -69,6 +69,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const ensureProfileExists = async (userId: string) => {
+    try {
+      console.log("🔍 Ensuring profile exists for user:", userId)
+
+      // Check if profile already exists
+      let profileData = await fetchProfile(userId)
+
+      if (!profileData) {
+        console.log("📝 Creating new profile for user:", userId)
+
+        // Get user email from current user
+        const userEmail = user?.email || ""
+
+        // Create new profile
+        const { data, error } = await supabase
+          .from("profiles")
+          .insert({
+            id: userId,
+            email: userEmail,
+            username: userEmail.split("@")[0], // Use email prefix as default username
+            role: "basic",
+            is_active: true,
+          })
+          .select()
+          .single()
+
+        if (error) {
+          console.error("❌ Error creating profile:", error)
+          return
+        }
+
+        profileData = data as Profile
+        console.log("✅ Profile created successfully")
+      }
+
+      setProfile(profileData)
+    } catch (error) {
+      console.error("❌ Error ensuring profile exists:", error)
+    }
+  }
+
   useEffect(() => {
     let mounted = true
 
@@ -173,47 +214,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       subscription.unsubscribe()
     }
   }, [toast])
-
-  const ensureProfileExists = async (userId: string) => {
-    try {
-      console.log("🔍 Ensuring profile exists for user:", userId)
-
-      // Check if profile already exists
-      let profileData = await fetchProfile(userId)
-
-      if (!profileData) {
-        console.log("📝 Creating new profile for user:", userId)
-
-        // Get user email from current user
-        const userEmail = user?.email || ""
-
-        // Create new profile
-        const { data, error } = await supabase
-          .from("profiles")
-          .insert({
-            id: userId,
-            email: userEmail,
-            username: userEmail.split("@")[0], // Use email prefix as default username
-            role: "basic",
-            is_active: true,
-          })
-          .select()
-          .single()
-
-        if (error) {
-          console.error("❌ Error creating profile:", error)
-          return
-        }
-
-        profileData = data as Profile
-        console.log("✅ Profile created successfully")
-      }
-
-      setProfile(profileData)
-    } catch (error) {
-      console.error("❌ Error ensuring profile exists:", error)
-    }
-  }
 
   const signOut = async () => {
     try {

@@ -107,10 +107,17 @@ export function PremiumPlans() {
       monthlyPrice: "¥250",
       quarterlyPrice: "¥675",
       yearlyPrice: "¥2,400",
+      // テスト用
+      // priceIds: {
+      //   monthly: "price_1RbM0VG0ZQZ9NwTgFqFsvdLn",
+      //   quarterly: "price_1RbM1NG0ZQZ9NwTgRmes43n5",
+      //   yearly: "price_1RbM1jG0ZQZ9NwTgBem1yafa",
+      // },
+      // 本番用
       priceIds: {
-        monthly: "price_1RbM0VG0ZQZ9NwTgFqFsvdLn",
-        quarterly: "price_1RbM1NG0ZQZ9NwTgRmes43n5",
-        yearly: "price_1RbM1jG0ZQZ9NwTgBem1yafa",
+        monthly: "price_1RbLTkG0ZQZ9NwTgRYvv4bet",
+        quarterly: "price_1RbLWXG0ZQZ9NwTgP9gxjMKb",
+        yearly: "price_1RbLX2G0ZQZ9NwTgN8P5ZM5V",
       },
       features: ["広告の非表示", "メールサポート"],
       popular: false,
@@ -123,10 +130,17 @@ export function PremiumPlans() {
       monthlyPrice: "¥500",
       quarterlyPrice: "¥1,350",
       yearlyPrice: "¥4,800",
+      //　テスト用
+      // priceIds: {
+      //   monthly: "price_1RbM2VG0ZQZ9NwTgpesMdLT0",
+      //   quarterly: "price_1RbM3CG0ZQZ9NwTgwyv1pyCl",
+      //   yearly: "price_1RbM3iG0ZQZ9NwTgnLZLGop2",
+      // },
+      //　本番用
       priceIds: {
-        monthly: "price_1RbM2VG0ZQZ9NwTgpesMdLT0",
-        quarterly: "price_1RbM3CG0ZQZ9NwTgwyv1pyCl",
-        yearly: "price_1RbM3iG0ZQZ9NwTgnLZLGop2",
+        monthly: "price_1RbLZzG0ZQZ9NwTgzYU5Fzbx",
+        quarterly: "price_1RbLcyG0ZQZ9NwTgzTv54GBf",
+        yearly: "price_1RbLdMG0ZQZ9NwTgxtWzTRsK",
       },
       features: ["プロプランの全機能", "プレミアムツールへのアクセス", "要望の優先制作"],
       popular: true,
@@ -139,11 +153,18 @@ export function PremiumPlans() {
       monthlyPrice: "¥2,800",
       quarterlyPrice: "¥7,560",
       yearlyPrice: "¥26,880",
+      //　テスト用
+      // priceIds: {
+      //   monthly: "price_1RbM4tG0ZQZ9NwTgko0Nu8iV",
+      //   quarterly: "price_1RbM6DG0ZQZ9NwTgeFVCZm5P",
+      //   yearly: "price_1RbM6lG0ZQZ9NwTgcgKgzwrf",
+      // },
+      //　本番用
       priceIds: {
-        monthly: "price_1RbM4tG0ZQZ9NwTgko0Nu8iV",
-        quarterly: "price_1RbM6DG0ZQZ9NwTgeFVCZm5P",
-        yearly: "price_1RbM6lG0ZQZ9NwTgcgKgzwrf",
-      },
+        monthly: "price_1RbLepG0ZQZ9NwTgMDb0JjU5",
+        quarterly: "price_1RbLhGG0ZQZ9NwTgZpw4Cok3",
+        yearly: "price_1RbLhgG0ZQZ9NwTgM5tItRkf",
+      },      
       features: ["プレミアムプランの全機能", "大組織向け開発", "YokaUnit内外のツール/UI制作", "専任サポート担当者"],
       popular: false,
       color: "emerald",

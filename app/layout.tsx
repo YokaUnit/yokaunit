@@ -142,6 +142,8 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#3b82f6" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
+        {/* Google AdSense 所有権確認用メタタグ - コメントアウト中*/}
+        <meta name="google-adsense-account" content="ca-pub-1199182020994691" />
       </head>
       <body className={inter.className}>
         {/* Google Analytics - コメントアウト中 */}

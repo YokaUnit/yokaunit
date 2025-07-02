@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | YokaUnit",
   },
   description:
-    "面倒な作業を一瞬で解���！完全無料で使える便利ツールが勢揃い。ブラウザですぐ使える、登録不要の高品質ツールで、あなたの「困った」を「簡単」に変えます。",
+      "「こんなの欲しかった！」をカタチに。YokaUnitは、日常や仕事の中でふと欲しくなる便利ツールを集めた無料Webサービスです。ブラウザですぐに使えて、登録不要。あなたの作業やアイデアをもっとスムーズに、もっと快適に。",
   keywords: [
     "無料ツール",
     "便利ツール",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "YokaUnit - 毎日の作業がラクになる無料便利ツール集",
     description:
-      "面倒な作業を一瞬で解決！完全無料で使える便利ツールが勢揃い。ブラウザですぐ使える、登録不要の高品質ツールで、あなたの「困った」を「簡単」に変えます。",
+      "「こんなの欲しかった！」をカタチに。YokaUnitは、日常や仕事の中でふと欲しくなる便利ツールを集めた無料Webサービスです。ブラウザですぐに使えて、登録不要。あなたの作業やアイデアをもっとスムーズに、もっと快適に。",
     url: "https://yokaunit.com",
     siteName: "YokaUnit",
     images: [
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "YokaUnit - 毎日の作業がラクになる無料便利ツール集🛠️",
     description:
-      "面倒な作業を一瞬で解決✨ 完全無料で使える便利ツールが勢揃い！登録不要ですぐ使える高品質ツールで、あなたの「困った」を「簡単」に🚀",
+      "「こんなの欲しかった！」をカタチに。YokaUnitは、日常や仕事の中でふと欲しくなる便利ツールを集めた無料Webサービスです。ブラウザですぐに使えて、登録不要。あなたの作業やアイデアをもっとスムーズに、もっと快適に。",
     images: ["/ogp/yokaunit-common.png"],
     creator: "@yokaunit",
     site: "@yokaunit",

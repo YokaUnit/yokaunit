@@ -12,9 +12,9 @@ import { ScrollToTop } from "@/components/scroll-to-top"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "YokaUnit - 無料で使える便利なWebツール集｜パスワード生成・チンチロゲーム・SEO対策ツール",
+  title: "YokaUnit - 登録不要・今すぐ使える無料の便利ツール集",
   description:
-    "YokaUnitは完全無料で使える便利なWebツール集です。パスワード生成、チンチロゲーム、SEO対策ツールなど、あなたの「あったらいいな」を実現する高品質ツールを多数提供。ブラウザですぐ使える、登録不要の便利ツールをお試しください。",
+    "YokaUnitは、日常や仕事に役立つ便利なツールを無料で提供するWebサービスです。高品質・高機能なツールを、すべてブラウザで即利用可能。面倒な登録なしで、あなたの「ちょっと助かる」をすぐに実現します。",
   keywords: [
     "無料ツール",
     "Webツール",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "ブラウザツール",
     "登録不要",
     "YokaUnit",
-    "ヨカユニッ��",
+    "ヨカユニット",
     "無料アプリ",
     "オンラインゲーム",
     "セキュリティツール",

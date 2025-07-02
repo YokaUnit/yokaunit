@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "@/hooks/use-auth"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthHandler } from "@/components/auth/auth-handler"
+import Script from "next/script"; 
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | YokaUnit",
   },
   description:
-    "面倒な作業を一瞬で解決！完全無料で使える便利ツールが勢揃い。ブラウザですぐ使える、登録不要の高品質ツールで、あなたの「困った」を「簡単」に変えます。",
+    "面倒な作業を一瞬で解���！完全無料で使える便利ツールが勢揃い。ブラウザですぐ使える、登録不要の高品質ツールで、あなたの「困った」を「簡単」に変えます。",
   keywords: [
     "無料ツール",
     "便利ツール",
@@ -143,6 +144,20 @@ export default function RootLayout({
         <meta name="msapplication-config" content="/browserconfig.xml" />
       </head>
       <body className={inter.className}>
+        {/* Google Analytics - コメントアウト中 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-S0XFNHDJQS"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-S0XFNHDJQS');
+          `}
+        </Script>
+        
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             <AuthHandler />

@@ -39,6 +39,7 @@ interface OnsenDetailPageClientProps {
 
 export default function OnsenDetailPageClient({ onsen }: OnsenDetailPageClientProps) {
   const [copied, setCopied] = useState(false)
+  const [imageError, setImageError] = useState(false)
 
   const handleShare = async (platform: string) => {
     const url = window.location.href
@@ -69,6 +70,28 @@ export default function OnsenDetailPageClient({ onsen }: OnsenDetailPageClientPr
     }
   }
 
+  // 画像URLの処理 - ポップアップと同じロジックを適用
+  const getImageUrl = () => {
+    if (!onsen.image_url) {
+      return "/placeholder.svg?height=300&width=400&text=温泉画像"
+    }
+
+    // URLをそのまま返す（ポップアップと同じ処理）
+    return onsen.image_url
+  }
+
+  // 画像エラー時のフォールバック
+  const handleImageError = () => {
+    console.log(`画像読み込みエラー: ${onsen.name} - ${onsen.image_url}`)
+    setImageError(true)
+  }
+
+  // 画像読み込み成功時の処理
+  const handleImageLoad = () => {
+    console.log(`画像読み込み成功: ${onsen.name} - ${onsen.image_url}`)
+    setImageError(false)
+  }
+
   // 構造化データ生成
   const structuredData = {
     "@context": "https://schema.org",
@@ -95,7 +118,7 @@ export default function OnsenDetailPageClient({ onsen }: OnsenDetailPageClientPr
     openingHours: onsen.opening_hours,
     telephone: onsen.phone,
     url: onsen.website_url,
-    image: onsen.image_url,
+    image: getImageUrl(),
     priceRange: onsen.admission_fee_adult ? `¥${onsen.admission_fee_adult}` : undefined,
   }
 
@@ -194,11 +217,25 @@ export default function OnsenDetailPageClient({ onsen }: OnsenDetailPageClientPr
                     {/* 画像 - モバイルでコンパクト */}
                     <div className="order-1 md:order-2 w-full md:w-80 lg:w-96 flex-shrink-0">
                       <div className="relative aspect-video md:aspect-[4/3] rounded-lg md:rounded-xl overflow-hidden shadow-xl">
-                        <img
-                          src={onsen.image_url || "/placeholder.svg?height=300&width=400"}
-                          alt={onsen.name}
-                          className="w-full h-full object-cover"
-                        />
+                        {!imageError && onsen.image_url ? (
+                          <img
+                            src={getImageUrl() || "/placeholder.svg"}
+                            alt={`${onsen.name}の温泉画像`}
+                            className="w-full h-full object-cover"
+                            onError={handleImageError}
+                            onLoad={handleImageLoad}
+                            loading="eager"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                            <div className="text-center text-blue-600">
+                              <Bath className="w-8 md:w-12 h-8 md:h-12 mx-auto mb-2" />
+                              <p className="text-xs md:text-sm font-medium">{onsen.name}</p>
+                              <p className="text-xs text-blue-500">温泉画像</p>
+                            </div>
+                          </div>
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                       </div>
                     </div>

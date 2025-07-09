@@ -172,6 +172,52 @@ export default function OnsenMapClientPage() {
             </div>
           </div>
 
+          {/* データ出典・情報源セクション */}
+          <div className="mt-4 bg-white/70 backdrop-blur-sm rounded-lg p-3 md:p-4 shadow-sm border-l-4 border-blue-400">
+            <div className="flex items-start gap-2">
+              <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <h3 className="text-sm font-medium text-gray-900 mb-2">データ出典・情報源について</h3>
+                <div className="text-xs text-gray-600 space-y-1.5">
+                  <p>
+                    本ページのランキング・評価情報は、
+                    <a
+                      href="https://onsen.nifty.com/rank/year/"
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline mx-1"
+                    >
+                      ニフティ温泉 年間ランキング
+                      <ExternalLink className="w-3 h-3 inline ml-0.5" />
+                    </a>
+                    や
+                    <a
+                      href="https://www.google.co.jp/maps?hl=ja"
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline mx-1"
+                    >
+                      Googleマップ
+                      <ExternalLink className="w-3 h-3 inline ml-0.5" />
+                    </a>
+                    の口コミ・評価数、各施設の公式サイトなどをもとに独自に集計・編集しています。
+                  </p>
+                  <p>
+                    情報はできる限り最新のものを掲載していますが、営業時間・料金・施設内容などが変更となる場合もあります。
+                    正確な情報については、必ず各施設の公式サイトまたは現地にてご確認ください。
+                  </p>
+                  <p>
+                    掲載内容に誤りがある場合や掲載停止を希望される場合は、お手数ですが
+                    <a href="/contact" className="text-blue-600 hover:text-blue-800 underline mx-1">
+                      お問い合わせフォーム
+                    </a>
+                    よりご連絡ください。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* 使い方セクション - コンパクト */}
           <div className="mt-6 bg-white/80 backdrop-blur-sm rounded-xl p-3 md:p-6 shadow-lg">
             <div className="text-center mb-4 md:mb-6">

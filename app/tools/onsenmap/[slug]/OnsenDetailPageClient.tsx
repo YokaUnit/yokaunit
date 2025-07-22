@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import dynamic from "next/dynamic"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -32,6 +33,19 @@ import { SiteFooter } from "@/components/site-footer"
 import { OnsenBreadcrumbs } from "../components/OnsenBreadcrumbs"
 import { BackgroundAnimation } from "@/components/background-animation"
 import type { OnsenData } from "../lib/onsen-data"
+
+// マップコンポーネントを動的インポート（SSR無効）
+const OnsenDetailMap = dynamic(() => import("../components/OnsenDetailMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-80 md:h-96 bg-gray-100 rounded-xl flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+        <p className="text-sm text-gray-600">地図を読み込み中...</p>
+      </div>
+    </div>
+  ),
+})
 
 interface OnsenDetailPageClientProps {
   onsen: OnsenData
@@ -153,13 +167,13 @@ export default function OnsenDetailPageClient({ onsen }: OnsenDetailPageClientPr
                 className="w-full sm:w-auto gap-1 md:gap-2 bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white/90 text-xs md:text-sm h-8 md:h-auto"
                 onClick={() =>
                   window.open(
-                    `https://www.google.com/maps/search/?api=1&query=${onsen.latitude},${onsen.longitude}`,
+                    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(onsen.name + " " + onsen.address)}`,
                     "_blank",
                   )
                 }
               >
                 <Map className="w-3 md:w-4 h-3 md:h-4" />
-                Googleマップで開く
+                Google マップで開く
               </Button>
             </div>
 
@@ -242,6 +256,22 @@ export default function OnsenDetailPageClient({ onsen }: OnsenDetailPageClientPr
                   </div>
                 </CardContent>
               </div>
+            </Card>
+
+            {/* マップセクション - 改善されたデザイン */}
+            <Card className="mb-3 md:mb-8 bg-white/95 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-2 md:pb-4">
+                <CardTitle className="flex items-center gap-1 md:gap-2 text-sm md:text-xl">
+                  <Map className="w-4 md:w-6 h-4 md:h-6 text-blue-600" />
+                  位置・アクセス
+                </CardTitle>
+                <p className="text-xs md:text-sm text-gray-600 mt-1">
+                  地図上のボタンからGoogle マップでルート検索や詳細表示ができます
+                </p>
+              </CardHeader>
+              <CardContent className="p-2 md:p-6 pt-0">
+                <OnsenDetailMap onsen={onsen} />
+              </CardContent>
             </Card>
 
             {/* シェアボタン - モバイルでコンパクト */}
@@ -459,7 +489,7 @@ export default function OnsenDetailPageClient({ onsen }: OnsenDetailPageClientPr
               )}
             </div>
 
-            {/* アクションボタン - モバイルでコンパクト */}
+            {/* アクションボタン - Google マップ表記を明確化 */}
             <Card className="mt-3 md:mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 shadow-lg">
               <CardContent className="p-2 md:p-6">
                 <div className="flex flex-col sm:flex-row gap-2 md:gap-4">
@@ -492,14 +522,14 @@ export default function OnsenDetailPageClient({ onsen }: OnsenDetailPageClientPr
                     variant="outline"
                     onClick={() =>
                       window.open(
-                        `https://www.google.com/maps/search/?api=1&query=${onsen.latitude},${onsen.longitude}`,
+                        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(onsen.name + " " + onsen.address)}`,
                         "_blank",
                       )
                     }
                     className="flex-1 border-green-300 text-green-600 hover:bg-green-50 shadow-lg text-xs md:text-base h-8 md:h-auto"
                   >
                     <MapPin className="w-3 md:w-4 h-3 md:h-4 mr-1 md:mr-2" />
-                    地図で見る
+                    Google マップで見る
                     <ExternalLink className="w-3 md:w-4 h-3 md:h-4 ml-1 md:ml-2" />
                   </Button>
                 </div>

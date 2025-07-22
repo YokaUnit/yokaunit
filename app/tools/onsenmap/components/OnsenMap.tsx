@@ -686,7 +686,7 @@ export default function OnsenMap({
                     </div>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? "4px" : "5px" }}>
-                      {/* 画像 */}
+                      {/* 画像 - ここが画像表示の条件！ */}
                       {onsen.image_url && (
                         <div
                           style={{

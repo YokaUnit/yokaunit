@@ -25,7 +25,7 @@ export function PremiumPlans() {
       console.log("❌ User not logged in")
       toast({
         title: "ログインが必要です",
-        description: "プランを購入するにはログインしてください。",
+
         variant: "destructive",
       })
       router.push("/login")

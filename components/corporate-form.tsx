@@ -33,8 +33,32 @@ export function CorporateForm() {
     setIsLoading(true)
 
     try {
-      // 実際のアプリではここでフォーム送信APIを呼び出します
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await fetch("/api/corporate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          companyName,
+          contactName,
+          email,
+          phone,
+          department,
+          position,
+          employeeCount,
+          budget,
+          timeline,
+          inquiryType,
+          inquiry,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || "送信に失敗しました")
+      }
+
       setIsSubmitted(true)
       toast({
         title: "お問い合わせを送信しました",
@@ -44,7 +68,7 @@ export function CorporateForm() {
       console.error("Form submission error:", error)
       toast({
         title: "エラーが発生しました",
-        description: "お問い合わせの送信に失敗しました。後ほど再度お試しください。",
+        description: error instanceof Error ? error.message : "お問い合わせの送信に失敗しました。後ほど再度お試しください。",
         variant: "destructive",
       })
     } finally {

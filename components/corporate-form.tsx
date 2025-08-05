@@ -99,7 +99,8 @@ export function CorporateForm() {
               緊急の場合は、お電話でもお気軽にお問い合わせください。
             </p>
             <div className="bg-blue-50 p-3 rounded-lg">
-              <p className="text-xs text-blue-800">📞 緊急連絡先: 03-1234-5678 (平日9:00-18:00)</p>
+              <p className="text-xs text-blue-800">📞 緊急連絡先: 0**-****-**** (現在準備中)</p>
+              <p className="text-xs text-gray-600 mt-1">お急ぎの場合は yokaunit.info@gmail.com までメールでお問い合わせください</p>
             </div>
           </div>
         ) : (

@@ -93,6 +93,10 @@ export async function POST(request: NextRequest) {
       mode: "subscription" as const,
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://v0-yokaunit-17.vercel.app"}/premium/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://v0-yokaunit-17.vercel.app"}/premium`,
+      // 税金の自動計算を有効化
+      automatic_tax: {
+        enabled: true,
+      },
       metadata: {
         userId: user.id,
         planName: planName,

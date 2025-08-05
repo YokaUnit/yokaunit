@@ -334,13 +334,13 @@ export default function ContactPage() {
                     {
                       icon: Mail,
                       title: "メールでのお問い合わせ",
-                      desc: "info@yokaunit.com",
+                      desc: "yokaunit.info@gmail.com",
                       color: "green",
                     },
                     {
                       icon: Phone,
                       title: "お電話でのお問い合わせ",
-                      desc: "03-1234-5678（平日 10:00-18:00）",
+                      desc: "0**-****-****（現在準備中）",
                       color: "purple",
                     },
                   ].map((item, index) => (

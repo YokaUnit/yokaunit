@@ -180,9 +180,9 @@ export async function POST(request: NextRequest) {
 
           <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
             <p style="margin: 0; font-size: 14px; color: #374151;">
-              <strong>📞 緊急のお問い合わせの場合</strong><br>
-              企業様専用ホットライン: 03-1234-5678<br>
-              （平日 9:00-19:00 / 担当：企業サポート部）
+              <strong>📧 緊急のお問い合わせの場合</strong><br>
+              メールアドレス: yokaunit.info@gmail.com<br>
+              （お電話でのお問い合わせは現在準備中です）
             </p>
           </div>
 

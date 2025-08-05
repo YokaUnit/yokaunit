@@ -33,6 +33,7 @@ export function SiteHeader() {
   // ログイン前のナビゲーション項目
   const publicNavigationItems = [
     { href: "/tools", title: "ツール一覧" },
+    { href: "/about", title: "当サイトについて" },
     { href: "/premium", title: "有料会員" },
     { href: "/corporate", title: "企業の方へ" },
     { href: "/contact", title: "お問い合わせ" },
@@ -41,6 +42,7 @@ export function SiteHeader() {
   // ログイン後のナビゲーション項目（プレミアムツールを削除）
   const privateNavigationItems = [
     { href: "/tools", title: "ツール一覧" },
+    { href: "/about", title: "当サイトについて" },
     { href: "/premium", title: "有料会員" },
     { href: "/corporate", title: "企業の方へ" },
     { href: "/contact", title: "お問い合わせ" },

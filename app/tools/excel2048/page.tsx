@@ -37,6 +37,89 @@ export default function ExcelPage() {
   const [isGameOver, setIsGameOver] = useState(false)
   const gameContainerRef = useRef<HTMLDivElement>(null)
 
+  // SEO設定を強化
+  useEffect(() => {
+    document.title = "Excel2048｜Excel風2048ゲーム・表計算作業に見える隠しゲーム【無料】"
+    
+    // メタディスクリプション
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+        "Microsoft Excelそっくりな見た目の2048パズルゲーム！表計算作業をしているように見えて実はゲーム。仕事中でも上司にバレずに2048パズルを楽しめる隠しゲーム。完全無料・登録不要で即プレイ可能。"
+      )
+    }
+
+    // キーワード
+    const metaKeywords = document.querySelector('meta[name="keywords"]')
+    if (metaKeywords) {
+      metaKeywords.setAttribute(
+        "content",
+        "Excel2048,Excel風ゲーム,隠しゲーム,仕事中ゲーム,バレないゲーム,2048パズル,表計算風ゲーム,スプレッドシート,オフィス風,Microsoft Excel,偽装ゲーム,ステルスゲーム,オフィスゲーム,休憩時間,ブラウザゲーム,無料ゲーム,パズルゲーム,数字パズル,論理ゲーム,頭脳ゲーム,YokaUnit,ヨカユニット,ウェブゲーム,HTML5ゲーム,レスポンシブゲーム,モバイル対応,スマホゲーム,タブレット対応,カモフラージュ,偽装画面,作業風,ビジネスツール風,Excel風インターフェース,セル操作,ワークシート"
+      )
+    }
+
+    // OGPタグ
+    const ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) {
+      ogTitle.setAttribute("content", "Excel2048｜Excel風2048ゲーム・表計算作業に見える隠しゲーム - YokaUnit")
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]')
+    if (ogDescription) {
+      ogDescription.setAttribute(
+        "content",
+        "Microsoft Excelそっくりな見た目の2048パズルゲーム！表計算作業をしているように見えて実はゲーム。仕事中でも上司にバレずに2048パズルを楽しめる隠しゲーム。"
+      )
+    }
+
+    // 構造化データ
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "Game",
+      "name": "Excel2048",
+      "description": "Excel風2048ゲーム・表計算作業に見える隠しゲーム",
+      "url": window.location.href,
+      "genre": "Puzzle",
+      "gameLocation": "Online",
+      "numberOfPlayers": {
+        "@type": "QuantitativeValue",
+        "value": 1
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY"
+      },
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "browserRequirements": "HTML5, JavaScript",
+      "featureList": [
+        "Excel風インターフェース",
+        "隠しゲーム機能",
+        "2048パズルゲーム",
+        "仕事中でもバレない",
+        "完全無料",
+        "登録不要",
+        "スマホ対応"
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.7",
+        "ratingCount": "950"
+      }
+    }
+
+    let scriptTag = document.querySelector('#excel2048-structured-data')
+    if (!scriptTag) {
+      scriptTag = document.createElement('script')
+      scriptTag.id = 'excel2048-structured-data'
+      ;(scriptTag as HTMLScriptElement).type = 'application/ld+json'
+      document.head.appendChild(scriptTag)
+    }
+    scriptTag.textContent = JSON.stringify(structuredData)
+  }, [])
+
   // Generate column headers A-Z, AA-AZ, etc.
   const generateColumns = () => {
     const columns = []

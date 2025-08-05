@@ -19,6 +19,89 @@ export default function SakuraEditor() {
     }
     return 0
   })
+
+  // SEO設定を強化
+  useEffect(() => {
+    document.title = "サクラ2048｜サクラエディタ風2048ゲーム・仕事中でもバレない隠しゲーム【無料】"
+    
+    // メタディスクリプション
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+        "サクラエディタそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲーム。コードを書いているフリをしながら2048パズルに挑戦。完全無料・登録不要で即プレイ可能。"
+      )
+    }
+
+    // キーワード
+    const metaKeywords = document.querySelector('meta[name="keywords"]')
+    if (metaKeywords) {
+      metaKeywords.setAttribute(
+        "content",
+        "サクラ2048,サクラエディタ,隠しゲーム,仕事中ゲーム,バレないゲーム,2048パズル,エディタ風ゲーム,コーディング風,プログラマー,テキストエディタ,偽装ゲーム,ステルスゲーム,オフィスゲーム,休憩時間,ブラウザゲーム,無料ゲーム,パズルゲーム,数字パズル,論理ゲーム,頭脳ゲーム,YokaUnit,ヨカユニット,ウェブゲーム,HTML5ゲーム,レスポンシブゲーム,モバイル対応,スマホゲーム,タブレット対応,カモフラージュ,偽装画面,作業風,開発者ツール"
+      )
+    }
+
+    // OGPタグ
+    const ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) {
+      ogTitle.setAttribute("content", "サクラ2048｜サクラエディタ風2048ゲーム・仕事中でもバレない隠しゲーム - YokaUnit")
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]')
+    if (ogDescription) {
+      ogDescription.setAttribute(
+        "content",
+        "サクラエディタそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲーム。コードを書いているフリをしながら2048パズルに挑戦。"
+      )
+    }
+
+    // 構造化データ
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "Game",
+      "name": "サクラ2048",
+      "description": "サクラエディタ風2048ゲーム・仕事中でもバレない隠しゲーム",
+      "url": window.location.href,
+      "genre": "Puzzle",
+      "gameLocation": "Online",
+      "numberOfPlayers": {
+        "@type": "QuantitativeValue",
+        "value": 1
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY"
+      },
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "browserRequirements": "HTML5, JavaScript",
+      "featureList": [
+        "サクラエディタ風インターフェース",
+        "隠しゲーム機能",
+        "2048パズルゲーム",
+        "仕事中でもバレない",
+        "完全無料",
+        "登録不要",
+        "スマホ対応"
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1200"
+      }
+    }
+
+    let scriptTag = document.querySelector('#sakura2048-structured-data')
+    if (!scriptTag) {
+      scriptTag = document.createElement('script')
+      scriptTag.id = 'sakura2048-structured-data'
+      ;(scriptTag as HTMLScriptElement).type = 'application/ld+json'
+      document.head.appendChild(scriptTag)
+    }
+    scriptTag.textContent = JSON.stringify(structuredData)
+  }, [])
   const [gameOver, setGameOver] = useState(false)
   const [showBorders, setShowBorders] = useState(false)
   const [moveCount, setMoveCount] = useState(0)

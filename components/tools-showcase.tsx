@@ -188,7 +188,7 @@ export function ToolsShowcase() {
             もっと見る <ArrowRight className="ml-1 h-3 w-3" />
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {Array.from({ length: displayCount }).map((_, i) => (
             <div key={i} className="bg-gray-200 animate-pulse rounded-lg aspect-video"></div>
           ))}
@@ -238,7 +238,7 @@ export function ToolsShowcase() {
             variants={container}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+            className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
           >
             {popularTools.map((tool) => (
               <motion.div key={tool.slug} variants={item}>
@@ -331,7 +331,7 @@ export function ToolsShowcase() {
             variants={container}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+            className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
           >
             {newTools.map((tool) => (
               <motion.div key={tool.slug} variants={item}>

@@ -3,6 +3,10 @@ import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
+import { Breadcrumbs } from "@/components/breadcrumbs"
+import { BackgroundAnimation } from "@/components/background-animation"
 import {
   Calculator,
   Shield,
@@ -22,28 +26,39 @@ import {
 
 export const metadata: Metadata = {
   title: "ヘルプ・使い方 | YokaUnit（ヨカユニット）",
-  description: "YokaUnitの基本的な使い方やよくある質問をご紹介。各ツールの詳細な使い方ガイドへのリンクもこちらから。",
-  keywords: "ヘルプ,使い方,FAQ,よくある質問,サポート,YokaUnit,ヨカユニット",
+  description: "YokaUnit（ヨカユニット）のヘルプページです。基本的な使い方、よくある質問、サポート情報をわかりやすくご案内いたします。",
+  keywords: "YokaUnit,ヨカユニット,ヘルプ,使い方,FAQ,よくある質問,サポート,無料ツール,便利ツール",
 }
 
 export default function HelpPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* ヘッダーセクション */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            <HelpCircle className="w-8 h-8 text-blue-600" />
-            <h1 className="text-4xl font-bold">ヘルプ・使い方</h1>
-          </div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            YokaUnitの基本的な使い方から詳細な機能まで、わかりやすくご説明します
-          </p>
-          <Badge variant="secondary" className="mt-4">
-            <Star className="w-4 h-4 mr-1" />
-            初心者の方もお気軽にご利用ください
-          </Badge>
-        </div>
+    <div className="flex min-h-screen flex-col relative">
+      <BackgroundAnimation />
+      <SiteHeader />
+      <main className="flex-1 relative z-10">
+        <div className="container mx-auto px-4 py-6">
+          <Breadcrumbs
+            items={[
+              { label: "ホーム", href: "/" },
+              { label: "ヘルプ・使い方", href: "/help" },
+            ]}
+          />
+
+          <div className="max-w-6xl mx-auto mt-6">
+            {/* ヘッダーセクション */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+                <HelpCircle className="w-8 h-8 text-blue-600" />
+                <h1 className="text-4xl font-bold">ヘルプ・使い方</h1>
+              </div>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                YokaUnitの基本的な使い方から詳細な機能まで、わかりやすくご説明します
+              </p>
+              <Badge variant="secondary" className="mt-4">
+                <Star className="w-4 h-4 mr-1" />
+                初心者の方もお気軽にご利用ください
+              </Badge>
+            </div>
 
         {/* YokaUnitの基本 */}
         <Card className="mb-8 border-0 shadow-lg bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
@@ -329,63 +344,43 @@ export default function HelpPage() {
         </Card>
 
         {/* サポート・お問い合わせ */}
-        <Card className="border-0 shadow-lg bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 text-white hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-2xl">
-              <Mail className="w-6 h-6" />
-              サポート・お問い合わせ
-            </CardTitle>
-            <CardDescription className="text-gray-300 text-lg">
-              ご不明な点がございましたら、お気軽にお問い合わせください
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                    <Mail className="w-5 h-5" />
-                    お問い合わせフォーム
-                  </h3>
-                  <p className="text-gray-300 mb-4">
-                    技術的な問題、機能のご要望、その他ご質問がございましたら、お問い合わせフォームからご連絡ください。
-                  </p>
-                  <Link href="/contact">
-                    <Button variant="secondary" className="w-full bg-white text-gray-900 hover:bg-gray-100">
-                      お問い合わせする
-                    </Button>
-                  </Link>
-                </div>
+        <Card className="bg-blue-50/80 backdrop-blur-sm border-blue-200 hover:shadow-lg transition-all duration-300">
+          <CardContent className="p-8 text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Mail className="w-6 h-6 text-blue-600" />
+              <h3 className="text-2xl font-bold text-blue-900">サポート・お問い合わせ</h3>
+            </div>
+            <p className="text-blue-800 mb-6 max-w-2xl mx-auto">
+              ご不明な点やご質問がございましたら、お気軽にお問い合わせください。
+              <br />
+              できる限り迅速にお答えいたします。
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <Link href="/contact">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12">
+                  <Mail className="w-4 h-4 mr-2" />
+                  お問い合わせフォーム
+                </Button>
+              </Link>
+              <Link href="/faq">
+                <Button variant="outline" className="w-full border-blue-300 text-blue-700 hover:bg-blue-100 h-12">
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  よくある質問を見る
+                </Button>
+              </Link>
+            </div>
 
-                <div>
-                  <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                    <HelpCircle className="w-5 h-5" />
-                    FAQ・よくある質問
-                  </h3>
-                  <p className="text-gray-300 mb-4">
-                    多くの質問にはFAQページで回答しています。まずはこちらをご確認ください。
-                  </p>
-                  <Link href="/faq">
-                    <Button
-                      variant="outline"
-                      className="w-full border-white text-white hover:bg-white hover:text-gray-900 bg-transparent"
-                    >
-                      FAQを見る
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <Clock className="w-4 h-4" />
-                  <span>お問い合わせへの返信は通常2営業日以内に行っております</span>
-                </div>
-              </div>
+            <div className="flex items-center justify-center gap-2 text-sm text-blue-700 bg-blue-100/50 rounded-lg p-3">
+              <Clock className="w-4 h-4" />
+              <span>お問い合わせへの返信は通常2営業日以内に行っております</span>
             </div>
           </CardContent>
         </Card>
-      </div>
+          </div>
+        </div>
+      </main>
+      <SiteFooter />
     </div>
   )
 }

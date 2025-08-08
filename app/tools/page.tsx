@@ -9,7 +9,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Lock, Crown, Filter, Heart, X, Gamepad2, Loader2 } from "lucide-react"
+import { Search, Lock, Crown, Filter, Heart, X, Gamepad2, Loader2, ChevronDown, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { motion, AnimatePresence } from "framer-motion"
@@ -20,6 +20,7 @@ import { getTools, getCategories, type Tool } from "@/lib/actions/tools"
 import { getUserFavorites, toggleFavorite } from "@/lib/actions/favorites"
 import { useAuth } from "@/hooks/use-auth"
 import { normalizeSearchQuery } from "@/lib/search-utils"
+import Image from "next/image"
 
 export default function ToolsPage() {
   const [activeTab, setActiveTab] = useState("all")
@@ -425,61 +426,83 @@ export default function ToolsPage() {
                     variants={container}
                     initial="hidden"
                     animate="show"
-                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
                   >
                     {filteredTools.map((tool) => (
                       <motion.div key={tool.slug} variants={item}>
                         <Link href={tool.href} className="block">
-                          <Card className="h-full hover:shadow-md transition-all duration-300 hover:border-blue-200 relative bg-white hover:translate-y-[-2px]">
-                            {tool.is_premium && (
-                              <div className="absolute top-0 right-0">
-                                <Badge
-                                  className="rounded-bl-lg rounded-tr-lg bg-yellow-100 text-yellow-800 flex items-center gap-1 px-2 py-0.5"
-                                  title="プレミアム会員限定ツール"
-                                >
-                                  <Crown className="h-3 w-3" />
-                                </Badge>
-                              </div>
-                            )}
-                            {tool.is_private && (
-                              <div className="absolute top-0 right-0">
-                                <Badge
-                                  className="rounded-bl-lg rounded-tr-lg bg-blue-100 text-blue-800 flex items-center gap-1 px-2 py-0.5"
-                                  title="限定公開ツール"
-                                >
-                                  <Lock className="h-3 w-3" />
-                                </Badge>
-                              </div>
-                            )}
-
-                            <button
-                              className="absolute top-1 left-1 text-gray-400 hover:text-red-500 transition-colors z-10"
-                              onClick={(e) => toggleFavoriteHandler(e, tool.slug)}
-                              title={favorites.includes(tool.slug) ? "お気に入りから削除" : "お気に入りに追加"}
-                            >
-                              <Heart
-                                className={`h-4 w-4 ${favorites.includes(tool.slug) ? "fill-red-500 text-red-500" : ""}`}
-                              />
-                            </button>
-
-                            <CardContent className="p-2 pt-6">
-                              <div className="flex flex-col h-full">
-                                <div className="flex justify-between items-start mb-1">
-                                  <h3 className="font-medium text-sm text-gray-900 line-clamp-1">{tool.title}</h3>
+                          <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:border-blue-200 bg-white hover:translate-y-[-2px]">
+                            <div className="relative">
+                              {/* 画像表示部分 - 16:9アスペクト比 */}
+                              <div className="relative aspect-video overflow-hidden bg-gray-100">
+                                {tool.image_url ? (
+                                  <Image
+                                    src={tool.image_url}
+                                    alt={tool.title}
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+                                    <div className="text-4xl">{tool.icon}</div>
+                                  </div>
+                                )}
+                                
+                                {/* オーバーレイバッジ */}
+                                <div className="absolute top-2 right-2 flex gap-1">
+                                  {tool.is_premium && (
+                                    <Badge className="bg-yellow-500/90 text-white text-xs px-2 py-1 backdrop-blur-sm">
+                                      <Crown className="h-3 w-3 mr-1" />
+                                      Premium
+                                    </Badge>
+                                  )}
+                                  {tool.is_private && (
+                                    <Badge className="bg-blue-500/90 text-white text-xs px-2 py-1 backdrop-blur-sm">
+                                      <Lock className="h-3 w-3 mr-1" />
+                                      Private
+                                    </Badge>
+                                  )}
                                   {tool.is_new && !tool.is_premium && !tool.is_private && (
-                                    <span className="text-xs bg-green-100 text-green-800 px-1 py-0.5 rounded-full">
+                                    <Badge className="bg-green-500/90 text-white text-xs px-2 py-1 backdrop-blur-sm">
                                       NEW
-                                    </span>
+                                    </Badge>
                                   )}
                                 </div>
-                                <p className="text-xs text-gray-600 line-clamp-2 mb-1">{tool.description}</p>
-                                <div className="mt-auto flex justify-between items-center">
-                                  <Badge variant="outline" className="text-xs px-1 py-0 border-gray-200">
-                                    {tool.category}
-                                  </Badge>
-                                </div>
+
+                                {/* お気に入りボタン */}
+                                <button
+                                  className="absolute top-2 left-2 p-1.5 rounded-full bg-white/80 backdrop-blur-sm text-gray-600 hover:text-red-500 hover:bg-white transition-all z-10"
+                                  onClick={(e) => toggleFavoriteHandler(e, tool.slug)}
+                                  title={favorites.includes(tool.slug) ? "お気に入りから削除" : "お気に入りに追加"}
+                                >
+                                  <Heart
+                                    className={`h-4 w-4 ${favorites.includes(tool.slug) ? "fill-red-500 text-red-500" : ""}`}
+                                  />
+                                </button>
                               </div>
-                            </CardContent>
+
+                              {/* コンテンツ部分 */}
+                              <CardContent className="p-3">
+                                <div className="space-y-2">
+                                  <h3 className="font-semibold text-sm text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                                    {tool.title}
+                                  </h3>
+                                  <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">
+                                    {tool.description}
+                                  </p>
+                                  <div className="flex items-center justify-between pt-1">
+                                    <Badge variant="outline" className="text-xs px-2 py-0.5 border-gray-200 text-gray-600">
+                                      {tool.category}
+                                    </Badge>
+                                    <div className="flex items-center text-xs text-gray-500">
+                                      <Heart className="h-3 w-3 mr-1 text-red-400" />
+                                      <span className="font-medium">{tool.likes_count || 0}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </div>
                           </Card>
                         </Link>
                       </motion.div>

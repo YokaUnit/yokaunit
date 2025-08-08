@@ -170,9 +170,7 @@ export default function ChinchiroClientPage() {
             {/* ヒーローセクション */}
             <div className="text-center mb-8 animate-fade-in">
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                チンチロ<span className="text-blue-600">3D</span>｜リアルな
-                <span className="text-green-600">物理演算</span>で楽しむ
-                <span className="text-red-600">無料</span>サイコロゲーム
+                チンチロ3D｜リアルな物理演算で楽しむ無料サイコロゲーム
               </h1>
               <p className="text-lg text-gray-600 mb-6 max-w-3xl mx-auto">
                 物理エンジンでリアルに転がる3Dチンチロサイコロ。ゾロ目、シゴロ、ヒフミ、そしてしょんべん（枠外）も忠実に再現。
@@ -357,8 +355,8 @@ export default function ChinchiroClientPage() {
                       title="サイコロをリセット"
                       size="lg"
                     >
-                      <RefreshCw className="h-4 w-4 mr-1 sm:mr-2" />
-                      <span className="hidden xs:inline">リセット</span>
+                      <RefreshCw className="h-4 w-4 mr-1" />
+                      <span className="text-xs">リセット</span>
                     </Button>
                   </div>
 

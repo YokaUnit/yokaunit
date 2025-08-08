@@ -97,6 +97,7 @@ export interface Database {
           tags: string[]
           icon: string
           href: string
+          image_url: string | null
           is_premium: boolean
           is_private: boolean
           is_new: boolean
@@ -116,6 +117,7 @@ export interface Database {
           tags?: string[]
           icon?: string
           href: string
+          image_url?: string | null
           is_premium?: boolean
           is_private?: boolean
           is_new?: boolean
@@ -135,6 +137,7 @@ export interface Database {
           tags?: string[]
           icon?: string
           href?: string
+          image_url?: string | null
           is_premium?: boolean
           is_private?: boolean
           is_new?: boolean

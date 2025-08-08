@@ -28,7 +28,7 @@ export function SiteFooter() {
             </p>
             <div className="flex space-x-4 pt-2">
               <a
-                href="https://instagram.com/yokaunit"
+                href="https://www.instagram.com/hisashi_web?igsh=MWxlaDdlcGg1YXk5cA%3D%3D&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-pink-500 transition-colors"
@@ -37,7 +37,7 @@ export function SiteFooter() {
                 <Instagram className="h-6 w-6" />
               </a>
               <a
-                href="https://threads.net/yokaunit"
+                href="https://www.threads.com/@hisashi_web?igshid=NTc4MTIwNjQ2YQ=="
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-blue-500 transition-colors"

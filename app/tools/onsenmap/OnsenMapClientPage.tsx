@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
 import OnsenMapClient from "./OnsenMapClient"
+import RecommendedHotels from "./components/RecommendedHotels"
 import {
   Crown,
   MapPin,
@@ -375,6 +376,14 @@ export default function OnsenMapClientPage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* 楽天APIを使ったおすすめホテル一覧 */}
+          <div className="mt-6 bg-white/80 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-lg">
+            <RecommendedHotels 
+              title="楽天トラベル おすすめホテル" 
+              maxHotels={6} 
+            />
           </div>
 
           {/* お問い合わせセクション */}

@@ -798,8 +798,14 @@ export default function OnsenMap({
           </Marker>
         ))}
 
-        {/* 宿泊施設ピン（ズームレベル15以上で表示、約500m） */}
-        {zoomLevel >= 15 &&
+              {/* 宿泊施設ピン（ズームレベル8以上で表示、デバッグ情報付き） */}
+      {zoomLevel >= 8 && accommodations.length > 0 && (
+        <div>
+          {console.log(`🏨 宿泊施設ピン表示: ${accommodations.length}件, ズームレベル: ${zoomLevel}`)}
+          {console.log('宿泊施設データサンプル:', accommodations.slice(0, 2))}
+        </div>
+      )}
+      {zoomLevel >= 8 &&
           accommodations.map((accommodation) => (
             <Marker
               key={`accommodation-${accommodation.id}`}

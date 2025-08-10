@@ -1,61 +1,82 @@
-'use client'
+"use client";
+// app/test/page.tsx
+import React, { useEffect, useState } from "react";
 
+type Hotel = {
+  hotelBasicInfo: {
+    hotelName: string;
+    hotelImageUrl: string;
+    reviewAverage: string;
+    hotelMinCharge: string;
+    hotelInformationUrl: string;
+    address1: string;
+    address2: string;
+  };
+};
 
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+export default function TestPage() {
+  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export default function DeleteUserPage() {
-  const [userId, setUserId] = useState("")
-  const [status, setStatus] = useState("idle")
-  const [error, setError] = useState("")
+  // 楽天APIキーなどは環境変数から取得
+  const applicationId = process.env.NEXT_PUBLIC_RAKUTEN_APP_ID!;
+  const affiliateId = process.env.NEXT_PUBLIC_RAKUTEN_AFFILIATE_ID!;
 
-  const handleDelete = async () => {
-    setStatus("loading")
-    setError("")
+  // 東京駅周辺の緯度経度（例）
+  const latitude = 35.681236;
+  const longitude = 139.767125;
 
-    try {
-      const res = await fetch("/api/delete-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId }),
-      })
+  useEffect(() => {
+    async function fetchHotels() {
+      setLoading(true);
+      setError(null);
 
-      const data = await res.json()
-
-      if (!res.ok) throw new Error(data.message || "削除に失敗しました")
-
-      setStatus("success")
-    } catch (err) {
-      setStatus("error")
-      setError(err.message)
+      try {
+        const url = `https://app.rakuten.co.jp/services/api/Travel/SimpleHotelSearch/20170426?applicationId=${applicationId}&affiliateId=${affiliateId}&latitude=${latitude}&longitude=${longitude}&searchRadius=3&format=json`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+        setHotels(data.hotels.map((item: any) => item.hotel[0]));
+      } catch (e: any) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
     }
-  }
+    fetchHotels();
+  }, [applicationId, affiliateId]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!hotels.length) return <p>No hotels found.</p>;
 
   return (
-    <Card className="max-w-md mx-auto mt-10 p-6">
-      <CardHeader>
-        <CardTitle>ユーザー削除ツール</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="mb-4 text-sm text-gray-600">
-          SupabaseのService RoleでユーザーIDを指定して完全削除します。
-        </p>
-        <Input
-          placeholder="ユーザーID (UUID) を入力"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          className="mb-4"
-        />
-        <Button onClick={handleDelete} disabled={status === "loading" || !userId}>
-          {status === "loading" ? "削除中..." : "削除する"}
-        </Button>
-        {status === "success" && <p className="text-green-600 mt-3">✅ 削除成功</p>}
-        {status === "error" && <p className="text-red-600 mt-3">❌ {error}</p>}
-      </CardContent>
-    </Card>
-  )
+    <div style={{ maxWidth: 600, margin: "auto" }}>
+      <h1>楽天トラベル宿泊施設一覧（東京駅周辺3km）</h1>
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {hotels.map((hotel) => (
+          <li key={hotel.hotelBasicInfo.hotelInformationUrl} style={{ marginBottom: 24, borderBottom: "1px solid #ccc", paddingBottom: 16 }}>
+            <h2>{hotel.hotelBasicInfo.hotelName}</h2>
+            <img
+              src={hotel.hotelBasicInfo.hotelImageUrl}
+              alt={hotel.hotelBasicInfo.hotelName}
+              style={{ maxWidth: "100%", height: "auto" }}
+            />
+            <p>評価: {hotel.hotelBasicInfo.reviewAverage} / 5</p>
+            <p>最安料金: ¥{hotel.hotelBasicInfo.hotelMinCharge}</p>
+            <p>住所: {hotel.hotelBasicInfo.address1} {hotel.hotelBasicInfo.address2}</p>
+            <a
+              href={hotel.hotelBasicInfo.hotelInformationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "blue" }}
+            >
+              公式ページ（楽天トラベル）
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }

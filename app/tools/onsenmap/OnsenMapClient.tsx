@@ -54,6 +54,10 @@ export default function OnsenMapClient() {
       try {
         setIsLoading(true)
         const [onsenData, accommodationData] = await Promise.all([getOnsenDataSorted(), getAccommodationData()])
+        console.log('OnsenMapClient データ読み込み完了:')
+        console.log('- 温泉データ数:', onsenData.length)
+        console.log('- 宿泊施設データ数:', accommodationData.length)
+        
         setOnsens(onsenData)
         setAccommodations(accommodationData)
         setFilteredOnsens(onsenData)

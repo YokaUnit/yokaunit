@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import dynamic from "next/dynamic"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -8,8 +8,10 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { Search, Star, Crown, X, MapPin, Menu } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Search, Star, Crown, X, MapPin, Menu, Hotel } from "lucide-react"
 import { getOnsenDataSorted, getAccommodationData, type OnsenData, type AccommodationData } from "./lib/onsen-data"
+import AccommodationList from "./components/AccommodationList"
 
 // React Leafletを動的インポート（SSR回避）
 const OnsenMap = dynamic(() => import("./components/OnsenMap"), {
@@ -37,6 +39,8 @@ export default function OnsenMapClient() {
   const [isMobile, setIsMobile] = useState(false)
   const [showMobileSearch, setShowMobileSearch] = useState(false)
   const [showDesktopSearch, setShowDesktopSearch] = useState(false)
+  const [searchTab, setSearchTab] = useState<"onsens" | "accommodations">("onsens")
+  const mapRef = useRef<L.Map>(null)
 
   // モバイル判定
   useEffect(() => {
@@ -133,6 +137,47 @@ export default function OnsenMapClient() {
     }
   }
 
+  // 検索結果から宿泊施設選択
+  const handleSearchAccommodationSelect = (accommodation: AccommodationData) => {
+    // 宿泊施設の位置にズームして、そのピンのポップアップを開く
+    setSelectedOnsen(null)
+    setSearchSelectedOnsen(null)
+    
+    // マップを宿泊施設の位置に移動（ズームレベル15で詳細表示）
+    if (mapRef.current) {
+      mapRef.current.setView([accommodation.latitude, accommodation.longitude], 15, {
+        animate: true,
+        duration: 1,
+      })
+
+      // 少し遅れてポップアップを開く
+      setTimeout(() => {
+        if (mapRef.current) {
+          // @ts-ignore
+          mapRef.current.eachLayer((layer: any) => {
+            // Leafletのマーカーかどうかを動的に確認
+            if (layer.getLatLng && typeof layer.openPopup === 'function') {
+              const markerLatLng = layer.getLatLng()
+              // 宿泊施設の座標と一致するマーカーを探す
+              if (
+                Math.abs(markerLatLng.lat - accommodation.latitude) < 0.0001 &&
+                Math.abs(markerLatLng.lng - accommodation.longitude) < 0.0001
+              ) {
+                layer.openPopup()
+              }
+            }
+          })
+        }
+      }, 500)
+    }
+    
+    if (isMobile) {
+      setShowMobileSearch(false)
+    } else {
+      setShowDesktopSearch(false)
+    }
+  }
+
   // フィルターリセット
   const resetFilters = () => {
     setSearchTerm("")
@@ -169,6 +214,7 @@ export default function OnsenMapClient() {
           onOnsenSelect={handleOnsenSelect}
           searchSelectedOnsen={searchSelectedOnsen}
           onZoomChange={handleZoomChange}
+          mapRef={mapRef}
         />
 
         {/* 検索ボタン - 地図の右上に配置（透明） */}
@@ -181,7 +227,7 @@ export default function OnsenMapClient() {
                 className="shadow-xl bg-white/70 hover:bg-white/80 text-gray-700 border border-gray-200/50 backdrop-blur-sm"
               >
                 <Search className="w-4 h-4 mr-2" />
-                検索・フィルター
+                温泉・宿泊施設検索
                 {(searchTerm || selectedRegion !== "all" || sortBy !== "ranking") && (
                   <Badge variant="destructive" className="ml-2 h-4 w-4 p-0 text-xs animate-pulse">
                     !
@@ -192,7 +238,7 @@ export default function OnsenMapClient() {
                 <SheetHeader className="mb-4 flex-shrink-0">
                   <SheetTitle className="flex items-center gap-2 text-lg">
                     <Crown className="w-5 h-5 text-yellow-500" />
-                    温泉ランキング検索
+                    温泉・宿泊施設検索
                   </SheetTitle>
                 </SheetHeader>
 
@@ -259,10 +305,24 @@ export default function OnsenMapClient() {
                       </Button>
                     )}
                   </div>
+
+
                 </div>
 
-                {/* 検索結果リスト（スクロール可能） */}
-                <div className="flex-1 overflow-y-auto min-h-0">
+                {/* タブ付き検索結果リスト */}
+                <Tabs value={searchTab} onValueChange={(value) => setSearchTab(value as "onsens" | "accommodations")} className="flex-1 flex flex-col min-h-0">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="onsens" className="flex items-center gap-2">
+                      <Crown className="h-4 w-4" />
+                      温泉 ({filteredOnsens.length})
+                    </TabsTrigger>
+                    <TabsTrigger value="accommodations" className="flex items-center gap-2">
+                      <Hotel className="h-4 w-4" />
+                      宿泊施設 ({accommodations.length})
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="onsens" className="flex-1 overflow-y-auto min-h-0 mt-4">
                   <div className="space-y-2 pb-4">
                     {filteredOnsens.map((onsen) => (
                       <Card
@@ -305,8 +365,16 @@ export default function OnsenMapClient() {
                         </CardContent>
                       </Card>
                     ))}
-                  </div>
-                </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="accommodations" className="flex-1 overflow-y-auto min-h-0 mt-4">
+                    <AccommodationList
+                      accommodations={accommodations}
+                      onAccommodationSelect={handleSearchAccommodationSelect}
+                    />
+                  </TabsContent>
+                </Tabs>
               </SheetContent>
             </Sheet>
           </div>
@@ -330,7 +398,7 @@ export default function OnsenMapClient() {
                 <SheetHeader className="mb-4 flex-shrink-0">
                   <SheetTitle className="flex items-center gap-2 text-lg">
                     <Crown className="w-5 h-5 text-yellow-500" />
-                    温泉ランキング検索
+                    温泉・宿泊施設検索
                   </SheetTitle>
                 </SheetHeader>
 
@@ -397,10 +465,24 @@ export default function OnsenMapClient() {
                       </Button>
                     )}
                   </div>
+
+
                 </div>
 
-                {/* 検索結果リスト（スクロール可能） */}
-                <div className="flex-1 overflow-y-auto min-h-0">
+                {/* タブ付き検索結果リスト */}
+                <Tabs value={searchTab} onValueChange={(value) => setSearchTab(value as "onsens" | "accommodations")} className="flex-1 flex flex-col min-h-0">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="onsens" className="flex items-center gap-2">
+                      <Crown className="h-4 w-4" />
+                      温泉 ({filteredOnsens.length})
+                    </TabsTrigger>
+                    <TabsTrigger value="accommodations" className="flex items-center gap-2">
+                      <Hotel className="h-4 w-4" />
+                      宿泊施設 ({accommodations.length})
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="onsens" className="flex-1 overflow-y-auto min-h-0 mt-4">
                   <div className="space-y-2 pb-4">
                     {filteredOnsens.map((onsen) => (
                       <Card
@@ -443,8 +525,16 @@ export default function OnsenMapClient() {
                         </CardContent>
                       </Card>
                     ))}
-                  </div>
-                </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="accommodations" className="flex-1 overflow-y-auto min-h-0 mt-4">
+                    <AccommodationList
+                      accommodations={accommodations}
+                      onAccommodationSelect={handleSearchAccommodationSelect}
+                    />
+                  </TabsContent>
+                </Tabs>
               </SheetContent>
             </Sheet>
           </div>

@@ -4,28 +4,31 @@ import { NextResponse } from 'next/server'
 const RAKUTEN_API_CONFIG = {
   applicationId: '1011285080477164382',
   affiliateId: '4b2ecc18.18aa4717.4b2ecc19.83d49175',
-  baseUrl: 'https://app.rakuten.co.jp/services/api/Travel/VacantHotelSearch/20170426',
+  baseUrl: 'https://app.rakuten.co.jp/services/api/Travel/KeywordHotelSearch/20170426',
 }
 
 export async function GET() {
   console.log('楽天API認証テスト開始')
   
-  // 楽天トラベル空室検索APIを使用（地域コード指定）
-  // 東京都（関東地方）のホテルを検索
+  // チェックイン・チェックアウト日を動的に生成（今日から30日後、31日後）
+  const today = new Date()
+  const checkinDate = new Date(today)
+  checkinDate.setDate(today.getDate() + 30) // 30日後
+  const checkoutDate = new Date(today)
+  checkoutDate.setDate(today.getDate() + 31) // 31日後
+  
+  const checkinDateStr = checkinDate.toISOString().split('T')[0]
+  const checkoutDateStr = checkoutDate.toISOString().split('T')[0]
+  
+  console.log('生成された日付:', { checkinDateStr, checkoutDateStr })
+  
+  // 楽天トラベルキーワード検索APIを使用（シンプルなキーワード検索）
   const params = new URLSearchParams({
     applicationId: RAKUTEN_API_CONFIG.applicationId,
     affiliateId: RAKUTEN_API_CONFIG.affiliateId,
-    largeClassCode: 'japan',      // 日本
-    middleClassCode: 'kanto',     // 関東
-    smallClassCode: 'tokyo',      // 東京
-    detailClassCode: 'A',         // 東京都詳細クラスコード
-    checkinDate: '2025-01-25',    // チェックイン日（明日）
-    checkoutDate: '2025-01-26',   // チェックアウト日（明後日）
-    adultNum: '2',                // 大人2名
-    hits: '5',                    // 取得件数
-    responseType: 'small',        // レスポンスタイプ
-    sort: 'standard',             // ソート
-    format: 'json'                // フォーマット
+    keyword: '東京',
+    hits: '5',
+    format: 'json'
   })
 
   const url = `${RAKUTEN_API_CONFIG.baseUrl}?${params}`

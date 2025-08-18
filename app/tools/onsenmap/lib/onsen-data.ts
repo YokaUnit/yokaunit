@@ -153,8 +153,59 @@ async function fetchRakutenHotels(latitude: number, longitude: number, radius: n
         const hotel = hotelWrapper.hotel[0]
         const hotelInfo = hotel.hotelBasicInfo
 
-        // 楽天のアフィリエイトリンクを生成
-        const rakutenLink = `${hotelInfo.dpPlanListUrl}?f_ik=${RAKUTEN_API_CONFIG.affiliateId}`
+        // 楽天のアフィリエイトリンクを生成（より確実な形式）
+        const baseUrl = hotelInfo.dpPlanListUrl || hotelInfo.planListUrl || hotelInfo.hotelInformationUrl
+        const rakutenLink = baseUrl ? `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}f_ik=${RAKUTEN_API_CONFIG.affiliateId}` : null
+
+        // 楽天APIの座標データをデバッグ
+        console.log('楽天API座標データ (生):', {
+          latitude: hotelInfo.latitude,
+          longitude: hotelInfo.longitude,
+          hotelName: hotelInfo.hotelName
+        })
+        
+        // 楽天APIの座標形式を複数パターンで試す
+        const rawLat = parseFloat(hotelInfo.latitude)
+        const rawLng = parseFloat(hotelInfo.longitude)
+        
+        // パターン1: そのまま使用
+        const lat1 = rawLat
+        const lng1 = rawLng
+        
+        // パターン2: 1,000,000で割る
+        const lat2 = rawLat / 1000000
+        const lng2 = rawLng / 1000000
+        
+        // パターン3: 10,000で割る
+        const lat3 = rawLat / 10000
+        const lng3 = rawLng / 10000
+        
+        console.log('座標変換パターン:', {
+          pattern1: { lat: lat1, lng: lng1 },
+          pattern2: { lat: lat2, lng: lng2 },
+          pattern3: { lat: lat3, lng: lng3 }
+        })
+        
+        // 日本の座標範囲（緯度24-46度、経度123-146度）に最も近いパターンを選択
+        let lat, lng
+        if (lat3 >= 24 && lat3 <= 46 && lng3 >= 123 && lng3 <= 146) {
+          lat = lat3
+          lng = lng3
+          console.log('パターン3を選択 (10,000で割る)')
+        } else if (lat2 >= 24 && lat2 <= 46 && lng2 >= 123 && lng2 <= 146) {
+          lat = lat2
+          lng = lng2
+          console.log('パターン2を選択 (1,000,000で割る)')
+        } else if (lat1 >= 24 && lat1 <= 46 && lng1 >= 123 && lng1 <= 146) {
+          lat = lat1
+          lng = lng1
+          console.log('パターン1を選択 (そのまま)')
+        } else {
+          // フォールバック: 東京駅の座標
+          lat = 35.6812
+          lng = 139.7671
+          console.log('すべてのパターンが無効、東京駅座標を使用')
+        }
 
         return {
           id: hotelInfo.hotelNo,
@@ -162,8 +213,8 @@ async function fetchRakutenHotels(latitude: number, longitude: number, radius: n
           type: 'hotel',
           description: hotelInfo.hotelSpecial || hotelInfo.userReview || `${hotelInfo.hotelName}の宿泊施設`,
           address: `${hotelInfo.address1}${hotelInfo.address2}`,
-          latitude: hotelInfo.latitude,
-          longitude: hotelInfo.longitude,
+          latitude: lat,
+          longitude: lng,
           image_url: hotelInfo.hotelImageUrl || hotelInfo.hotelThumbnailUrl,
           rating: hotelInfo.reviewAverage || 0,
           reviews_count: hotelInfo.reviewCount || 0,
@@ -290,8 +341,8 @@ export async function getAccommodationData(): Promise<AccommodationData[]> {
     if (tokyoStationTest.length > 0) {
       console.log('✓ 楽天API正常動作確認。温泉地周辺を検索します。')
       
-      // API制限を考慮して上位1位のみの温泉地周辺のホテルを取得
-      const topOnsens = onsens.slice(0, 1)
+      // API制限を考慮して上位3位まで検索
+      const topOnsens = onsens.slice(0, 3)
       console.log('検索対象温泉:', topOnsens.map(o => ({ name: o.name, lat: o.latitude, lng: o.longitude })))
       
       const accommodationPromises = topOnsens.map(onsen => 
@@ -335,7 +386,7 @@ export async function getAccommodationData(): Promise<AccommodationData[]> {
 
     const finalAccommodations = Array.from(uniqueAccommodations.values())
       .sort((a, b) => b.rating - a.rating)
-      .slice(0, 30) // 最大30件に制限
+      .slice(0, 50) // 最大50件に制限
     
     console.log(`最終的な宿泊施設数: ${finalAccommodations.length}`)
     

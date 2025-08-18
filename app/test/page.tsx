@@ -1,5 +1,5 @@
 "use client";
-// app/test/page.tsx
+
 import React, { useEffect, useState } from "react";
 
 type Hotel = {
@@ -16,47 +16,66 @@ type Hotel = {
 
 export default function TestPage() {
   const [hotels, setHotels] = useState<Hotel[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 楽天APIキーなどは環境変数から取得
-  const applicationId = process.env.NEXT_PUBLIC_RAKUTEN_APP_ID!;
-  const affiliateId = process.env.NEXT_PUBLIC_RAKUTEN_AFFILIATE_ID!;
+  // 取得済みの楽天APIキー（環境変数推奨）
+  const applicationId = "1011285080477164382";
+  const affiliateId = "4b2ecc18.18aa4717.4b2ecc19.83d49175";
 
-  // 東京駅周辺の緯度経度（例）
-  const latitude = 35.681236;
-  const longitude = 139.767125;
+  // 東京23区エリアコード（緯度経度の代わりにこちらを利用）
+  const areaCode = "130010";
 
   useEffect(() => {
-    async function fetchHotels() {
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
-      try {
-        const url = `https://app.rakuten.co.jp/services/api/Travel/SimpleHotelSearch/20170426?applicationId=${applicationId}&affiliateId=${affiliateId}&latitude=${latitude}&longitude=${longitude}&searchRadius=3&format=json`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
+    const url = `https://app.rakuten.co.jp/services/api/Travel/SimpleHotelSearch/20170426?applicationId=${applicationId}&affiliateId=${affiliateId}&areaCode=${areaCode}&format=json`;
+
+    console.log("楽天API呼び出しURL:", url);
+
+    fetch(url)
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`APIエラー ${res.status}: ${text}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("APIレスポンス:", data);
+
+        if (!data.hotels || !Array.isArray(data.hotels)) {
+          setError("宿データがありません");
+          return;
+        }
         setHotels(data.hotels.map((item: any) => item.hotel[0]));
-      } catch (e: any) {
+      })
+      .catch((e) => {
         setError(e.message);
-      } finally {
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    }
-    fetchHotels();
-  }, [applicationId, affiliateId]);
+      });
+  }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!hotels.length) return <p>No hotels found.</p>;
+  if (loading) return <p>読み込み中...</p>;
+  if (error) return <p style={{ color: "red" }}>エラー: {error}</p>;
+  if (!hotels.length) return <p>宿泊施設が見つかりませんでした。</p>;
 
   return (
-    <div style={{ maxWidth: 600, margin: "auto" }}>
-      <h1>楽天トラベル宿泊施設一覧（東京駅周辺3km）</h1>
+    <div style={{ maxWidth: 600, margin: "auto", padding: 16 }}>
+      <h1>楽天トラベル 宿泊施設一覧（東京23区）</h1>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {hotels.map((hotel) => (
-          <li key={hotel.hotelBasicInfo.hotelInformationUrl} style={{ marginBottom: 24, borderBottom: "1px solid #ccc", paddingBottom: 16 }}>
+          <li
+            key={hotel.hotelBasicInfo.hotelInformationUrl}
+            style={{
+              marginBottom: 24,
+              borderBottom: "1px solid #ccc",
+              paddingBottom: 16,
+            }}
+          >
             <h2>{hotel.hotelBasicInfo.hotelName}</h2>
             <img
               src={hotel.hotelBasicInfo.hotelImageUrl}
@@ -65,14 +84,16 @@ export default function TestPage() {
             />
             <p>評価: {hotel.hotelBasicInfo.reviewAverage} / 5</p>
             <p>最安料金: ¥{hotel.hotelBasicInfo.hotelMinCharge}</p>
-            <p>住所: {hotel.hotelBasicInfo.address1} {hotel.hotelBasicInfo.address2}</p>
+            <p>
+              住所: {hotel.hotelBasicInfo.address1} {hotel.hotelBasicInfo.address2}
+            </p>
             <a
               href={hotel.hotelBasicInfo.hotelInformationUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: "blue" }}
             >
-              公式ページ（楽天トラベル）
+              楽天トラベル公式ページ
             </a>
           </li>
         ))}

@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// 緯度・経度から地域コードを判定する関数
-function getRegionFromCoordinates(lat: number, lng: number) {
-  // 簡易的な地域判定（実際のプロジェクトではより詳細な判定が必要）
-  if (lat >= 35.5 && lat <= 36.0 && lng >= 139.0 && lng <= 140.0) {
-    return { middle: 'kanto', small: 'tokyo', detail: 'A' }  // 東京
-  } else if (lat >= 34.5 && lat <= 35.0 && lng >= 135.0 && lng <= 136.0) {
-    return { middle: 'kansai', small: 'osaka', detail: 'A' } // 大阪
-  } else if (lat >= 34.8 && lat <= 35.2 && lng >= 135.5 && lng <= 136.0) {
-    return { middle: 'kansai', small: 'kyoto', detail: 'A' } // 京都
-  } else if (lat >= 43.0 && lat <= 44.0 && lng >= 141.0 && lng <= 142.0) {
-    return { middle: 'hokkaido', small: 'sapporo', detail: 'A' } // 札幌
+// 緯度・経度からキーワードを生成する関数
+function getKeywordFromCoordinates(lat: number, lng: number): string {
+  // 座標に基づいて適切な地域キーワードを返す
+  if (lat >= 35.0 && lat <= 36.5 && lng >= 138.5 && lng <= 140.5) {
+    return '東京'  // 東京地域
+  } else if (lat >= 34.0 && lat <= 35.5 && lng >= 134.5 && lng <= 136.5) {
+    return '大阪' // 関西地方
+  } else if (lat >= 42.5 && lat <= 44.5 && lng >= 140.5 && lng <= 142.5) {
+    return '札幌' // 北海道
   } else {
     // デフォルトは東京
-    return { middle: 'kanto', small: 'tokyo', detail: 'A' }
+    return '東京'
   }
 }
 
@@ -21,7 +19,7 @@ function getRegionFromCoordinates(lat: number, lng: number) {
 const RAKUTEN_API_CONFIG = {
   applicationId: '1011285080477164382',
   affiliateId: '4b2ecc18.18aa4717.4b2ecc19.83d49175',
-  baseUrl: 'https://app.rakuten.co.jp/services/api/Travel/VacantHotelSearch/20170426',
+  baseUrl: 'https://app.rakuten.co.jp/services/api/Travel/KeywordHotelSearch/20170426',
 }
 
 export async function GET(request: NextRequest) {
@@ -39,32 +37,15 @@ export async function GET(request: NextRequest) {
 
   console.log('楽天API サーバーサイドリクエスト:', { latitude, longitude, radius })
 
-  // 楽天トラベル空室検索APIのパラメータを構築
-  // 緯度・経度から地域を判定して地域コードを設定
-  const regionCode = getRegionFromCoordinates(parseFloat(latitude), parseFloat(longitude))
-  
-  // チェックイン・チェックアウト日を設定（明日・明後日）
-  const tomorrow = new Date()
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  const dayAfterTomorrow = new Date()
-  dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2)
-  
-  const checkinDate = tomorrow.toISOString().split('T')[0]
-  const checkoutDate = dayAfterTomorrow.toISOString().split('T')[0]
+  // 楽天トラベルキーワード検索APIのパラメータを構築
+  // 座標に基づいて適切なキーワードを生成
+  const keyword = getKeywordFromCoordinates(parseFloat(latitude), parseFloat(longitude))
   
   const params = new URLSearchParams({
     applicationId: RAKUTEN_API_CONFIG.applicationId,
     affiliateId: RAKUTEN_API_CONFIG.affiliateId,
-    largeClassCode: 'japan',
-    middleClassCode: regionCode.middle,
-    smallClassCode: regionCode.small,
-    detailClassCode: regionCode.detail,
-    checkinDate: checkinDate,
-    checkoutDate: checkoutDate,
-    adultNum: '2',
-    hits: '10',
-    responseType: 'small',
-    sort: 'standard',
+    keyword: keyword,  // 地域キーワード
+    hits: '30',        // 件数を適度に増やす
     format: 'json'
   })
 

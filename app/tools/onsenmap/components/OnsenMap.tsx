@@ -62,13 +62,30 @@ const getDistanceFromZoom = (zoomLevel: number): string => {
   return distances[Math.round(zoomLevel)] || `${Math.round(40075 / Math.pow(2, zoomLevel + 1))}km`
 }
 
-// 宿泊施設用のピンアイコン作成（温泉ピンの3分の2のサイズ）
+// 宿泊施設用のピンアイコン作成（評価に基づく色分け）
 const createAccommodationIcon = (accommodation: AccommodationData, zoomLevel: number, showName: boolean) => {
   // 温泉ピンのサイズ計算と同じロジック
   const onsenBaseSize = Math.max(20, Math.min(40, 20 + (zoomLevel - 6) * 3))
-  // 温泉ピンの3分の2のサイズ
-  const size = Math.round(onsenBaseSize * (2 / 3))
-  const shouldShowName = showName && zoomLevel >= 15
+  // 宿泊施設は温泉ピンと同じサイズにして目立たせる
+  const size = Math.round(onsenBaseSize * 0.8)
+  const shouldShowName = showName && zoomLevel >= 12 // 表示しやすくするため閾値を下げる
+
+  // 評価に基づく色分け
+  const rating = accommodation.rating || 0
+  let bgColor, borderColor
+  if (rating >= 4.5) {
+    bgColor = '#059669' // 高評価: 緑
+    borderColor = '#047857'
+  } else if (rating >= 4.0) {
+    bgColor = '#3b82f6' // 良評価: 青
+    borderColor = '#1d4ed8'
+  } else if (rating >= 3.5) {
+    bgColor = '#f59e0b' // 普通: オレンジ
+    borderColor = '#d97706'
+  } else {
+    bgColor = '#6b7280' // 低評価: グレー
+    borderColor = '#4b5563'
+  }
 
   return new L.DivIcon({
     html: `
@@ -83,22 +100,40 @@ const createAccommodationIcon = (accommodation: AccommodationData, zoomLevel: nu
         <div style="
           width: ${size}px;
           height: ${size}px;
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          background: linear-gradient(135deg, ${bgColor}, ${borderColor});
+          border: 2px solid white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.1);
+          cursor: pointer;
+          transition: all 0.2s ease;
+          position: relative;
+          z-index: 1;
+        " onmouseover="this.style.transform='scale(1.15)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.8)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.1)'">
+          <svg width="${size - 8}" height="${size - 8}" viewBox="0 0 24 24" fill="white">
+            <path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V6H1v15h2v-3h18v3h2V10c0-1.66-1.34-3-3-3z"/>
+          </svg>
+        </div>
+        ${rating >= 4.0 ? `
+        <div style="
+          position: absolute;
+          top: -2px;
+          right: -2px;
+          width: ${Math.max(12, size * 0.3)}px;
+          height: ${Math.max(12, size * 0.3)}px;
+          background: #fbbf24;
           border: 1px solid white;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-          cursor: pointer;
-          transition: transform 0.2s ease;
-          position: relative;
-          z-index: 1;
-        " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-          <svg width="${size - 6}" height="${size - 6}" viewBox="0 0 24 24" fill="white">
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-          </svg>
+          z-index: 2;
+        ">
+          <span style="color: #92400e; font-size: ${Math.max(6, size * 0.2)}px; font-weight: bold;">★</span>
         </div>
+        ` : ''}
         ${
           shouldShowName
             ? `
@@ -246,6 +281,7 @@ interface OnsenMapProps {
   onOnsenSelect: (onsen: OnsenData) => void
   searchSelectedOnsen?: OnsenData | null
   onZoomChange: (zoomLevel: number) => void
+  mapRef?: React.RefObject<L.Map>
 }
 
 // マップの中心を更新し、選択された温泉のポップアップを開く + ズーム監視
@@ -338,8 +374,9 @@ export default function OnsenMap({
   selectedOnsen,
   onOnsenSelect,
   searchSelectedOnsen,
+  mapRef: externalMapRef,
 }: OnsenMapProps) {
-  const mapRef = useRef<L.Map>(null)
+  const mapRef = externalMapRef || useRef<L.Map>(null)
   const [activeTab, setActiveTab] = useState<"basic" | "detail">("basic")
   const [zoomLevel, setZoomLevel] = useState(6)
   const [clickedOnsen, setClickedOnsen] = useState<OnsenData | null>(null)
@@ -798,14 +835,14 @@ export default function OnsenMap({
           </Marker>
         ))}
 
-              {/* 宿泊施設ピン（ズームレベル8以上で表示、デバッグ情報付き） */}
-      {zoomLevel >= 8 && accommodations.length > 0 && (
+              {/* 宿泊施設ピン（ズームレベル6以上で表示、デバッグ情報付き） */}
+      {zoomLevel >= 6 && accommodations.length > 0 && (
         <div>
           {console.log(`🏨 宿泊施設ピン表示: ${accommodations.length}件, ズームレベル: ${zoomLevel}`)}
           {console.log('宿泊施設データサンプル:', accommodations.slice(0, 2))}
         </div>
       )}
-      {zoomLevel >= 8 &&
+      {zoomLevel >= 6 &&
           accommodations.map((accommodation) => (
             <Marker
               key={`accommodation-${accommodation.id}`}
@@ -858,9 +895,19 @@ export default function OnsenMap({
                     <div style={{ fontSize: fontSize, fontWeight: "bold", lineHeight: "1.2", marginBottom: "3px" }}>
                       {accommodation.name}
                     </div>
-                    <span style={{ fontSize: tinyFontSize, opacity: "0.9" }}>
-                      温泉まで{accommodation.distance_to_onsen}km
-                    </span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: tinyFontSize }}>
+                      <span style={{ opacity: "0.9" }}>
+                        温泉まで{accommodation.distance_to_onsen}km
+                      </span>
+                      <span style={{ 
+                        background: "rgba(255,255,255,0.2)", 
+                        padding: "1px 4px", 
+                        borderRadius: "3px",
+                        fontWeight: "bold"
+                      }}>
+                        ¥{accommodation.price_range.min.toLocaleString()}〜
+                      </span>
+                    </div>
                   </div>
 
                   {/* コンテンツ */}
@@ -943,43 +990,25 @@ export default function OnsenMap({
                       </p>
                     </div>
 
-                    {/* 予約ボタン（アフィリエイトリンク） */}
-                    <div style={{ marginTop: isMobile ? "5px" : "6px", display: "flex", gap: "3px" }}>
-                      {accommodation.jalan_link && (
-                        <Button
-                          size="sm"
-                          className="h-6 text-xs px-3 bg-orange-600 hover:bg-orange-700 text-white flex-1"
-                          asChild
-                          style={{
-                            height: isMobile ? "22px" : "24px",
-                            fontSize: tinyFontSize,
-                            padding: "0 8px",
-                            backgroundColor: "#ea580c",
-                            color: "#ffffff",
-                          }}
-                        >
-                          <a href={accommodation.jalan_link} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-2 h-2 mr-1" />
-                            じゃらん
-                          </a>
-                        </Button>
-                      )}
+                    {/* 予約・詳細ボタン */}
+                    <div style={{ marginTop: isMobile ? "5px" : "6px", display: "flex", gap: "3px", flexWrap: "wrap" }}>
                       {accommodation.rakuten_link && (
                         <Button
                           size="sm"
-                          className="h-6 text-xs px-3 bg-red-600 hover:bg-red-700 text-white flex-1"
+                          className="h-6 text-xs px-3 bg-red-600 hover:bg-red-700 text-white flex-1 min-w-0"
                           asChild
                           style={{
-                            height: isMobile ? "22px" : "24px",
+                            height: isMobile ? "24px" : "26px",
                             fontSize: tinyFontSize,
                             padding: "0 8px",
                             backgroundColor: "#dc2626",
                             color: "#ffffff",
+                            fontWeight: "bold"
                           }}
                         >
                           <a href={accommodation.rakuten_link} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-2 h-2 mr-1" />
-                            楽天
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            楽天で予約
                           </a>
                         </Button>
                       )}
@@ -987,12 +1016,39 @@ export default function OnsenMap({
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-6 text-xs px-3 border-gray-300 flex-1 bg-white text-gray-700 hover:bg-gray-50"
+                          className="h-6 text-xs px-3 border-blue-300 flex-1 bg-blue-50 text-blue-700 hover:bg-blue-100 min-w-0"
                           asChild
-                          style={{ height: isMobile ? "22px" : "24px", fontSize: tinyFontSize, padding: "0 8px" }}
+                          style={{ 
+                            height: isMobile ? "24px" : "26px", 
+                            fontSize: tinyFontSize, 
+                            padding: "0 8px",
+                            borderColor: "#3b82f6",
+                            fontWeight: "500"
+                          }}
                         >
                           <a href={accommodation.official_website} target="_blank" rel="noopener noreferrer">
-                            公式
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            公式サイト
+                          </a>
+                        </Button>
+                      )}
+                      {accommodation.jalan_link && (
+                        <Button
+                          size="sm"
+                          className="h-6 text-xs px-3 bg-orange-600 hover:bg-orange-700 text-white flex-1 min-w-0"
+                          asChild
+                          style={{
+                            height: isMobile ? "24px" : "26px",
+                            fontSize: tinyFontSize,
+                            padding: "0 8px",
+                            backgroundColor: "#ea580c",
+                            color: "#ffffff",
+                            fontWeight: "500"
+                          }}
+                        >
+                          <a href={accommodation.jalan_link} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            じゃらん
                           </a>
                         </Button>
                       )}

@@ -47,8 +47,24 @@ export default function RecommendedHotels({
               return data.hotels.slice(0, 2).map((hotel: any) => ({
                 id: parseInt(hotel.hotel[0].hotelBasicInfo.hotelNo) || Math.random(),
                 name: hotel.hotel[0].hotelBasicInfo.hotelName || 'ホテル名不明',
-                latitude: parseFloat(hotel.hotel[0].hotelBasicInfo.latitude) || location.lat,
-                longitude: parseFloat(hotel.hotel[0].hotelBasicInfo.longitude) || location.lng,
+                latitude: (() => {
+                  const rawLat = parseFloat(hotel.hotel[0].hotelBasicInfo.latitude)
+                  if (rawLat >= 24 && rawLat <= 46) return rawLat
+                  const lat3 = rawLat / 10000
+                  if (lat3 >= 24 && lat3 <= 46) return lat3
+                  const lat2 = rawLat / 1000000
+                  if (lat2 >= 24 && lat2 <= 46) return lat2
+                  return location.lat
+                })(),
+                longitude: (() => {
+                  const rawLng = parseFloat(hotel.hotel[0].hotelBasicInfo.longitude)
+                  if (rawLng >= 123 && rawLng <= 146) return rawLng
+                  const lng3 = rawLng / 10000
+                  if (lng3 >= 123 && lng3 <= 146) return lng3
+                  const lng2 = rawLng / 1000000
+                  if (lng2 >= 123 && lng2 <= 146) return lng2
+                  return location.lng
+                })(),
                 rating: parseFloat(hotel.hotel[0].hotelBasicInfo.reviewAverage) || 0,
                 price: parseInt(hotel.hotel[0].hotelBasicInfo.hotelMinCharge) || 0,
                 image_url: hotel.hotel[0].hotelBasicInfo.hotelImageUrl || '/placeholder.jpg',

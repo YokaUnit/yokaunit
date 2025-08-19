@@ -136,18 +136,22 @@ export default function CardStackPage() {
         <SiteHeader />
         <main className="flex-1 relative z-10">
           <div className="container mx-auto px-4 py-6">
-            <Breadcrumbs items={breadcrumbItems} />
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">🃏 トランプ山札めくるだけ</h1>
-                          <p className="text-gray-600 max-w-2xl mx-auto">
-              54枚のトランプ（ジョーカー含む）の山札からカードをめくるだけのシンプルなツールです。
-              ハイ&ロー、マーク予想、ジョーカーロシアンルーレットなど、お好きな遊び方でお楽しみください。
-            </p>
+            <div className="text-xs sm:text-sm mb-4">
+              <Breadcrumbs items={breadcrumbItems} />
+            </div>
+                        <div className="text-center mb-4 sm:mb-6">
+              <h1 className="text-xl sm:text-4xl font-bold text-gray-900 mb-2 sm:mb-4 leading-tight px-2">
+                🃏 トランプ山札めくるだけ
+              </h1>
+              <p className="text-xs sm:text-base text-gray-600 max-w-2xl mx-auto px-4 leading-relaxed">
+                54枚のトランプ（ジョーカー含む）の山札からカードをめくるだけのシンプルなツールです。
+                ハイ&ロー、マーク予想、ジョーカーロシアンルーレットなど、お好きな遊び方でお楽しみください。
+              </p>
             </div>
             <CardStackClientPage />
             
             {/* SEO用の追加コンテンツ */}
-            <div className="mt-16 max-w-4xl mx-auto">
+            <div className="mt-8 max-w-4xl mx-auto">
               <section className="mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">🎮 ゲームモード紹介</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -175,7 +179,7 @@ export default function CardStackPage() {
                       ジョーカーを引いたら負け！54分の2の確率でジョーカーが出るロシアンルーレット。
                     </p>
                   </div>
-                </div>
+      </div>
               </section>
 
               <section className="mb-12">
@@ -215,10 +219,10 @@ export default function CardStackPage() {
                         {keyword}
                       </span>
                     ))}
-                  </div>
-                </div>
+      </div>
+        </div>
               </section>
-            </div>
+        </div>
           </div>
         </main>
         <SiteFooter />

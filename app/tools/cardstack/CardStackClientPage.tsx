@@ -127,10 +127,10 @@ export default function CardStackClientPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white p-4">
-      <p className="mb-6 text-gray-600">カードをドラッグして山札から引いてください</p>
+    <main className="flex min-h-screen flex-col items-center justify-start bg-white p-2 sm:p-4 pt-0">
+      <p className="mb-3 sm:mb-4 text-xs sm:text-base text-gray-600 text-center px-2">カードをドラッグして山札から引いてください</p>
 
-      <div className="relative h-[400px] w-[280px] mb-8">
+      <div className="relative h-[280px] w-[180px] sm:h-[400px] sm:w-[280px] mb-4 sm:mb-6 mx-auto">
         <AnimatePresence mode="popLayout">
           {availableCards.slice(0, 5).map((card, index) => (
             <PlayingCardComponent
@@ -144,23 +144,24 @@ export default function CardStackClientPage() {
         </AnimatePresence>
       </div>
 
-      <div className="text-center text-gray-600 mb-6">
-        <p>残りカード: {availableCards.length}枚</p>
-        <p>引いたカード: {drawnCount}枚</p>
+      <div className="text-center text-gray-600 mb-3 sm:mb-4">
+        <p className="text-xs sm:text-sm">残りカード: {availableCards.length}枚</p>
+        <p className="text-xs sm:text-sm">引いたカード: {drawnCount}枚</p>
       </div>
 
       <button
         onClick={resetDeck}
-        className="mb-8 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg transition-colors"
+        className="mb-4 sm:mb-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1.5 sm:py-2 px-4 sm:px-6 rounded-lg transition-colors text-sm sm:text-base"
       >
         🔄 デッキをリセット
       </button>
 
-      {/* 54枚全てのカード表示（テーブル形式） */}
-      <div className="w-full max-w-5xl">
-        <h2 className="text-xl font-bold text-gray-800 mb-3 text-center">全カード状況</h2>
+      {/* 54枚全てのカード表示 */}
+      <div className="w-full max-w-5xl mb-0 px-2 sm:px-0">
+        <h2 className="text-base sm:text-xl font-bold text-gray-800 mb-2 sm:mb-3 text-center">全カード状況</h2>
         
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 overflow-x-auto">
+        {/* デスクトップ: 横並びテーブル */}
+        <div className="hidden sm:block bg-white rounded-lg shadow-sm border border-gray-200 p-4 overflow-x-auto">
           <table className="w-full">
             <tbody>
               <tr>
@@ -204,6 +205,35 @@ export default function CardStackClientPage() {
             </tbody>
           </table>
         </div>
+
+        {/* モバイル: 縦並びテーブル */}
+        <div className="sm:hidden space-y-2">
+          {[
+            { suit: "♠", color: "text-black", cards: allCards.filter(c => c.suit === "♠") },
+            { suit: "♥", color: "text-red-500", cards: allCards.filter(c => c.suit === "♥") },
+            { suit: "♦", color: "text-red-500", cards: allCards.filter(c => c.suit === "♦") },
+            { suit: "♣", color: "text-black", cards: allCards.filter(c => c.suit === "♣") },
+            { suit: "🃏", color: "text-purple-600", cards: allCards.filter(c => c.suit === "🃏") }
+          ].map(({ suit, color, cards }) => (
+            <div key={suit} className="bg-white rounded-lg shadow-sm border border-gray-200 p-2">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className={`text-sm font-bold ${color}`}>{suit}</span>
+                <div className="flex-1 h-px bg-gray-200"></div>
+              </div>
+              <div className="grid grid-cols-7 gap-0.5">
+                {suit === "🃏" ? 
+                  cards.map((card) => (
+                    <SmallCard key={card.id} card={card} />
+                  )) :
+                  ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"].map(value => {
+                    const card = cards.find(c => c.value === value)
+                    return <SmallCard key={value} card={card!} />
+                  })
+                }
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   )
@@ -222,7 +252,7 @@ function SmallCard({ card }: SmallCardProps) {
   return (
     <div 
       className={`
-        w-7 h-9 rounded border border-gray-300 shadow-sm flex items-center justify-center text-xs
+        w-6 h-8 sm:w-7 sm:h-9 rounded border border-gray-300 shadow-sm flex items-center justify-center
         ${card.isDrawn 
           ? "bg-gray-200 opacity-40 grayscale" 
           : "bg-white"
@@ -230,7 +260,7 @@ function SmallCard({ card }: SmallCardProps) {
       `}
     >
       {isJoker ? (
-        <div className={`text-sm ${card.isDrawn ? "text-gray-400" : cardColor}`}>
+        <div className={`text-xs sm:text-sm ${card.isDrawn ? "text-gray-400" : cardColor}`}>
           🃏
         </div>
       ) : (
@@ -251,9 +281,12 @@ interface CardProps {
 
 function PlayingCardComponent({ card, index, removeCard, totalCards }: CardProps) {
   const zIndex = totalCards - index
-  const yOffset = index * 8
-  const xOffset = index * 2
-  const rotation = index * -2
+  
+  // モバイルとデスクトップで異なるオフセット値を使用
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
+  const yOffset = index * (isMobile ? 6 : 8)
+  const xOffset = index * (isMobile ? 1.5 : 2)
+  const rotation = index * (isMobile ? -1.5 : -2)
 
   const isRed = card.color === "red"
   const isJoker = card.color === "joker"
@@ -265,13 +298,13 @@ function PlayingCardComponent({ card, index, removeCard, totalCards }: CardProps
     if (isJoker) {
       return (
         <div className="flex flex-1 items-center justify-center">
-          <div className="text-8xl text-purple-600">🃏</div>
+          <div className="text-5xl sm:text-8xl text-purple-600">🃏</div>
         </div>
       )
     }
     return (
       <div className="flex flex-1 items-center justify-center">
-        <div className={`text-8xl ${cardColor}`}>{card.suit}</div>
+        <div className={`text-5xl sm:text-8xl ${cardColor}`}>{card.suit}</div>
       </div>
     )
   }
@@ -311,7 +344,7 @@ function PlayingCardComponent({ card, index, removeCard, totalCards }: CardProps
         zIndex,
         boxShadow: `0 ${5 + index * 3}px ${15 + index * 5}px ${shadowColor}`,
       }}
-      className="absolute left-0 top-0 h-full w-full cursor-grab overflow-hidden rounded-xl bg-white border-2 border-gray-400 active:cursor-grabbing"
+      className="absolute left-0 top-0 h-full w-full cursor-grab overflow-hidden rounded-lg sm:rounded-xl bg-white border-2 border-gray-400 active:cursor-grabbing"
       drag={index === 0}
       dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
       dragElastic={0.6}
@@ -328,13 +361,13 @@ function PlayingCardComponent({ card, index, removeCard, totalCards }: CardProps
         boxShadow: `0 ${10 + index * 3}px ${25 + index * 5}px ${shadowColor}`,
       }}
     >
-      <div className="relative flex h-full w-full flex-col p-3">
+      <div className="relative flex h-full w-full flex-col p-2 sm:p-3">
         {!isJoker && (
           <>
             {/* 左上のスーツと数字 */}
             <div className={`flex flex-col items-start ${cardColor}`}>
-              <div className="text-lg font-bold leading-none">{card.value}</div>
-              <div className="text-lg leading-none">{card.suit}</div>
+              <div className="text-sm sm:text-lg font-bold leading-none">{card.value}</div>
+              <div className="text-sm sm:text-lg leading-none">{card.suit}</div>
             </div>
           </>
         )}
@@ -346,8 +379,8 @@ function PlayingCardComponent({ card, index, removeCard, totalCards }: CardProps
           <>
             {/* 右下のスーツと数字（逆さま） */}
             <div className={`flex flex-col items-end ${cardColor} rotate-180 self-end`}>
-              <div className="text-lg font-bold leading-none">{card.value}</div>
-              <div className="text-lg leading-none">{card.suit}</div>
+              <div className="text-sm sm:text-lg font-bold leading-none">{card.value}</div>
+              <div className="text-sm sm:text-lg leading-none">{card.suit}</div>
             </div>
           </>
         )}

@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 import { DiagnosisForm } from "./components/DiagnosisForm"
 import { DiagnosisResult as DiagnosisResultComponent } from "./components/DiagnosisResult"
 import { useAiSeishinnenreiDiagnosis } from "./hooks/useAiSeishinnenreiDiagnosis"
@@ -179,7 +180,16 @@ export default function AiSeishinnenreiClientPage() {
       <div className="min-h-screen relative">
         <BackgroundAnimation />
 
-        <div className="relative z-10 container mx-auto px-4 py-8 max-w-4xl">
+        <div className="relative z-10 container mx-auto px-4 py-6">
+          <Breadcrumbs
+            items={[
+              { label: "ホーム", href: "/" },
+              { label: "ツール一覧", href: "/tools" },
+              { label: "AI精神年齢診断", href: "/tools/ai-seishinnenrei" },
+            ]}
+          />
+
+          <div className="max-w-4xl mx-auto mt-6">
           {/* ヘッダー */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
@@ -187,8 +197,8 @@ export default function AiSeishinnenreiClientPage() {
                 <Brain className="h-10 w-10 text-white" />
               </div>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">AI精神年齢診断（無料）</h1>
-            <h2 className="text-xl text-gray-600 mb-4">AIがあなたの心理年齢・メンタル年齢を数値化</h2>
+            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">AI精神年齢診断（無料）</h1>
+            <h2 className="text-lg md:text-xl text-gray-600 mb-4">AIがあなたの心理年齢・メンタル年齢を数値化</h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
               簡単な5つの選択式質問に答えるだけで、AIがあなたの精神年齢を分析し、実年齢との差を詳しく解説します
             </p>

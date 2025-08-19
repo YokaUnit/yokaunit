@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 import { DiagnosisForm } from "./components/DiagnosisForm"
 import { DiagnosisResult as DiagnosisResultComponent } from "./components/DiagnosisResult"
 import { AnalysisLoading } from "./components/AnalysisLoading"
@@ -194,7 +195,16 @@ export default function AiMoteClientPage() {
       <div className="min-h-screen relative">
         <BackgroundAnimation />
 
-        <div className="relative z-10 container mx-auto px-4 py-8 max-w-4xl">
+        <div className="relative z-10 container mx-auto px-4 py-6">
+          <Breadcrumbs
+            items={[
+              { label: "ホーム", href: "/" },
+              { label: "ツール一覧", href: "/tools" },
+              { label: "AIモテ度診断", href: "/tools/ai-mote" },
+            ]}
+          />
+
+          <div className="max-w-4xl mx-auto mt-6">
           {/* ヘッダー */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
@@ -202,8 +212,8 @@ export default function AiMoteClientPage() {
                 <Heart className="h-10 w-10 text-white" />
               </div>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">AIモテ度診断（無料）</h1>
-            <h2 className="text-xl text-gray-600 mb-4">AIがあなたの恋愛モテ度を数値化</h2>
+            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">AIモテ度診断（無料）</h1>
+            <h2 className="text-lg md:text-xl text-gray-600 mb-4">AIがあなたの恋愛モテ度を数値化</h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
               最新のAI技術があなたの文章を分析し、ポジティブ度・社交性・共感力から総合的なモテ度を診断します
             </p>
@@ -449,6 +459,7 @@ export default function AiMoteClientPage() {
                 モテ度測定 恋愛心理テスト AI恋愛診断 ポジティブ度 社交性 共感力 恋愛診断無料 モテ度ランキング 恋愛適性診断
               </p>
             </section>
+          </div>
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { Calculator, Users, Share2, RotateCcw, ArrowLeft, ArrowRight, HelpCircle
 import { BackgroundAnimation } from "@/components/background-animation"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 import { SettlementInput } from "./components/SettlementInput"
 import { SettlementResult } from "./components/SettlementResult"
 import { useSimpleWarikan } from "./hooks/useSimpleWarikan"
@@ -157,7 +158,16 @@ export default function WariKanPage() {
       <div className="min-h-screen relative">
         <BackgroundAnimation />
 
-        <div className="relative z-10 container mx-auto px-4 py-8 max-w-md">
+        <div className="relative z-10 container mx-auto px-4 py-6">
+          <Breadcrumbs
+            items={[
+              { label: "ホーム", href: "/" },
+              { label: "ツール一覧", href: "/tools" },
+              { label: "割り勘計算ツール", href: "/tools/warikan" },
+            ]}
+          />
+
+          <div className="max-w-md mx-auto mt-6">
           {/* ヘッダー */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
@@ -165,8 +175,8 @@ export default function WariKanPage() {
                 <Calculator className="h-10 w-10 text-white" />
               </div>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">秒割り</h1>
-            <p className="text-gray-600 text-lg">{step === "calculate" ? "3秒で割り勘完了" : "精算方法を計算"}</p>
+            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">秒割り</h1>
+            <p className="text-gray-600 text-base md:text-lg">{step === "calculate" ? "3秒で割り勘完了" : "精算方法を計算"}</p>
             
             {/* 使い方リンク */}
             <div className="mt-4">

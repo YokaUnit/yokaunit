@@ -327,7 +327,7 @@ function MapUpdater({
       })
 
       setTimeout(() => {
-        map.eachLayer((layer) => {
+        map.eachLayer((layer: L.Layer) => {
           if (layer instanceof L.Marker) {
             const marker = layer as L.Marker
             const markerLatLng = marker.getLatLng()
@@ -349,7 +349,7 @@ function MapUpdater({
       })
 
       setTimeout(() => {
-        map.eachLayer((layer) => {
+        map.eachLayer((layer: L.Layer) => {
           if (layer instanceof L.Marker) {
             const marker = layer as L.Marker
             const markerLatLng = marker.getLatLng()
@@ -467,7 +467,9 @@ export default function OnsenMap({
       }
     `
     document.head.appendChild(style)
-    return () => document.head.removeChild(style)
+    return () => {
+      document.head.removeChild(style)
+    }
   }, [isMobile])
 
   // ピンクリック時の処理（バグ修正）
@@ -505,7 +507,7 @@ export default function OnsenMap({
   return (
     <div style={{ position: "relative", height: "100%", width: "100%" }}>
       <MapContainer
-        center={japanCenter}
+        center={japanCenter as [number, number]}
         zoom={6}
         style={{ height: "100%", width: "100%" }}
         ref={mapRef}
@@ -528,19 +530,17 @@ export default function OnsenMap({
         {onsens.map((onsen) => (
           <Marker
             key={`onsen-${onsen.id}`}
-            position={[onsen.latitude, onsen.longitude]}
+            position={[onsen.latitude, onsen.longitude] as [number, number]}
             icon={createOnsenIcon(onsen.ranking, zoomLevel, showNames, onsen.name)}
             eventHandlers={{
               click: () => handleMarkerClick(onsen),
             }}
           >
             <Popup
-              className="custom-popup"
               maxWidth={popupSize.maxWidth}
               minWidth={popupSize.minWidth}
               closeButton={true}
               autoClose={false}
-              offset={[0, -6]}
             >
               <div style={{ fontSize, lineHeight: "1.2", fontFamily: "system-ui, sans-serif" }}>
                 {/* ヘッダー */}
@@ -836,26 +836,23 @@ export default function OnsenMap({
         ))}
 
               {/* 宿泊施設ピン（ズームレベル6以上で表示、デバッグ情報付き） */}
-      {zoomLevel >= 6 && accommodations.length > 0 && (
-        <div>
-          {console.log(`🏨 宿泊施設ピン表示: ${accommodations.length}件, ズームレベル: ${zoomLevel}`)}
-          {console.log('宿泊施設データサンプル:', accommodations.slice(0, 2))}
-        </div>
-      )}
+      {zoomLevel >= 6 && accommodations.length > 0 && (() => {
+        console.log(`🏨 宿泊施設ピン表示: ${accommodations.length}件, ズームレベル: ${zoomLevel}`)
+        console.log('宿泊施設データサンプル:', accommodations.slice(0, 2))
+        return null
+      })()}
       {zoomLevel >= 6 &&
           accommodations.map((accommodation) => (
             <Marker
               key={`accommodation-${accommodation.id}`}
-              position={[accommodation.latitude, accommodation.longitude]}
+              position={[accommodation.latitude, accommodation.longitude] as [number, number]}
               icon={createAccommodationIcon(accommodation, zoomLevel, showAccommodationNames)}
             >
               <Popup
-                className="custom-popup"
                 maxWidth={popupSize.maxWidth}
                 minWidth={popupSize.minWidth}
                 closeButton={true}
                 autoClose={false}
-                offset={[0, -6]}
               >
                 <div style={{ fontSize, lineHeight: "1.2", fontFamily: "system-ui, sans-serif" }}>
                   {/* ヘッダー */}

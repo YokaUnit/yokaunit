@@ -1,197 +1,228 @@
-"use client"
+import type { Metadata } from "next"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
+import { BackgroundAnimation } from "@/components/background-animation"
+import { Breadcrumbs } from "@/components/breadcrumbs"
+import CardStackClientPage from "./CardStackClientPage"
+import { webPageStructuredData, gameStructuredData, faqStructuredData } from "./lib/structured-data"
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-
-interface PlayingCard {
-  id: number
-  suit: "♠" | "♥" | "♦" | "♣"
-  value: string
-  color: "red" | "black"
+export const metadata: Metadata = {
+  title: "トランプ山札めくるだけ｜ハイ&ロー・マーク予想・ジョーカーロシアンルーレット【2024年最新版】 | yokaunit",
+  description:
+    "【完全無料】54枚のトランプ（ジョーカー含む）の山札からカードをめくるだけのシンプルなツール。ハイ&ロー、マーク予想、ジョーカーロシアンルーレットなど、お好きな遊び方で楽しめます。引いたカードは履歴に表示され、リセット機能付きで何度でも楽しめます。",
+  keywords: [
+    "ハイ&ロー",
+    "トランプ",
+    "山札",
+    "ジョーカーロシアンルーレット",
+    "マーク予想ゲーム",
+    "カードゲーム",
+    "トランプゲーム",
+    "54枚",
+    "ジョーカー",
+    "運試し",
+    "カード占い",
+    "予想ゲーム",
+    "ハイローゲーム",
+    "スーツ予想",
+    "数字予想",
+    "確率ゲーム",
+    "カジノゲーム",
+    "ギャンブルゲーム",
+    "無料ゲーム",
+    "ブラウザゲーム",
+    "オンラインゲーム",
+    "パーティーゲーム",
+    "暇つぶし",
+    "エンターテイメント",
+    "YokaUnit",
+    "ヨカユニット",
+    "トランプ占い",
+    "カード引き",
+    "山札ゲーム",
+    "ロシアンルーレット",
+    "スペード",
+    "ハート",
+    "ダイヤ",
+    "クラブ",
+    "エース",
+    "キング",
+    "クイーン",
+    "ジャック",
+  ],
+  authors: [{ name: "YokaUnit", url: "https://yokaunit.com" }],
+  creator: "YokaUnit",
+  publisher: "YokaUnit",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://yokaunit.com/tools/cardstack",
+  },
+  openGraph: {
+    type: "website",
+    locale: "ja_JP",
+    url: "https://yokaunit.com/tools/cardstack",
+    siteName: "YokaUnit",
+    title: "トランプ山札めくるだけ｜ハイ&ロー・マーク予想・ジョーカーロシアンルーレット【2024年最新版】",
+    description: "【完全無料】54枚のトランプでハイ&ローゲーム、マーク予想ゲーム、ジョーカーロシアンルーレットが楽しめる！山札から1枚ずつカードを引いて運試し。",
+    images: [
+      {
+        url: "/ogp/cardstack-game.png",
+        width: 1200,
+        height: 630,
+        alt: "トランプ山札めくるだけ - ハイ&ロー・マーク予想・ジョーカーロシアンルーレット",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@yokaunit",
+    creator: "@yokaunit",
+    title: "トランプ山札めくるだけ🃏｜ハイ&ロー・マーク予想ゲーム",
+    description: "54枚のトランプで運試し🎲 ハイ&ローゲーム📈 マーク予想🔮 ジョーカーロシアンルーレット💥 完全無料で楽しめる！",
+    images: ["/ogp/cardstack-game.png"],
+  },
+  verification: {
+    google: "your-google-verification-code",
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "format-detection": "telephone=no",
+  },
 }
 
-// トランプカードのデータ
-const createDeck = (): PlayingCard[] => {
-  const suits: Array<{ symbol: "♠" | "♥" | "♦" | "♣"; color: "red" | "black" }> = [
-    { symbol: "♠", color: "black" },
-    { symbol: "♥", color: "red" },
-    { symbol: "♦", color: "red" },
-    { symbol: "♣", color: "black" },
-  ]
-  const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+const breadcrumbItems = [
+  { label: "ホーム", href: "/" },
+  { label: "ツール一覧", href: "/tools" },
+  { label: "トランプ山札めくるだけ", href: "/tools/cardstack" },
+]
 
-  const deck: PlayingCard[] = []
-  let id = 1
-
-  suits.forEach((suit) => {
-    values.forEach((value) => {
-      deck.push({
-        id: id++,
-        suit: suit.symbol,
-        value,
-        color: suit.color,
-      })
-    })
-  })
-
-  // シャッフル
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[deck[i], deck[j]] = [deck[j], deck[i]]
-  }
-
-  return deck
-}
-
-export default function PlayingCardStack() {
-  const [cards, setCards] = useState<PlayingCard[]>(() => createDeck())
-
-  const removeCard = (id: number) => {
-    setCards((prevCards) => {
-      const newCards = prevCards.filter((card) => card.id !== id)
-
-      // 新しいカードを追加（デッキから次のカード）
-      if (newCards.length > 0) {
-        const remainingCards = createDeck().filter((card) => !newCards.some((existing) => existing.id === card.id))
-        if (remainingCards.length > 0) {
-          const newCard = remainingCards[0]
-          return [...newCards, newCard]
-        }
-      }
-
-      // カードがなくなったら新しいデッキを作成
-      if (newCards.length === 0) {
-        return createDeck()
-      }
-
-      return newCards
-    })
-  }
-
+export default function CardStackPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white p-4">
-      <h1 className="mb-8 text-4xl font-bold tracking-tight text-gray-800">Playing Card Stack</h1>
-      <p className="mb-6 text-gray-600">Drag cards to remove them from the stack</p>
+    <>
+      {/* 構造化データ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageStructuredData),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(gameStructuredData),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqStructuredData),
+        }}
+      />
+      
+      <div className="min-h-screen flex flex-col relative">
+        <BackgroundAnimation />
+        <SiteHeader />
+        <main className="flex-1 relative z-10">
+          <div className="container mx-auto px-4 py-6">
+            <Breadcrumbs items={breadcrumbItems} />
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">🃏 トランプ山札めくるだけ</h1>
+                          <p className="text-gray-600 max-w-2xl mx-auto">
+              54枚のトランプ（ジョーカー含む）の山札からカードをめくるだけのシンプルなツールです。
+              ハイ&ロー、マーク予想、ジョーカーロシアンルーレットなど、お好きな遊び方でお楽しみください。
+            </p>
+            </div>
+            <CardStackClientPage />
+            
+            {/* SEO用の追加コンテンツ */}
+            <div className="mt-16 max-w-4xl mx-auto">
+              <section className="mb-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">🎮 ゲームモード紹介</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-lg font-bold mb-3">🃏 フリードロー</h3>
+                    <p className="text-gray-600 text-sm">
+                      予想なしで自由にカードを引くモード。純粋にカードを引く楽しみを味わえます。
+                    </p>
+                  </div>
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-lg font-bold mb-3">📈 ハイ&ロー</h3>
+                    <p className="text-gray-600 text-sm">
+                      現在のカードより次のカードが高いか低いかを予想。数値の駆け引きが楽しいゲームです。
+                    </p>
+                  </div>
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-lg font-bold mb-3">🔮 マーク予想</h3>
+                    <p className="text-gray-600 text-sm">
+                      次のカードのマーク（♠♥♦♣）を予想。4分の1の確率で的中する予想ゲームです。
+                    </p>
+                  </div>
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-lg font-bold mb-3">💥 ジョーカールーレット</h3>
+                    <p className="text-gray-600 text-sm">
+                      ジョーカーを引いたら負け！54分の2の確率でジョーカーが出るロシアンルーレット。
+                    </p>
+                  </div>
+                </div>
+              </section>
 
-      <div className="relative h-[400px] w-[280px]">
-        <AnimatePresence mode="popLayout">
-          {cards.slice(0, 5).map((card, index) => (
-            <PlayingCardComponent
-              key={card.id}
-              card={card}
-              index={index}
-              removeCard={removeCard}
-              totalCards={Math.min(cards.length, 5)}
-            />
-          ))}
-        </AnimatePresence>
-      </div>
+              <section className="mb-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">❓ よくある質問</h2>
+                <div className="space-y-4">
+                  <details className="bg-white rounded-lg shadow-md p-6">
+                    <summary className="font-bold cursor-pointer">トランプ山札めくるだけとはどんなゲームですか？</summary>
+                    <p className="mt-3 text-gray-600">
+                      54枚のトランプカード（ジョーカー2枚含む）を使用したオンラインカードゲームです。ハイ&ローゲーム、マーク予想ゲーム、ジョーカーロシアンルーレットの3つのモードで楽しめます。
+                    </p>
+                  </details>
+                  <details className="bg-white rounded-lg shadow-md p-6">
+                    <summary className="font-bold cursor-pointer">引いたカードはどうなりますか？</summary>
+                    <p className="mt-3 text-gray-600">
+                      一度引いたカードは山札から除外され、履歴として表示されます。リセットボタンを押すまで山札は減り続けます。これにより、残りカードの確率が変化していく戦略性があります。
+                    </p>
+                  </details>
+                  <details className="bg-white rounded-lg shadow-md p-6">
+                    <summary className="font-bold cursor-pointer">無料で遊べますか？</summary>
+                    <p className="mt-3 text-gray-600">
+                      はい、完全無料でお楽しみいただけます。会員登録やアプリのダウンロードも不要で、ブラウザですぐに遊べます。
+                    </p>
+                  </details>
+                </div>
+              </section>
 
-      <div className="mt-6 text-center text-gray-600">
-        <p>Cards remaining: {cards.length}</p>
-      </div>
-    </main>
-  )
-}
-
-interface CardProps {
-  card: PlayingCard
-  index: number
-  removeCard: (id: number) => void
-  totalCards: number
-}
-
-function PlayingCardComponent({ card, index, removeCard, totalCards }: CardProps) {
-  const zIndex = totalCards - index
-  const yOffset = index * 8
-  const xOffset = index * 2
-  const rotation = index * -2
-
-  const isRed = card.color === "red"
-  const cardColor = isRed ? "text-red-500" : "text-black"
-  const shadowColor = isRed ? "rgba(239, 68, 68, 0.3)" : "rgba(0, 0, 0, 0.3)"
-
-  // スーツマークの配置パターンを取得
-  const getSuitPattern = () => {
-    return (
-      <div className="flex flex-1 items-center justify-center">
-        <div className={`text-8xl ${cardColor}`}>{card.suit}</div>
-      </div>
-    )
-  }
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 100, x: xOffset }}
-      animate={{
-        opacity: 1,
-        y: yOffset,
-        x: xOffset,
-        scale: 1 - index * 0.02,
-        rotateZ: rotation,
-      }}
-      exit={{
-        opacity: 0,
-        x: Math.random() > 0.5 ? 300 : -300,
-        y: -200,
-        rotateZ: Math.random() * 30 - 15,
-        transition: { duration: 0.3 },
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 500,
-        damping: 50,
-        mass: 1,
-      }}
-      style={{
-        zIndex,
-        boxShadow: `0 ${5 + index * 3}px ${15 + index * 5}px ${shadowColor}`,
-      }}
-      className="absolute left-0 top-0 h-full w-full cursor-grab overflow-hidden rounded-xl bg-white border-2 border-gray-300 active:cursor-grabbing"
-      drag={index === 0}
-      dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
-      dragElastic={0.6}
-      onDragEnd={(_, info) => {
-        if (index === 0) {
-          const distance = Math.sqrt(Math.pow(info.offset.x, 2) + Math.pow(info.offset.y, 2))
-          if (distance > 100) {
-            removeCard(card.id)
-          }
-        }
-      }}
-      whileDrag={{
-        scale: 1.05,
-        boxShadow: `0 ${10 + index * 3}px ${25 + index * 5}px ${shadowColor}`,
-      }}
-    >
-      <div className="relative flex h-full w-full flex-col p-3">
-        {/* 左上のスーツと数字 */}
-        <div className={`flex flex-col items-start ${cardColor}`}>
-          <div className="text-lg font-bold leading-none">{card.value}</div>
-          <div className="text-lg leading-none">{card.suit}</div>
-        </div>
-
-        {/* 中央のスーツパターン */}
-        {getSuitPattern()}
-
-        {/* 右下のスーツと数字（逆さま） */}
-        <div className={`flex flex-col items-end ${cardColor} rotate-180 self-end`}>
-          <div className="text-lg font-bold leading-none">{card.value}</div>
-          <div className="text-lg leading-none">{card.suit}</div>
-        </div>
-
-        {/* ドラッグインジケーター（一番上のカードのみ） */}
-        {index === 0 && (
-          <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 flex-col items-center">
-            <motion.div
-              className="h-1 w-8 rounded-full bg-gray-400"
-              animate={{ y: [0, 3, 0] }}
-              transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
-            />
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">🏷️ 関連キーワード</h2>
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      "ハイ&ロー", "トランプ", "山札", "ジョーカーロシアンルーレット", "マーク予想ゲーム",
+                      "カードゲーム", "運試し", "確率ゲーム", "オンラインゲーム", "無料ゲーム",
+                      "スペード", "ハート", "ダイヤ", "クラブ", "ジョーカー", "暇つぶし"
+                    ].map((keyword) => (
+                      <span key={keyword} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
-        )}
+        </main>
+        <SiteFooter />
       </div>
-    </motion.div>
+    </>
   )
 }

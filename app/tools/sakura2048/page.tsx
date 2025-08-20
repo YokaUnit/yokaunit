@@ -1,6 +1,14 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
+import { Breadcrumbs } from "@/components/breadcrumbs"
+import { ScrollToTop } from "@/components/scroll-to-top"
+import { BackgroundAnimation } from "@/components/background-animation"
+import { motion } from "framer-motion"
+import { Maximize2, Minimize2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function SakuraEditor() {
   const [board, setBoard] = useState<number[][]>(() => {
@@ -107,6 +115,7 @@ export default function SakuraEditor() {
   const [moveCount, setMoveCount] = useState(0)
   const [showColors, setShowColors] = useState(false)
   const [currentTab, setCurrentTab] = useState<"game" | "help">("game")
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   // ランダムな位置に2または4を追加
   function addRandomTile(board: number[][]) {
@@ -301,6 +310,11 @@ export default function SakuraEditor() {
         case "C":
           // Cキーで色切り替え
           setShowColors((prev) => !prev)
+          break
+        case "f":
+        case "F":
+          // Fキーで全画面切り替え
+          setIsFullscreen((prev) => !prev)
           break
       }
     },
@@ -674,8 +688,19 @@ export default function SakuraEditor() {
 // 2048タブに戻るには「2048」タブをクリック`
   }
 
-  return (
-    <div className="h-screen bg-gray-100 flex flex-col">
+  const breadcrumbItems = [
+    { href: "/tools", label: "ツール一覧" },
+    { href: "/tools/sakura2048", label: "サクラエディタ風2048" },
+  ]
+
+  // 全画面表示の切り替え
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen)
+  }
+
+  // 全画面表示時のコンテンツ
+  const GameContent = () => (
+    <div className="min-h-[800px] bg-gray-100 flex flex-col">
       {/* タイトルバー */}
       <div className="bg-gray-200 border-b border-gray-300 px-2 py-1 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -827,6 +852,89 @@ export default function SakuraEditor() {
           <span className="text-gray-400">ベスト:{bestScore}</span>
         </div>
       </div>
+    </div>
+  )
+
+  // 全画面表示の場合
+  if (isFullscreen) {
+    return (
+      <div className="fixed inset-0 z-50 bg-gray-100">
+        {/* 全画面時の閉じるボタン */}
+        <Button
+          onClick={toggleFullscreen}
+          className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white text-gray-700"
+          size="sm"
+          title="全画面を終了 (Fキー)"
+        >
+          <Minimize2 className="w-4 h-4 mr-2" />
+          全画面終了
+        </Button>
+        <GameContent />
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col relative">
+      <BackgroundAnimation />
+      <SiteHeader />
+      
+      <main className="flex-1 relative z-10">
+        <div className="container mx-auto px-4 py-6">
+          <Breadcrumbs items={breadcrumbItems} />
+          
+          {/* ツール説明セクション */}
+          <motion.div 
+            className="mb-6 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm border p-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">
+              サクラエディタ風2048ゲーム
+            </h1>
+            <p className="text-gray-600 mb-4">
+              サクラエディタそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲームです。
+              コードを書いているフリをしながら2048パズルに挑戦してください。
+            </p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">隠しゲーム</span>
+              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">2048パズル</span>
+              <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">エディタ風</span>
+              <span className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">仕事中対応</span>
+            </div>
+            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded">
+              <p className="text-amber-800 text-sm">
+                <strong>操作方法：</strong> 矢印キーでタイルを移動、同じ数字を合体させて2048を目指そう！
+                Bキー：枠表示切替、Rキー：リスタート、Cキー：色表示切替、Fキー：全画面表示
+              </p>
+            </div>
+          </motion.div>
+
+          {/* ゲーム画面 */}
+          <motion.div 
+            className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border overflow-hidden relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            {/* 全画面表示ボタン */}
+            <Button
+              onClick={toggleFullscreen}
+              className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white text-gray-700"
+              size="sm"
+              title="全画面表示 (Fキー)"
+            >
+              <Maximize2 className="w-4 h-4 mr-2" />
+              全画面
+            </Button>
+                        <GameContent />
+          </motion.div>
+        </div>
+      </main>
+
+      <SiteFooter />
+      <ScrollToTop />
     </div>
   )
 }

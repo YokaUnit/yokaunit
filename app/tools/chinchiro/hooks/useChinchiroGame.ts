@@ -26,20 +26,7 @@ export function useChinchiroGame() {
 
     const newValues = [0, 0, 0]
     setDiceValues(newValues)
-
-    // 最大10秒後に強制的に結果を表示
-    setTimeout(() => {
-      if (rolling && !allDiceStopped) {
-        const randomValues = [
-          Math.floor(Math.random() * 6) + 1,
-          Math.floor(Math.random() * 6) + 1,
-          Math.floor(Math.random() * 6) + 1,
-        ]
-        setDiceValues(randomValues)
-        handleAllDiceStopped(randomValues, [false, false, false])
-      }
-    }, 10000)
-  }, [rolling, allDiceStopped])
+  }, [])
 
   const resetDice = useCallback(() => {
     setRolling(false)

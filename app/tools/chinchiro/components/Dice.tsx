@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react"
 import { useFrame } from "@react-three/fiber"
-import { RigidBody } from "@react-three/rapier"
+import { RigidBody, type RapierRigidBody } from "@react-three/rapier"
 import { DiceFace } from "./DiceFace"
 import { determineTopFace, isOutOfBowl, getRandomImpulse, getRandomTorque } from "../lib/chinchiro-logic"
 
@@ -27,9 +27,10 @@ export function Dice({
   continueFromCurrent,
   rollTrigger,
 }: DiceProps) {
-  const rigidBodyRef = useRef(null)
+  const rigidBodyRef = useRef<RapierRigidBody>(null)
   const [rested, setRested] = useState(false)
   const [topFace, setTopFace] = useState(1)
+  const [restingFrameCount, setRestingFrameCount] = useState(0)
   const size = 0.8
 
   const initialPosition: [number, number, number] = [position[0], 0.5, position[2]]
@@ -40,11 +41,12 @@ export function Dice({
         x: initialPosition[0],
         y: 0.5,
         z: initialPosition[2],
-      })
-      rigidBodyRef.current.setRotation({ x: Math.random(), y: Math.random(), z: Math.random(), w: Math.random() })
-      rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 })
-      rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 })
+      }, true)
+      rigidBodyRef.current.setRotation({ x: Math.random(), y: Math.random(), z: Math.random(), w: Math.random() }, true)
+      rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true)
+      rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true)
       setRested(false)
+      setRestingFrameCount(0)
     }
   }, [resetPosition])
 
@@ -55,30 +57,32 @@ export function Dice({
           x: initialPosition[0],
           y: 0.5,
           z: initialPosition[2],
-        })
-        rigidBodyRef.current.setRotation({ x: Math.random(), y: Math.random(), z: Math.random(), w: Math.random() })
+        }, true)
+        rigidBodyRef.current.setRotation({ x: Math.random(), y: Math.random(), z: Math.random(), w: Math.random() }, true)
       } else {
         const currentPos = rigidBodyRef.current.translation()
         rigidBodyRef.current.setTranslation({
           x: currentPos.x,
           y: currentPos.y + 0.1,
           z: currentPos.z,
-        })
+        }, true)
       }
 
-      rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 })
-      rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 })
+      rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true)
+      rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true)
 
       setTimeout(() => {
         if (rigidBodyRef.current) {
           const impulse = getRandomImpulse()
           const torque = getRandomTorque()
 
+          // @ts-ignore - Rapier API compatibility
           rigidBodyRef.current.applyImpulse({
             x: impulse[0],
             y: impulse[1],
             z: impulse[2],
           })
+          // @ts-ignore - Rapier API compatibility  
           rigidBodyRef.current.applyTorqueImpulse({
             x: torque[0],
             y: torque[1],
@@ -88,6 +92,7 @@ export function Dice({
       }, 10)
 
       setRested(false)
+      setRestingFrameCount(0)
     }
   }, [rollTrigger])
 
@@ -96,21 +101,30 @@ export function Dice({
       const vel = rigidBodyRef.current.linvel()
       const angVel = rigidBodyRef.current.angvel()
 
+      // より厳密な停止判定（閾値を小さく）
       const isResting =
-        Math.abs(vel.x) < 0.05 &&
-        Math.abs(vel.y) < 0.05 &&
-        Math.abs(vel.z) < 0.05 &&
-        Math.abs(angVel.x) < 0.05 &&
-        Math.abs(angVel.y) < 0.05 &&
-        Math.abs(angVel.z) < 0.05
+        Math.abs(vel.x) < 0.01 &&
+        Math.abs(vel.y) < 0.01 &&
+        Math.abs(vel.z) < 0.01 &&
+        Math.abs(angVel.x) < 0.01 &&
+        Math.abs(angVel.y) < 0.01 &&
+        Math.abs(angVel.z) < 0.01
 
       if (isResting) {
-        const face = determineTopFace(rigidBodyRef.current.rotation())
-        setTopFace(face)
-        setRested(true)
+        // 連続して10フレーム停止状態を確認してから判定（約0.16秒）
+        setRestingFrameCount(prev => prev + 1)
+        
+        if (restingFrameCount >= 10) {
+          const face = determineTopFace(rigidBodyRef.current.rotation())
+          setTopFace(face)
+          setRested(true)
 
-        const outOfBowl = isOutOfBowl(rigidBodyRef.current.translation())
-        onRest(index, face, outOfBowl)
+          const outOfBowl = isOutOfBowl(rigidBodyRef.current.translation())
+          onRest(index, face, outOfBowl)
+        }
+      } else {
+        // 停止していない場合はカウンターをリセット
+        setRestingFrameCount(0)
       }
     }
   })

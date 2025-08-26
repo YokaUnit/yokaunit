@@ -93,12 +93,7 @@ export default function SakuraEditor() {
         "完全無料",
         "登録不要",
         "スマホ対応"
-      ],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "1200"
-      }
+      ]
     }
 
     let scriptTag = document.querySelector('#sakura2048-structured-data')

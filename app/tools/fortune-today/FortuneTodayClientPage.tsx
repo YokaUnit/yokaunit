@@ -65,13 +65,7 @@ export default function FortuneTodayClientPage() {
         "url": "https://yokaunit.com"
       },
       "datePublished": "2024-01-01",
-      "dateModified": new Date().toISOString().split('T')[0],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.7",
-        "reviewCount": "892",
-        "bestRating": "5"
-      }
+      "dateModified": new Date().toISOString().split('T')[0]
     }
 
     // 構造化データ（FAQ）

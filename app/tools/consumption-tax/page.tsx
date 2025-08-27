@@ -121,14 +121,16 @@ export default function ConsumptionTaxPage() {
 
             {/* 履歴セクション */}
             <section id="history" className="mb-16">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                  計算履歴
-                </h2>
-                <p className="text-gray-600">
-                  過去の計算結果を確認したり、CSVファイルとしてエクスポートできます。
-                </p>
-              </div>
+                          <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                計算履歴
+              </h2>
+              <p className="text-gray-600">
+                過去の計算結果を確認したり、<strong>Excel対応のCSVファイル</strong>としてエクスポートできます。
+                <br className="hidden sm:block" />
+                <span className="text-sm text-gray-500">※文字化け対策済み・BOM付きUTF-8形式</span>
+              </p>
+            </div>
               <CalculationHistory />
             </section>
           </ConsumptionTaxProvider>
@@ -168,8 +170,8 @@ export default function ConsumptionTaxPage() {
                 },
                 {
                   icon: '📁',
-                  title: 'CSVエクスポート',
-                  description: '計算履歴をCSVファイルとしてダウンロード可能',
+                  title: 'Excel対応CSV出力',
+                  description: '計算履歴をExcel対応のCSVファイルでダウンロード（文字化け対策済み）',
                 },
                 {
                   icon: '📱',
@@ -220,7 +222,7 @@ export default function ConsumptionTaxPage() {
                 },
                 {
                   question: '計算履歴は保存されますか？CSV出力はできる？',
-                  answer: 'はい、計算履歴はブラウザのローカルストレージに自動保存され、最大100件まで保存できます。CSVファイルとしてダウンロードも可能で、Excelで開いて管理できます。',
+                  answer: 'はい、計算履歴はブラウザのローカルストレージに自動保存され、最大100件まで保存できます。Excel対応のCSVファイルとしてダウンロードも可能で、文字化けすることなくExcelで開いて管理できます。',
                 },
                 {
                   question: 'スマホでも使いやすいですか？iPhone・Androidで動作する？',

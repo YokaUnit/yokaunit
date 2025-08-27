@@ -221,32 +221,48 @@ export function useConsumptionTaxCalculator() {
       '税額',
       '合計金額',
       '通貨',
+      'メモ'
     ];
     
     const rows = history.map(item => [
       item.timestamp.toLocaleString('ja-JP'),
-      item.calculation.calculationType === 'tax-included' ? '税込計算' :
-      item.calculation.calculationType === 'tax-excluded' ? '税抜計算' : '税額計算',
-      item.calculation.baseAmount.toString(),
-      item.calculation.taxRate.toString(),
-      item.calculation.taxAmount.toString(),
-      item.calculation.totalAmount.toString(),
-      item.currency?.code || 'JPY',
+      item.calculation.calculationType === 'tax-included' ? '税込→税抜計算' :
+      item.calculation.calculationType === 'tax-excluded' ? '税抜→税込計算' : '税額のみ計算',
+      item.calculation.baseAmount.toLocaleString('ja-JP'),
+      `${item.calculation.taxRate}%`,
+      item.calculation.taxAmount.toLocaleString('ja-JP'),
+      item.calculation.totalAmount.toLocaleString('ja-JP'),
+      item.currency?.name || '日本円',
+      item.note || ''
     ]);
     
     const csvContent = [headers, ...rows]
       .map(row => row.map(cell => `"${cell}"`).join(','))
-      .join('\n');
+      .join('\r\n'); // Windows改行コードを使用
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    // BOM付きUTF-8でエンコード（Excel文字化け対策）
+    const BOM = '\uFEFF';
+    const csvWithBOM = BOM + csvContent;
+    
+    const blob = new Blob([csvWithBOM], { 
+      type: 'text/csv;charset=utf-8;' 
+    });
+    
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
+    const fileName = `消費税計算履歴_${new Date().toISOString().split('T')[0]}.csv`;
+    
     link.setAttribute('href', url);
-    link.setAttribute('download', `消費税計算履歴_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', fileName);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    
+    // メモリリークを防ぐためURLを解放
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 100);
   }, [state.history]);
 
   return {

@@ -137,7 +137,7 @@ export function createCalculationHistory(calculation: TaxCalculation, currency?:
 }
 
 /**
- * CSVエクスポート用のデータを生成
+ * CSVエクスポート用のデータを生成（Excel対応・BOM付きUTF-8）
  */
 export function generateCSVData(history: CalculationHistory[]): string {
   const headers = [
@@ -152,20 +152,31 @@ export function generateCSVData(history: CalculationHistory[]): string {
   ];
   
   const rows = history.map(item => [
-    item.timestamp.toLocaleString('ja-JP'),
-    item.calculation.calculationType === 'tax-included' ? '税込計算' :
-    item.calculation.calculationType === 'tax-excluded' ? '税抜計算' : '税額計算',
-    item.calculation.baseAmount.toString(),
-    item.calculation.taxRate.toString(),
-    item.calculation.taxAmount.toString(),
-    item.calculation.totalAmount.toString(),
-    item.currency?.code || 'JPY',
+    item.timestamp.toLocaleString('ja-JP', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }),
+    item.calculation.calculationType === 'tax-included' ? '税込→税抜計算' :
+    item.calculation.calculationType === 'tax-excluded' ? '税抜→税込計算' : '税額のみ計算',
+    item.calculation.baseAmount.toLocaleString('ja-JP'),
+    `${item.calculation.taxRate}%`,
+    item.calculation.taxAmount.toLocaleString('ja-JP'),
+    item.calculation.totalAmount.toLocaleString('ja-JP'),
+    item.currency?.name || '日本円',
     item.note || ''
   ]);
   
-  return [headers, ...rows]
-    .map(row => row.map(cell => `"${cell}"`).join(','))
-    .join('\n');
+  const csvContent = [headers, ...rows]
+    .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    .join('\r\n'); // Windows改行コードを使用
+  
+  // BOM付きUTF-8でエンコード（Excel文字化け対策）
+  const BOM = '\uFEFF';
+  return BOM + csvContent;
 }
 
 /**

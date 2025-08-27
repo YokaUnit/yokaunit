@@ -57,11 +57,13 @@ export function CalculationHistory() {
             <button
               onClick={exportToCSV}
               className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium"
+              title="計算履歴をCSVファイルでダウンロード（Excel対応・文字化け対策済み）"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              CSV出力
+              <span className="hidden sm:inline">CSV出力</span>
+              <span className="sm:hidden">CSV</span>
             </button>
             
             <button

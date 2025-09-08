@@ -400,7 +400,7 @@ export default function TermsPage() {
             {/* 最終更新日 */}
             <div className="text-center mt-8">
               <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm">
-                <p className="text-sm text-gray-500">最終更新日：2024年1月15日</p>
+                <p className="text-sm text-gray-500">最終更新日：2025年9月10日</p>
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import UuidGeneratorClientPage from "./UuidGeneratorClientPage"
 
 export const metadata: Metadata = {
-  title: "UUID生成ツール｜PostgreSQL対応のUUIDを無料生成・開発者向けツール【2024年最新版】 | yokaunit",
+  title: "UUID生成ツール｜PostgreSQL対応のUUIDを無料生成・開発者向けツール | yokaunit",
   description:
     "【完全無料】PostgreSQL UUID型対応（8-4-4-4-12形式）のUUID生成ツール。v1～v4、Nil UUID対応。一括生成・バリデーション機能付き。開発者必携の高機能UUIDジェネレーター。ブラウザ完結でセキュア。",
   keywords: [
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     locale: "ja_JP",
     url: "https://yokaunit.com/tools/uuid",
     siteName: "YokaUnit",
-    title: "UUID生成ツール｜PostgreSQL対応のUUIDを無料生成・開発者向けツール【2024年最新版】",
+    title: "UUID生成ツール｜PostgreSQL対応のUUIDを無料生成・開発者向けツール",
     description: "PostgreSQL UUID型対応（8-4-4-4-12形式）のUUID生成ツール。v1～v4、Nil UUID対応。一括生成・バリデーション機能付き。開発者必携の高機能UUIDジェネレーター。",
     images: [
       {

@@ -7,7 +7,7 @@ import CardStackClientPage from "./CardStackClientPage"
 import { webPageStructuredData, gameStructuredData, faqStructuredData } from "./lib/structured-data"
 
 export const metadata: Metadata = {
-  title: "トランプ山札めくるだけ｜ハイ&ロー・マーク予想・ジョーカーロシアンルーレット【2024年最新版】 | yokaunit",
+  title: "トランプ山札めくるだけ｜ハイ&ロー・マーク予想・ジョーカーロシアンルーレット| yokaunit",
   description:
     "【完全無料】54枚のトランプ（ジョーカー含む）の山札からカードをめくるだけのシンプルなツール。ハイ&ロー、マーク予想、ジョーカーロシアンルーレットなど、お好きな遊び方で楽しめます。引いたカードは履歴に表示され、リセット機能付きで何度でも楽しめます。",
   keywords: [
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     locale: "ja_JP",
     url: "https://yokaunit.com/tools/cardstack",
     siteName: "YokaUnit",
-    title: "トランプ山札めくるだけ｜ハイ&ロー・マーク予想・ジョーカーロシアンルーレット【2024年最新版】",
+    title: "トランプ山札めくるだけ｜ハイ&ロー・マーク予想・ジョーカーロシアンルーレット",
     description: "【完全無料】54枚のトランプでハイ&ローゲーム、マーク予想ゲーム、ジョーカーロシアンルーレットが楽しめる！山札から1枚ずつカードを引いて運試し。",
     images: [
       {

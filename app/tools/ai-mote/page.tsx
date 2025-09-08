@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@yokaunit",
     creator: "@yokaunit",
-    title: "AIモテ度診断｜無料でできる恋愛相性・モテ診断ツール【2024年最新版】",
+    title: "AIモテ度診断｜無料でできる恋愛相性・モテ診断ツール",
     description: "【完全無料】AIがあなたのモテ度を0-100%で数値化！ポジティブ度・社交性・共感力を最新AI技術で分析。",
     images: ["/ogp/ai-mote-diagnosis.png"],
   },

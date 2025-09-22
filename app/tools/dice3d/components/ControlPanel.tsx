@@ -263,56 +263,20 @@ export function ControlPanel({
         </CardContent>
       </Card>
 
-      {/* 結果表示 */}
-      {results.length > 0 && (
+      {/* 合計表示 */}
+      {statistics && statistics.total > 0 && (
         <Card className="bg-white/90 backdrop-blur-sm border-gray-200 shadow-lg">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-gray-900">
               <BarChart3 className="h-5 w-5 text-orange-600" />
-              結果
+              合計
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-6 gap-2 max-h-32 overflow-y-auto">
-              {results.map((result) => (
-                <div
-                  key={result.id}
-                  className="flex items-center justify-center w-8 h-8 rounded-md text-xs font-bold text-white shadow-sm border-2 border-white"
-                  style={{ backgroundColor: result.color }}
-                >
-                  {result.value}
-                </div>
-              ))}
+          <CardContent>
+            <div className="bg-orange-50 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-orange-600">{statistics.total}</div>
+              <div className="text-sm text-gray-600 mt-1">{statistics.count}個のサイコロ</div>
             </div>
-            
-            {statistics && (
-              <>
-                <Separator className="my-3" />
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="bg-orange-50 p-3 rounded-lg">
-                      <div className="text-xs font-medium text-gray-600 mb-1">合計</div>
-                      <div className="text-lg font-bold text-orange-600">{statistics.total}</div>
-                    </div>
-                    <div className="bg-orange-50 p-3 rounded-lg">
-                      <div className="text-xs font-medium text-gray-600 mb-1">平均</div>
-                      <div className="text-lg font-bold text-orange-600">{statistics.average}</div>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <div className="text-xs font-medium text-gray-600 mb-2">分布</div>
-                    <div className="space-y-1">
-                      {Object.entries(statistics.distribution).map(([value, count]) => (
-                        <div key={value} className="flex justify-between text-xs">
-                          <span className="text-gray-600">{value}の目:</span>
-                          <span className="font-mono font-medium">{count}個</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
           </CardContent>
         </Card>
       )}

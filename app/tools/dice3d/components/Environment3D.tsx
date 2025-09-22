@@ -1,11 +1,11 @@
 import { RigidBody } from "@react-three/rapier"
 
-// 地面コンポーネント（チンチロ3D風のテーブル）
+// 地面コンポーネント（大きなテーブル）
 export function Ground() {
   return (
     <RigidBody type="fixed" colliders="cuboid">
       <mesh position={[0, -2, 0]} receiveShadow>
-        <boxGeometry args={[30, 1, 30]} />
+        <boxGeometry args={[100, 1, 100]} />
         <meshStandardMaterial color="#8B4513" />
       </mesh>
     </RigidBody>

@@ -80,12 +80,12 @@ export function isDiceAtRest(linearVelocity: Vector3, angularVelocity: Vector3, 
   return linearSpeed < threshold && angularSpeed < threshold
 }
 
-// サイコロを中央付近に集めて配置（チンチロ3D風）
+// サイコロを中央付近に集めて配置（地面の上に）
 export function getRandomSpawnPosition(index: number, totalDice: number): [number, number, number] {
-  // 中央付近に集めて配置（チンチロ3Dのように）
+  // 中央付近に集めて配置（地面の上に）
   const randomX = (Math.random() - 0.5) * 3 // -1.5 ~ 1.5の範囲
   const randomZ = (Math.random() - 0.5) * 3 // -1.5 ~ 1.5の範囲
-  const height = 1 + Math.random() * 2 // 1-3の高さ
+  const height = -1 + Math.random() * 1 // -1 ~ 0の高さ（地面の上）
   
   return [randomX, height, randomZ]
 }

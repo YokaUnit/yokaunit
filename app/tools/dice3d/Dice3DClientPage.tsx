@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useRef } from "react"
+import { Suspense, useEffect, useRef, createRef } from "react"
 import { Canvas } from "@react-three/fiber"
 import { Physics } from "@react-three/rapier"
 import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei"
@@ -28,17 +28,16 @@ export function Dice3DClientPage() {
     getStatistics,
   } = useDice3D()
 
-  const diceRefs = useRef<Map<number, React.RefObject<Dice3DRef>>>(new Map())
+  const diceRefs = useRef<Map<number, React.RefObject<Dice3DRef | null>>>(new Map())
 
-  // サイコロのrefを管理
-  useEffect(() => {
-    diceInstances.forEach(dice => {
-      if (!diceRefs.current.has(dice.id)) {
-        const ref = { current: null }
-        diceRefs.current.set(dice.id, ref)
-        dice.ref.current = ref.current
-      }
-    })
+   // サイコロのrefを管理
+   useEffect(() => {
+     diceInstances.forEach(dice => {
+       if (!diceRefs.current.has(dice.id)) {
+         const ref = createRef<Dice3DRef>()
+         diceRefs.current.set(dice.id, ref)
+       }
+     })
 
     // 削除されたサイコロのrefを削除
     const currentIds = new Set(diceInstances.map(d => d.id))
@@ -84,7 +83,7 @@ export function Dice3DClientPage() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* 3Dビューポート */}
             <div className="lg:col-span-3">
-              <div className="bg-gray-900 rounded-lg border border-gray-700 shadow-lg overflow-hidden">
+               <div className="overflow-hidden">
                 <div className="h-[70vh] min-h-[500px]">
                 <Canvas 
                   shadows 
@@ -102,33 +101,35 @@ export function Dice3DClientPage() {
                       shadow-mapSize-height={1024}
                     />
                     
+                    {/* チンチロ3Dと同じpark背景 */}
+                    <Environment preset="park" background />
+                    
                     <Physics 
-                      gravity={[0, -20, 0]} 
+                      gravity={[0, -15, 0]} 
                       debug={false}
                     >
                       {/* 環境 */}
                       <Ground />
                       <Walls />
                       
-                      {/* サイコロ */}
-                      {diceInstances.map(dice => {
-                        const ref = diceRefs.current.get(dice.id)
-                        if (ref) {
-                          dice.ref = ref
-                        }
-                        
-                        return (
-                          <Dice3D
-                            key={dice.id}
-                            ref={dice.ref}
-                            id={dice.id}
-                            position={dice.position}
-                            color={dice.color}
-                            physics={physics}
-                            onRest={handleDiceRest}
-                          />
-                        )
-                      })}
+                       {/* サイコロ */}
+                       {diceInstances.map(dice => {
+                         const ref = diceRefs.current.get(dice.id)
+                         if (ref) {
+                           return (
+                             <Dice3D
+                               key={dice.id}
+                               ref={ref}
+                               id={dice.id}
+                               position={dice.position}
+                               color={dice.color}
+                               physics={physics}
+                               onRest={handleDiceRest}
+                             />
+                           )
+                         }
+                         return null
+                       })}
                     </Physics>
                     
                     {/* カメラコントロール（チンチロ3D風） */}
@@ -161,24 +162,24 @@ export function Dice3DClientPage() {
               </div>
             </div>
 
-            {/* サイドバー */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-4 space-y-4 max-h-[80vh] overflow-y-auto">
-                <ControlPanel
-                  diceCount={diceInstances.length}
-                  isRolling={isRolling}
-                  physics={physics}
-                  results={diceResults}
-                  statistics={statistics}
-                  onAddDice={addDice}
-                  onRemoveDice={removeLastDice}
-                  onClearAll={clearAllDice}
-                  onRollAll={rollAllDice}
-                  onResetAll={resetAllDice}
-                  onUpdatePhysics={updatePhysics}
-                />
-              </div>
-            </div>
+             {/* サイドバー */}
+             <div className="lg:col-span-1">
+               <div className="space-y-4">
+                 <ControlPanel
+                   diceCount={diceInstances.length}
+                   isRolling={isRolling}
+                   physics={physics}
+                   results={diceResults}
+                   statistics={statistics}
+                   onAddDice={addDice}
+                   onRemoveDice={removeLastDice}
+                   onClearAll={clearAllDice}
+                   onRollAll={rollAllDice}
+                   onResetAll={resetAllDice}
+                   onUpdatePhysics={updatePhysics}
+                 />
+               </div>
+             </div>
           </div>
 
           {/* 機能説明 */}

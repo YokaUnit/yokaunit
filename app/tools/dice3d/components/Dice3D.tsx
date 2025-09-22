@@ -102,8 +102,8 @@ export const Dice3D = forwardRef<Dice3DRef, Dice3DProps>(({
     if (isDiceAtRest(linearVelocity, angularVelocity)) {
       setRestingFrames(prev => prev + 1)
       
-      // 一定フレーム静止していたら結果を確定
-      if (restingFrames >= 30) {
+       // 早い判定で結果を確定
+       if (restingFrames >= 10) {
         const rotation = rigidBodyRef.current.rotation()
         const quaternion = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w)
         const value = determineTopFace(quaternion)

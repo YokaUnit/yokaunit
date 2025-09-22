@@ -80,3 +80,4 @@ export function DiceFace({ position, rotation, number, size }: DiceFaceProps) {
     </group>
   )
 }
+

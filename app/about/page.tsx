@@ -176,7 +176,7 @@ export default function AboutPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-gray-700 leading-relaxed">
-                    YokaUnitは2024年に「日常のちょっとした不便を解決したい」という想いから生まれました。開発者自身が実際に困った場面で使いたいと思うツールを中心に、一つひとつ丁寧に作り上げています。
+                    YokaUnitは2025年に「日常のちょっとした不便を解決したい」という想いから生まれました。開発者自身が実際に困った場面で使いたいと思うツールを中心に、一つひとつ丁寧に作り上げています。
                   </p>
                   <p className="text-gray-700 leading-relaxed">
                     最初に開発したのは<a href="/tools/password" className="text-blue-600 hover:underline">パスワード生成ツール</a>でした。既存のサービスは広告が多すぎたり、使いにくかったりと、本当に必要な時にストレスを感じることが多かったからです。「シンプルで使いやすく、広告に邪魔されない」というコンセプトはここから始まりました。

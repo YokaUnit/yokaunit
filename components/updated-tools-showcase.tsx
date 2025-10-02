@@ -17,7 +17,7 @@ import Image from "next/image"
 
 export function UpdatedToolsShowcase() {
   const [favorites, setFavorites] = useState<string[]>([])
-  const [displayCount, setDisplayCount] = useState(10)
+  const [displayCount, setDisplayCount] = useState(12)
   const [updatedTools, setUpdatedTools] = useState<Tool[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -31,15 +31,15 @@ export function UpdatedToolsShowcase() {
       if (typeof window === 'undefined') return
       
       if (window.innerWidth >= 1280) {
-        setDisplayCount(8)
+        setDisplayCount(12)
       } else if (window.innerWidth >= 1024) {
-        setDisplayCount(6)
+        setDisplayCount(10)
       } else if (window.innerWidth >= 768) {
-        setDisplayCount(4)
+        setDisplayCount(8)
       } else if (window.innerWidth >= 640) {
-        setDisplayCount(4)
+        setDisplayCount(8)
       } else {
-        setDisplayCount(2)
+        setDisplayCount(8)
       }
     }
 

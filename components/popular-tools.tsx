@@ -16,7 +16,7 @@ export function PopularTools() {
       try {
         const { tools } = await getTools({
           isPopular: true,
-          limit: 15,
+          limit: 20,
           userRole: "basic", // プレミアムツールと非公開ツールを除外
         })
         setPopularTools(tools)

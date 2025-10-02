@@ -68,7 +68,7 @@ export function Dice3DClientPage() {
                       alpha: false,
                       powerPreference: "high-performance" // 高性能GPU使用
                     }} 
-                    dpr={Math.min(window.devicePixelRatio, 2)} // DPRを制限
+                    dpr={typeof window !== 'undefined' ? Math.min(window.devicePixelRatio, 2) : 1} // SSR対応
                     performance={{ min: 0.5 }} // パフォーマンス最適化
                   >
                     <Suspense fallback={null}>

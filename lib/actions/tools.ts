@@ -109,6 +109,25 @@ export async function getToolBySlug(slug: string): Promise<Tool | null> {
   return data
 }
 
+export async function getLatestTools(limit: number = 15): Promise<Tool[]> {
+  const supabase = createServerSupabaseClient()
+
+  const { data, error } = await supabase
+    .from("tools")
+    .select("*")
+    .eq("is_active", true)
+    .eq("is_premium", false)
+    .eq("is_private", false)
+    .order("updated_at", { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    throw new Error(`Error fetching latest tools: ${error.message}`)
+  }
+
+  return data || []
+}
+
 export async function getCategories(): Promise<string[]> {
   const supabase = createServerSupabaseClient()
 

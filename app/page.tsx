@@ -6,6 +6,8 @@ import { SocialRequestBanner } from "@/components/social-request-banner"
 import { AdminMessage } from "@/components/admin-message"
 import { CorporateSection } from "@/components/corporate-section"
 import { MembershipSection } from "@/components/membership-section"
+import { PopularTools } from "@/components/popular-tools"
+import { UpdatedToolsShowcase } from "@/components/updated-tools-showcase"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -55,7 +57,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "YokaUnit - 無料で使える便利なWebツール集🛠️",
     description:
-      "パスワード生成、チンチロゲーム、SEO対策ツールなど完全無料！登録不要ですぐ使える便利ツールが満載✨ あなたの作業効率を劇的アップ🚀",
+      "パスワード生成、チンチロゲーム、登録不要・無料ですぐ使える便利ツールが満載✨",
     images: ["/ogp/yokaunit-common.png"],
     creator: "@yokaunit",
     site: "@yokaunit",
@@ -78,11 +80,13 @@ export default function Home() {
             <div className="md:col-span-2">
               <CurrentlyBuilding />
               <ToolsShowcase />
+              <UpdatedToolsShowcase />
             </div>
             <div className="space-y-4">
               <AdminMessage />
               <CorporateSection />
               <MembershipSection />
+              <PopularTools />
             </div>
           </div>
         </div>

@@ -1,9 +1,8 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { getRandomSpawnPosition, getDiceColor, DEFAULT_PHYSICS } from "../lib/dice-physics"
 import type { DicePhysicsSettings } from "../lib/dice-physics"
-import type { Dice3DRef } from "../components/Dice3D"
 
 interface DiceResult {
   id: number
@@ -15,7 +14,13 @@ interface DiceInstance {
   id: number
   position: [number, number, number]
   color: string
-  ref: React.RefObject<Dice3DRef>
+}
+
+interface Statistics {
+  total: number
+  average: number
+  count: number
+  distribution: Record<number, number>
 }
 
 export function useDice3D() {
@@ -23,7 +28,9 @@ export function useDice3D() {
   const [diceResults, setDiceResults] = useState<DiceResult[]>([])
   const [isRolling, setIsRolling] = useState(false)
   const [physics, setPhysics] = useState<DicePhysicsSettings>(DEFAULT_PHYSICS)
-  const nextDiceId = useRef(1)
+  const [resetTrigger, setResetTrigger] = useState(0)
+  const [rollTrigger, setRollTrigger] = useState(0)
+  const [allDiceStopped, setAllDiceStopped] = useState(false)
 
   // サイコロを追加
   const addDice = useCallback((count: number = 1) => {
@@ -31,7 +38,7 @@ export function useDice3D() {
       const newDice: DiceInstance[] = []
       
       for (let i = 0; i < count; i++) {
-        const id = nextDiceId.current++
+        const id = prev.length + i + 1
         const position = getRandomSpawnPosition(prev.length + i, prev.length + count)
         const color = getDiceColor(prev.length + i)
         
@@ -39,7 +46,6 @@ export function useDice3D() {
           id,
           position,
           color,
-          ref: { current: null },
         })
       }
       
@@ -51,7 +57,8 @@ export function useDice3D() {
   const clearAllDice = useCallback(() => {
     setDiceInstances([])
     setDiceResults([])
-    nextDiceId.current = 1
+    setIsRolling(false)
+    setAllDiceStopped(false)
   }, [])
 
   // 最後のサイコロを削除
@@ -60,37 +67,33 @@ export function useDice3D() {
     setDiceResults(prev => prev.slice(0, -1))
   }, [])
 
-  // すべてのサイコロを振る
+  // すべてのサイコロを振る（高速化）
   const rollAllDice = useCallback(() => {
-    if (diceInstances.length === 0 || isRolling) return
+    if (diceInstances.length === 0) return
     
     setIsRolling(true)
     setDiceResults([])
-    
-    diceInstances.forEach(dice => {
-      dice.ref.current?.roll()
-    })
-  }, [diceInstances, isRolling])
+    setAllDiceStopped(false)
+    setRollTrigger(prev => prev + 1)
+  }, [diceInstances.length]) // isRollingの依存関係を削除
 
   // すべてのサイコロをリセット
   const resetAllDice = useCallback(() => {
     setIsRolling(false)
     setDiceResults([])
-    
-    diceInstances.forEach(dice => {
-      dice.ref.current?.reset()
-    })
-  }, [diceInstances])
+    setAllDiceStopped(false)
+    setResetTrigger(prev => prev + 1)
+  }, [])
 
-  // サイコロが静止した時の処理
-  const handleDiceRest = useCallback((id: number, value: number) => {
+  // サイコロが静止した時の処理（高速化）
+  const handleDiceRest = useCallback((index: number, value: number) => {
     setDiceResults(prev => {
       const newResults = [...prev]
-      const existingIndex = newResults.findIndex(result => result.id === id)
-      const dice = diceInstances.find(d => d.id === id)
+      const existingIndex = newResults.findIndex(result => result.id === index + 1)
+      const dice = diceInstances.find(d => d.id === index + 1)
       
       const result: DiceResult = {
-        id,
+        id: index + 1,
         value,
         color: dice?.color || "#ffffff",
       }
@@ -101,9 +104,10 @@ export function useDice3D() {
         newResults.push(result)
       }
       
-      // すべてのサイコロが静止したかチェック
+      // すべてのサイコロが静止したかチェック（遅延なしで即座に処理）
       if (newResults.length === diceInstances.length) {
-        setIsRolling(false)
+        setAllDiceStopped(true)
+        setIsRolling(false) // 遅延を削除
       }
       
       return newResults
@@ -116,7 +120,7 @@ export function useDice3D() {
   }, [])
 
   // 統計情報を計算
-  const getStatistics = useCallback(() => {
+  const getStatistics = useCallback((): Statistics | null => {
     if (diceResults.length === 0) return null
     
     const values = diceResults.map(r => r.value)
@@ -135,12 +139,22 @@ export function useDice3D() {
     }
   }, [diceResults])
 
+  // 初期サイコロを追加（1回だけ）
+  const initializeDice = useCallback(() => {
+    if (diceInstances.length === 0) {
+      addDice(1)
+    }
+  }, [diceInstances.length, addDice])
+
   return {
     // State
     diceInstances,
     diceResults,
     isRolling,
     physics,
+    resetTrigger,
+    rollTrigger,
+    allDiceStopped,
     
     // Actions
     addDice,
@@ -149,6 +163,7 @@ export function useDice3D() {
     rollAllDice,
     resetAllDice,
     updatePhysics,
+    initializeDice,
     
     // Handlers
     handleDiceRest,

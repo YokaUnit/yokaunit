@@ -9,88 +9,124 @@ export interface DicePhysicsSettings {
   mass: number            // 質量
 }
 
-// デフォルトの物理設定（チンチロ3D風、重いサイコロ）
+// デフォルトの物理設定（チンチロ3D準拠）
 export const DEFAULT_PHYSICS: DicePhysicsSettings = {
-  impulseStrength: 6,      // 適度な投げる力
-  torqueStrength: 8,       // 適度な回転力
-  restitution: 0.1,        // 低い反発（チンチロ3D風）
+  impulseStrength: 3,      // 適度な投げる力
+  torqueStrength: 1.5,     // 適度な回転力
+  restitution: 0.1,        // 低い反発（チンチロ3D同様）
   friction: 0.8,           // 高い摩擦で安定
-  mass: 20,                // 重いサイコロ
+  mass: 10,                // チンチロ3D同様の重さ
 }
 
-// ランダムな力を生成
-export function getRandomImpulse(strength: number): [number, number, number] {
+// ランダムな力を生成（チンチロ3D準拠）
+export function getRandomImpulse(strength: number = 3): [number, number, number] {
+  return [
+    (Math.random() - 0.5) * strength, // X方向
+    Math.random() * strength + 2,     // Y方向（上向き）
+    (Math.random() - 0.5) * strength, // Z方向
+  ]
+}
+
+// ランダムな回転力を生成（チンチロ3D準拠）
+export function getRandomTorque(strength: number = 1.5): [number, number, number] {
   return [
     (Math.random() - 0.5) * strength,
-    Math.random() * strength * 0.5 + strength * 0.5, // 上向きに偏らせる
+    (Math.random() - 0.5) * strength,
     (Math.random() - 0.5) * strength,
   ]
 }
 
-// ランダムな回転力を生成
-export function getRandomTorque(strength: number): [number, number, number] {
-  return [
-    (Math.random() - 0.5) * strength,
-    (Math.random() - 0.5) * strength,
-    (Math.random() - 0.5) * strength,
-  ]
-}
-
-// サイコロの上面を判定
+// サイコロの上面を判定（チンチロ3D準拠）
 export function determineTopFace(rotation: any): number {
-  // クォータニオンから回転行列を取得
-  const rotationMatrix = new Vector3()
-  
-  // 各面の法線ベクトル（ローカル座標）
-  const faces = [
-    new Vector3(0, 1, 0),  // 上面 (1)
-    new Vector3(0, -1, 0), // 下面 (6)
-    new Vector3(1, 0, 0),  // 右面 (3)
-    new Vector3(-1, 0, 0), // 左面 (4)
-    new Vector3(0, 0, 1),  // 前面 (2)
-    new Vector3(0, 0, -1), // 後面 (5)
+  if (!rotation) return 1
+
+  const q = rotation
+
+  // 四元数→回転行列
+  const rotMatrix = [
+    [1 - 2 * (q.y * q.y + q.z * q.z), 2 * (q.x * q.y - q.z * q.w), 2 * (q.x * q.z + q.y * q.w)],
+    [2 * (q.x * q.y + q.z * q.w), 1 - 2 * (q.x * q.x + q.z * q.z), 2 * (q.y * q.z - q.x * q.w)],
+    [2 * (q.x * q.z - q.y * q.w), 2 * (q.y * q.z + q.x * q.w), 1 - 2 * (q.x * q.x + q.y * q.y)],
   ]
 
-  // 上向きのワールド座標ベクトル
-  const up = new Vector3(0, 1, 0)
-  
-  let maxDot = -1
-  let topFace = 1
+  // 各面の法線ベクトル（チンチロ3D準拠）
+  const normals = [
+    { face: 4, normal: [0, 1, 0] },   // 上面
+    { face: 2, normal: [1, 0, 0] },   // 右面
+    { face: 1, normal: [0, 0, 1] },   // 前面
+    { face: 6, normal: [0, 0, -1] },  // 後面
+    { face: 5, normal: [-1, 0, 0] },  // 左面
+    { face: 3, normal: [0, -1, 0] },  // 下面
+  ]
 
-  faces.forEach((face, index) => {
-    // 面の法線をワールド座標に変換
-    const worldNormal = face.clone().applyQuaternion(rotation)
-    const dot = worldNormal.dot(up)
-    
+  let maxDot = Number.NEGATIVE_INFINITY
+  let resultFace = 1
+
+  normals.forEach(({ face, normal }) => {
+    // normal ベクトルに回転行列を掛ける
+    const rotated = {
+      x: rotMatrix[0][0] * normal[0] + rotMatrix[0][1] * normal[1] + rotMatrix[0][2] * normal[2],
+      y: rotMatrix[1][0] * normal[0] + rotMatrix[1][1] * normal[1] + rotMatrix[1][2] * normal[2],
+      z: rotMatrix[2][0] * normal[0] + rotMatrix[2][1] * normal[1] + rotMatrix[2][2] * normal[2],
+    }
+
+    // 上方向(Y軸正方向)との内積
+    const dot = rotated.y
+
     if (dot > maxDot) {
       maxDot = dot
-      // 面番号の対応: 0->1, 1->6, 2->3, 3->4, 4->2, 5->5
-      const faceNumbers = [1, 6, 3, 4, 2, 5]
-      topFace = faceNumbers[index]
+      resultFace = face
     }
   })
 
-  return topFace
+  return resultFace
 }
 
-// サイコロが静止しているかチェック
-export function isDiceAtRest(linearVelocity: Vector3, angularVelocity: Vector3, threshold = 0.1): boolean {
-  const linearSpeed = linearVelocity.length()
-  const angularSpeed = angularVelocity.length()
-  return linearSpeed < threshold && angularSpeed < threshold
+// サイコロが静止しているかチェック（チンチロ3D準拠）
+export function isDiceAtRest(linearVel: any, angularVel: any): boolean {
+  return (
+    Math.abs(linearVel.x) < 0.01 &&
+    Math.abs(linearVel.y) < 0.01 &&
+    Math.abs(linearVel.z) < 0.01 &&
+    Math.abs(angularVel.x) < 0.01 &&
+    Math.abs(angularVel.y) < 0.01 &&
+    Math.abs(angularVel.z) < 0.01
+  )
 }
 
-// サイコロを中央付近に集めて配置（地面の上に）
+// サイコロの初期位置を生成
 export function getRandomSpawnPosition(index: number, totalDice: number): [number, number, number] {
-  // 中央付近に集めて配置（地面の上に）
-  const randomX = (Math.random() - 0.5) * 3 // -1.5 ~ 1.5の範囲
-  const randomZ = (Math.random() - 0.5) * 3 // -1.5 ~ 1.5の範囲
-  const height = -1 + Math.random() * 1 // -1 ~ 0の高さ（地面の上）
+  const gridSize = Math.ceil(Math.sqrt(totalDice))
+  const row = Math.floor(index / gridSize)
+  const col = index % gridSize
   
-  return [randomX, height, randomZ]
+  // グリッド配置に少しランダム性を加える
+  const x = (col - (gridSize - 1) / 2) * 1.5 + (Math.random() - 0.5) * 0.5
+  const z = (row - (gridSize - 1) / 2) * 1.5 + (Math.random() - 0.5) * 0.5
+  const y = 3 + Math.random() * 0.5 // 地面より十分上
+  
+  return [x, y, z]
 }
 
-// 統一されたサイコロ色（白で統一）
+// サイコロの色を生成
 export function getDiceColor(index: number): string {
-  return "#f8f9fa" // 統一された明るいグレー
+  const colors = [
+    "#ffffff", // 白
+    "#f8f9fa", // 薄いグレー
+    "#e9ecef", // グレー
+    "#dee2e6", // 濃いグレー
+    "#ced4da", // より濃いグレー
+  ]
+  return colors[index % colors.length]
+}
+
+// 範囲外判定
+export function isOutOfBounds(position: any): boolean {
+  if (!position) return false
+  
+  return (
+    Math.abs(position.x) > 15 ||
+    Math.abs(position.z) > 15 ||
+    position.y < -5
+  )
 }

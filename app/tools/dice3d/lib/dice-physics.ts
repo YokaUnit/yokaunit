@@ -94,16 +94,16 @@ export function isDiceAtRest(linearVel: any, angularVel: any): boolean {
   )
 }
 
-// サイコロの初期位置を生成
+// サイコロの初期位置を生成（チンチロ3D準拠：地面に配置）
 export function getRandomSpawnPosition(index: number, totalDice: number): [number, number, number] {
   const gridSize = Math.ceil(Math.sqrt(totalDice))
   const row = Math.floor(index / gridSize)
   const col = index % gridSize
   
-  // グリッド配置に少しランダム性を加える
+  // グリッド配置に少しランダム性を加える（地面に配置）
   const x = (col - (gridSize - 1) / 2) * 1.5 + (Math.random() - 0.5) * 0.5
   const z = (row - (gridSize - 1) / 2) * 1.5 + (Math.random() - 0.5) * 0.5
-  const y = 3 + Math.random() * 0.5 // 地面より十分上
+  const y = 0.5 // 地面の少し上に配置
   
   return [x, y, z]
 }

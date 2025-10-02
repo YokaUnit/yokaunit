@@ -26,11 +26,9 @@ interface Statistics {
 export function useDice3D() {
   const [diceInstances, setDiceInstances] = useState<DiceInstance[]>([])
   const [diceResults, setDiceResults] = useState<DiceResult[]>([])
-  const [isRolling, setIsRolling] = useState(false)
   const [physics, setPhysics] = useState<DicePhysicsSettings>(DEFAULT_PHYSICS)
   const [resetTrigger, setResetTrigger] = useState(0)
   const [rollTrigger, setRollTrigger] = useState(0)
-  const [allDiceStopped, setAllDiceStopped] = useState(false)
 
   // サイコロを追加
   const addDice = useCallback((count: number = 1) => {
@@ -57,8 +55,6 @@ export function useDice3D() {
   const clearAllDice = useCallback(() => {
     setDiceInstances([])
     setDiceResults([])
-    setIsRolling(false)
-    setAllDiceStopped(false)
   }, [])
 
   // 最後のサイコロを削除
@@ -67,26 +63,24 @@ export function useDice3D() {
     setDiceResults(prev => prev.slice(0, -1))
   }, [])
 
-  // すべてのサイコロを振る（高速化）
+  // すべてのサイコロを振る（シンプル化）
   const rollAllDice = useCallback(() => {
     if (diceInstances.length === 0) return
     
-    setIsRolling(true)
+    // 結果をクリアして新しいロールを開始
     setDiceResults([])
-    setAllDiceStopped(false)
     setRollTrigger(prev => prev + 1)
-  }, [diceInstances.length]) // isRollingの依存関係を削除
+  }, [diceInstances.length])
 
   // すべてのサイコロをリセット
   const resetAllDice = useCallback(() => {
-    setIsRolling(false)
     setDiceResults([])
-    setAllDiceStopped(false)
     setResetTrigger(prev => prev + 1)
   }, [])
 
-  // サイコロが静止した時の処理（高速化）
+  // サイコロが静止した時の処理（シンプル化）
   const handleDiceRest = useCallback((index: number, value: number) => {
+    // 結果のみ記録（複雑な状態管理を削除）
     setDiceResults(prev => {
       const newResults = [...prev]
       const existingIndex = newResults.findIndex(result => result.id === index + 1)
@@ -102,12 +96,6 @@ export function useDice3D() {
         newResults[existingIndex] = result
       } else {
         newResults.push(result)
-      }
-      
-      // すべてのサイコロが静止したかチェック（遅延なしで即座に処理）
-      if (newResults.length === diceInstances.length) {
-        setAllDiceStopped(true)
-        setIsRolling(false) // 遅延を削除
       }
       
       return newResults
@@ -150,11 +138,9 @@ export function useDice3D() {
     // State
     diceInstances,
     diceResults,
-    isRolling,
     physics,
     resetTrigger,
     rollTrigger,
-    allDiceStopped,
     
     // Actions
     addDice,

@@ -48,34 +48,34 @@ export function Dice3D({
     }
   }, [resetTrigger, initialPosition])
 
-  // ロール処理
+  // ロール処理（チンチロ3D準拠）
   useEffect(() => {
-    if (rollTrigger > 0 && rigidBodyRef.current && !rested) {
-      // 初期位置にリセット
-      rigidBodyRef.current.setTranslation({ x: initialPosition[0], y: initialPosition[1], z: initialPosition[2] }, true)
+    if (rollTrigger > 0 && rigidBodyRef.current) {
+      // restedフラグをリセット
+      setRested(false)
+      setRestingFrameCount(0)
+      
+      // 地面に配置（チンチロ3D準拠）
+      rigidBodyRef.current.setTranslation({ x: initialPosition[0], y: 0.5, z: initialPosition[2] }, true)
       rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true)
       rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true)
 
-      // 即座に力を適用（遅延を削除）
-      setTimeout(() => {
-        if (rigidBodyRef.current) {
-          const impulse = getRandomImpulse(physics.impulseStrength)
-          const torque = getRandomTorque(physics.torqueStrength)
-          
-          rigidBodyRef.current.applyImpulse({ x: impulse[0], y: impulse[1], z: impulse[2] }, true)
-          rigidBodyRef.current.applyTorqueImpulse({ x: torque[0], y: torque[1], z: torque[2] }, true)
-        }
-      }, 50) // 遅延を100ms→50msに短縮
+      // チンチロ3D準拠の力を適用（上向きに飛ばす）
+      const impulse = getRandomImpulse(physics.impulseStrength)
+      const torque = getRandomTorque(physics.torqueStrength)
+      
+      rigidBodyRef.current.applyImpulse({ x: impulse[0], y: impulse[1], z: impulse[2] }, true)
+      rigidBodyRef.current.applyTorqueImpulse({ x: torque[0], y: torque[1], z: torque[2] }, true)
     }
-  }, [rollTrigger, physics, initialPosition, rested])
+  }, [rollTrigger, physics, initialPosition])
 
-  // フレームごとの更新処理（チンチロ3D準拠）
+  // フレームごとの更新処理（最適化）
   useFrame(() => {
-    if (rolling && !rested && rigidBodyRef.current) {
-      // 範囲外チェック
+    if (!rested && rigidBodyRef.current) {
+      // 範囲外チェック（簡素化）
       const currentPos = rigidBodyRef.current.translation()
       if (isOutOfBounds(currentPos)) {
-        rigidBodyRef.current.setTranslation({ x: initialPosition[0], y: initialPosition[1], z: initialPosition[2] }, true)
+        rigidBodyRef.current.setTranslation({ x: initialPosition[0], y: 0.5, z: initialPosition[2] }, true)
         rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true)
         rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true)
         return
@@ -84,21 +84,20 @@ export function Dice3D({
       const vel = rigidBodyRef.current.linvel()
       const angVel = rigidBodyRef.current.angvel()
 
-      // 高速化された停止判定
+      // 最適化された停止判定
       const isResting = isDiceAtRest(vel, angVel)
 
       if (isResting) {
-        // 連続して5フレーム停止状態を確認してから判定（高速化）
         setRestingFrameCount(prev => prev + 1)
         
-        if (restingFrameCount >= 5) {
+        // 3フレームで判定（さらに高速化）
+        if (restingFrameCount >= 3) {
           const face = determineTopFace(rigidBodyRef.current.rotation())
           setTopFace(face)
           setRested(true)
           onRest(index, face)
         }
       } else {
-        // 停止していない場合はカウンターをリセット
         setRestingFrameCount(0)
       }
     }

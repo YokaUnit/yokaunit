@@ -16,7 +16,6 @@ export function Dice3DClientPage() {
   const {
     diceInstances,
     diceResults,
-    isRolling,
     physics,
     resetTrigger,
     rollTrigger,
@@ -64,8 +63,13 @@ export function Dice3DClientPage() {
                 <div className="h-[70vh] min-h-[500px]">
                   <Canvas 
                     shadows 
-                    gl={{ antialias: true, alpha: false }} 
-                    dpr={1}
+                    gl={{ 
+                      antialias: false, // アンチエイリアスを無効化してパフォーマンス向上
+                      alpha: false,
+                      powerPreference: "high-performance" // 高性能GPU使用
+                    }} 
+                    dpr={Math.min(window.devicePixelRatio, 2)} // DPRを制限
+                    performance={{ min: 0.5 }} // パフォーマンス最適化
                   >
                     <Suspense fallback={null}>
                       <Lighting />
@@ -74,6 +78,8 @@ export function Dice3DClientPage() {
                       <Physics 
                         gravity={[0, -15, 0]} 
                         debug={false}
+                        timeStep={1/60} // 固定タイムステップでパフォーマンス向上
+                        paused={false}
                       >
                         {/* 環境 */}
                         <Ground />
@@ -86,7 +92,7 @@ export function Dice3DClientPage() {
                             index={index}
                             position={dice.position}
                             color={dice.color}
-                            rolling={isRolling}
+                            rolling={true}
                             onRest={handleDiceRest}
                             resetTrigger={resetTrigger}
                             rollTrigger={rollTrigger}
@@ -130,7 +136,7 @@ export function Dice3DClientPage() {
               <div className="space-y-4">
                 <ControlPanel
                   diceCount={diceInstances.length}
-                  isRolling={isRolling}
+                  isRolling={false}
                   physics={physics}
                   results={diceResults}
                   statistics={statistics}

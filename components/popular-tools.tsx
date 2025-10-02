@@ -27,7 +27,12 @@ export function PopularTools() {
       }
     }
 
-    fetchPopularTools()
+    // デバウンス処理（他のコンポーネントとの競合を避ける）
+    const timeoutId = setTimeout(() => {
+      fetchPopularTools()
+    }, 300)
+
+    return () => clearTimeout(timeoutId)
   }, [])
 
   if (loading) {

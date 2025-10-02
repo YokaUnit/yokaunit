@@ -25,9 +25,11 @@ export function UpdatedToolsShowcase() {
   const { toast } = useToast()
   const { isLoggedIn } = useAuth()
 
-  // 画面サイズに応じて表示数を調整
+  // 画面サイズに応じて表示数を調整（SSR対応）
   useEffect(() => {
     const handleResize = () => {
+      if (typeof window === 'undefined') return
+      
       if (window.innerWidth >= 1280) {
         setDisplayCount(8)
       } else if (window.innerWidth >= 1024) {
@@ -41,9 +43,17 @@ export function UpdatedToolsShowcase() {
       }
     }
 
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    // 初期設定（SSR対応）
+    if (typeof window !== 'undefined') {
+      handleResize()
+      window.addEventListener("resize", handleResize)
+    }
+    
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener("resize", handleResize)
+      }
+    }
   }, [])
 
   // お気に入りを取得
@@ -69,7 +79,7 @@ export function UpdatedToolsShowcase() {
     fetchFavorites()
   }, [isLoggedIn])
 
-  // 更新順ツールを取得（updated_atの降順）
+  // 更新順ツールを取得（updated_atの降順、デバウンス付き）
   useEffect(() => {
     const fetchUpdatedTools = async () => {
       setLoading(true)
@@ -100,7 +110,12 @@ export function UpdatedToolsShowcase() {
       }
     }
 
-    fetchUpdatedTools()
+    // デバウンス処理
+    const timeoutId = setTimeout(() => {
+      fetchUpdatedTools()
+    }, 200) // 少し遅延させて他のコンポーネントとの競合を避ける
+
+    return () => clearTimeout(timeoutId)
   }, [displayCount, toast])
 
   const toggleFavoriteHandler = async (e: React.MouseEvent, toolSlug: string) => {
@@ -133,7 +148,7 @@ export function UpdatedToolsShowcase() {
             : "マイページのお気に入りリストから削除されました",
         })
 
-        // ツールデータを再取得してlikes_countを更新
+        // ツールデータを再取得してlikes_countを更新（最適化）
         const { tools: updatedToolsData } = await getTools({
           limit: displayCount,
           userRole: "basic",

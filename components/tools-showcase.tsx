@@ -29,9 +29,11 @@ export function ToolsShowcase() {
   const { toast } = useToast()
   const { isLoggedIn } = useAuth()
 
-  // 画面サイズに応じて表示数を調整
+  // 画面サイズに応じて表示数を調整（SSR対応）
   useEffect(() => {
     const handleResize = () => {
+      if (typeof window === 'undefined') return
+      
       if (window.innerWidth >= 1280) {
         setDisplayCount(8)
       } else if (window.innerWidth >= 1024) {
@@ -45,9 +47,17 @@ export function ToolsShowcase() {
       }
     }
 
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    // 初期設定（SSR対応）
+    if (typeof window !== 'undefined') {
+      handleResize()
+      window.addEventListener("resize", handleResize)
+    }
+    
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener("resize", handleResize)
+      }
+    }
   }, [])
 
   // お気に入りを取得
@@ -74,25 +84,26 @@ export function ToolsShowcase() {
     fetchFavorites()
   }, [isLoggedIn])
 
-  // 人気ツールと新着ツールを両方取得
+  // 人気ツールと新着ツールを両方取得（デバウンス付き）
   useEffect(() => {
     const fetchAllTools = async () => {
       setLoading(true)
       setError(null)
       try {
-        // 人気ツールを取得
-        const { tools: popularToolsData } = await getTools({
-          limit: displayCount,
-          isPopular: true,
-        })
-        setPopularTools(popularToolsData)
-
-        // 新着ツールを取得
-        const { tools: newToolsData } = await getTools({
-          limit: displayCount,
-          isNew: true,
-        })
-        setNewTools(newToolsData)
+        // 並列でデータを取得してパフォーマンス向上
+        const [popularResult, newResult] = await Promise.all([
+          getTools({
+            limit: displayCount,
+            isPopular: true,
+          }),
+          getTools({
+            limit: displayCount,
+            isNew: true,
+          })
+        ])
+        
+        setPopularTools(popularResult.tools)
+        setNewTools(newResult.tools)
       } catch (error) {
         console.error("Error fetching tools:", error)
         setError(error instanceof Error ? error.message : "ツールの取得に失敗しました")
@@ -106,7 +117,12 @@ export function ToolsShowcase() {
       }
     }
 
-    fetchAllTools()
+    // デバウンス処理
+    const timeoutId = setTimeout(() => {
+      fetchAllTools()
+    }, 100)
+
+    return () => clearTimeout(timeoutId)
   }, [displayCount, toast])
 
   const toggleFavoriteHandler = async (e: React.MouseEvent, toolSlug: string) => {
@@ -139,18 +155,20 @@ export function ToolsShowcase() {
             : "マイページのお気に入りリストから削除されました",
         })
 
-        // ツールデータを再取得してlikes_countを更新
-        const { tools: updatedPopularTools } = await getTools({
-          limit: displayCount,
-          isPopular: true,
-        })
-        setPopularTools(updatedPopularTools)
-
-        const { tools: updatedNewTools } = await getTools({
-          limit: displayCount,
-          isNew: true,
-        })
-        setNewTools(updatedNewTools)
+        // ツールデータを再取得してlikes_countを更新（並列処理）
+        const [updatedPopularResult, updatedNewResult] = await Promise.all([
+          getTools({
+            limit: displayCount,
+            isPopular: true,
+          }),
+          getTools({
+            limit: displayCount,
+            isNew: true,
+          })
+        ])
+        
+        setPopularTools(updatedPopularResult.tools)
+        setNewTools(updatedNewResult.tools)
       }
     } catch (error) {
       toast({

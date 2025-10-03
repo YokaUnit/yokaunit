@@ -45,15 +45,30 @@ export function Dice3DClientPage() {
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              🎲 3Dサイコロシミュレーター
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+              🎲 サイコロ｜無料オンラインサイコロ
             </h1>
-            <p className="text-xl text-gray-600 mb-2">
-              リアルな物理エンジンを使った高精度サイコロツール
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+              <strong>無料でサイコロを振れるオンラインツール。</strong>リアルな3D物理エンジンでサイコロを投げ、<strong>TRPG・ボードゲーム・すごろくに最適。</strong>
+              1個から複数個まで同時に振れて、確率計算・統計機能付き。<strong>スマホ・PCで今すぐ使える！</strong>
             </p>
-            <p className="text-gray-500">
-              複数のサイコロを同時に振って、物理パラメーターを自由に調整。統計機能で確率も検証できます
-            </p>
+            <div className="flex flex-wrap justify-center gap-2 mb-6">
+              {[
+                { label: '🆓 完全無料', color: 'bg-green-100 text-green-800' },
+                { label: '📱 スマホ対応', color: 'bg-blue-100 text-blue-800' },
+                { label: '🎮 TRPG対応', color: 'bg-purple-100 text-purple-800' },
+                { label: '🎲 複数同時', color: 'bg-yellow-100 text-yellow-800' },
+                { label: '📊 統計機能', color: 'bg-indigo-100 text-indigo-800' },
+                { label: '⚡ 瞬時計算', color: 'bg-pink-100 text-pink-800' },
+              ].map((tag) => (
+                <span
+                  key={tag.label}
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${tag.color}`}
+                >
+                  {tag.label}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -181,7 +196,7 @@ export function Dice3DClientPage() {
 
             {/* SEO対策用の詳細説明 */}
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8 border border-blue-200">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">3Dサイコロシミュレーターの特徴</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">オンラインサイコロの特徴と使い方</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">🎲 高精度な物理演算</h3>
@@ -190,10 +205,10 @@ export function Dice3DClientPage() {
                     重力、慣性、摩擦、反発など、すべての物理法則を正確にシミュレートします。
                   </p>
                   
-                  <h3 className="font-semibold text-gray-900 mb-2">🎮 多様な用途に対応</h3>
+                  <h3 className="font-semibold text-gray-900 mb-2">🎮 TRPG・ボードゲームに最適</h3>
                   <p>
-                    TRPG（テーブルトークRPG）、ボードゲーム、確率実験、統計学習、
-                    ゲーム開発のテストなど、様々なシーンでご活用いただけます。
+                    <strong>TRPG（テーブルトークRPG）</strong>、<strong>ボードゲーム</strong>、<strong>すごろく</strong>、確率実験、統計学習、
+                    ゲーム開発のテストなど、様々なシーンでご活用いただけます。オンラインセッションでも大活躍！
                   </p>
                 </div>
                 <div>

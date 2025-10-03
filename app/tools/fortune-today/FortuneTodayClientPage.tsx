@@ -176,7 +176,7 @@ export default function FortuneTodayClientPage() {
             items={[
               { label: "ホーム", href: "/" },
               { label: "ツール一覧", href: "/tools" },
-              { label: "今日の運勢AI", href: "/tools/fortune-today" },
+              { label: "今日の運勢", href: "/tools/fortune-today" },
             ]}
           />
 
@@ -188,18 +188,37 @@ export default function FortuneTodayClientPage() {
                   <Star className="h-10 w-10 text-white" />
                 </div>
               </div>
-                          <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">今日の運勢AI（無料）</h1>
-            <h2 className="text-lg md:text-xl text-gray-600 mb-4">AIが星座×今日の行動で運勢を診断</h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">
-                最新のAI技術があなたの星座と今日の予定から、総合運・恋愛運・仕事運・金運を占います
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                🔮 今日の運勢｜無料占い・星座占い
+              </h1>
+              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+                <strong>今日の運勢を無料で占える星座占いツール。</strong>12星座別に<strong>総合運・恋愛運・仕事運・金運</strong>を診断し、
+                ラッキー行動とアドバイスを提供。<strong>毎日更新される運勢で今日一日を素敵に過ごそう。</strong>
               </p>
+              <div className="flex flex-wrap justify-center gap-2 mb-6">
+                {[
+                  { label: '🆓 完全無料', color: 'bg-green-100 text-green-800' },
+                  { label: '🔮 12星座対応', color: 'bg-purple-100 text-purple-800' },
+                  { label: '💕 恋愛運診断', color: 'bg-pink-100 text-pink-800' },
+                  { label: '💼 仕事運診断', color: 'bg-blue-100 text-blue-800' },
+                  { label: '💰 金運診断', color: 'bg-yellow-100 text-yellow-800' },
+                  { label: '🍀 ラッキー行動', color: 'bg-indigo-100 text-indigo-800' },
+                ].map((tag) => (
+                  <span
+                    key={tag.label}
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${tag.color}`}
+                  >
+                    {tag.label}
+                  </span>
+                ))}
+              </div>
             </div>
 
             {step === "intro" && (
               <>
                 {/* 占い説明カード */}
                 <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                  <h2 className="text-2xl font-bold text-center mb-6">今日の運勢AIのやり方</h2>
+                  <h2 className="text-2xl font-bold text-center mb-6">今日の運勢占いのやり方</h2>
                   <div className="grid md:grid-cols-3 gap-6 mb-8">
                     <div className="text-center">
                       <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -344,24 +363,24 @@ export default function FortuneTodayClientPage() {
 
               {/* 占いの特徴 */}
               <section className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 shadow-md">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">占いの特徴・メリット</h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">今日の運勢占いの特徴</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-bold text-lg text-purple-800 mb-3">🔮 個別化された診断</h3>
+                    <h3 className="font-bold text-lg text-purple-800 mb-3">🔮 12星座対応の本格占い</h3>
                     <ul className="text-gray-700 space-y-2 text-sm">
-                      <li>• 12星座すべてに対応</li>
-                      <li>• 今日の行動を考慮した個別診断</li>
-                      <li>• 日付をシードにした毎日異なる結果</li>
+                      <li>• <strong>牡羊座から魚座まで全12星座対応</strong></li>
+                      <li>• 総合運・恋愛運・仕事運・金運を数値化</li>
+                      <li>• 毎日更新される運勢結果</li>
                       <li>• 星座の特性を活かしたアドバイス</li>
                     </ul>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg text-pink-800 mb-3">✨ 使いやすさ</h3>
+                    <h3 className="font-bold text-lg text-pink-800 mb-3">✨ 無料で簡単</h3>
                     <ul className="text-gray-700 space-y-2 text-sm">
-                      <li>• 完全無料・登録不要</li>
+                      <li>• <strong>完全無料・登録不要</strong></li>
                       <li>• スマホ・PC・タブレット対応</li>
                       <li>• 約1分で診断完了</li>
-                      <li>• SNSシェア機能付き</li>
+                      <li>• ラッキー行動とアドバイス付き</li>
                     </ul>
                   </div>
                 </div>
@@ -395,13 +414,31 @@ export default function FortuneTodayClientPage() {
                 </div>
               </section>
 
-              {/* 関連キーワード */}
-              <section className="text-center">
-                <p className="text-xs text-gray-500">
-                  <strong>関連キーワード:</strong> 今日の運勢 星座占い 無料占い 恋愛運 仕事運 金運 総合運 
-                  12星座 牡羊座 牡牛座 双子座 蟹座 獅子座 乙女座 天秤座 蠍座 射手座 山羊座 水瓶座 魚座
-                  ラッキー行動 占い無料 今日の占い 星座運勢 運気アップ 占い結果
-                </p>
+              {/* 12星座一覧 */}
+              <section className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">対応星座一覧</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 text-center">
+                  {[
+                    { name: "牡羊座", period: "3/21-4/19", emoji: "♈" },
+                    { name: "牡牛座", period: "4/20-5/20", emoji: "♉" },
+                    { name: "双子座", period: "5/21-6/21", emoji: "♊" },
+                    { name: "蟹座", period: "6/22-7/22", emoji: "♋" },
+                    { name: "獅子座", period: "7/23-8/22", emoji: "♌" },
+                    { name: "乙女座", period: "8/23-9/22", emoji: "♍" },
+                    { name: "天秤座", period: "9/23-10/23", emoji: "♎" },
+                    { name: "蠍座", period: "10/24-11/22", emoji: "♏" },
+                    { name: "射手座", period: "11/23-12/21", emoji: "♐" },
+                    { name: "山羊座", period: "12/22-1/19", emoji: "♑" },
+                    { name: "水瓶座", period: "1/20-2/18", emoji: "♒" },
+                    { name: "魚座", period: "2/19-3/20", emoji: "♓" },
+                  ].map((zodiac) => (
+                    <div key={zodiac.name} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-3 border border-purple-100">
+                      <div className="text-2xl mb-1">{zodiac.emoji}</div>
+                      <div className="font-bold text-sm text-gray-800">{zodiac.name}</div>
+                      <div className="text-xs text-gray-600">{zodiac.period}</div>
+                    </div>
+                  ))}
+                </div>
               </section>
             </div>
           </div>

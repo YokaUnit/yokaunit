@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '消費税計算機💰税込・税抜・税額を瞬時に計算｜無料で使いやすい',
-    description: '消費税10%・8%の計算が一瞬でできる無料ツール✨ スマホ・PCどちらでも使いやすく、履歴保存・CSV出力機能付き📊 経理・会計・日常の買い物に便利🆓',
+    title: '消費税計算機💰税込・税抜・税額を瞬時に計算｜無料オンライン計算機',
+    description: '消費税10%・8%の計算が瞬時にできる無料オンライン計算機✨ 軽減税率対応・履歴保存・CSV出力機能付き📊 経理・会計・確定申告に便利🆓',
     images: [SEO_METADATA.ogImage],
     creator: '@yokaunit',
   },
@@ -92,17 +92,17 @@ export default function ConsumptionTaxPage() {
                 消費税計算機｜税込・税抜・税額を瞬時に計算
               </h1>
               <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6">
-                <strong>消費税10%・8%の計算が一瞬でできる無料ツール。</strong>税込価格から税抜価格、税抜価格から税込価格、税額のみの計算に対応。
-                <strong>スマホ・PCどちらでも使いやすく、履歴保存・CSV出力機能付き。</strong>経理・会計・日常の買い物に便利。
+                <strong>消費税10%・8%の計算が瞬時にできる無料オンライン計算機。</strong>税込価格から税抜価格、税抜価格から税込価格、税額のみの計算に対応。
+                <strong>軽減税率8%にも対応し、スマホ・PCで使いやすく、履歴保存・CSV出力機能付き。</strong>経理・会計・日常の買い物・確定申告に便利。
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {[
-                  { label: '💰 無料', color: 'bg-green-100 text-green-800' },
+                  { label: '🆓 完全無料', color: 'bg-green-100 text-green-800' },
                   { label: '📱 スマホ対応', color: 'bg-blue-100 text-blue-800' },
                   { label: '⚡ 瞬時計算', color: 'bg-yellow-100 text-yellow-800' },
                   { label: '📊 履歴保存', color: 'bg-purple-100 text-purple-800' },
                   { label: '📁 CSV出力', color: 'bg-indigo-100 text-indigo-800' },
-                  { label: '🌍 外貨対応', color: 'bg-pink-100 text-pink-800' },
+                  { label: '🏪 軽減税率対応', color: 'bg-pink-100 text-pink-800' },
                 ].map((tag) => (
                   <span
                     key={tag.label}

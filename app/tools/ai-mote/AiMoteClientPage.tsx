@@ -13,6 +13,7 @@ import { DiagnosisResult as DiagnosisResultComponent } from "./components/Diagno
 import { AnalysisLoading } from "./components/AnalysisLoading"
 import { useAiMoteDiagnosis } from "./hooks/useAiMoteDiagnosis"
 import { toast } from "@/hooks/use-toast"
+import { RelatedTools } from "@/components/related-tools"
 
 export default function AiMoteClientPage() {
   const {
@@ -457,6 +458,9 @@ export default function AiMoteClientPage() {
           </div>
         </div>
       </div>
+      
+      <RelatedTools currentToolSlug="ai-mote" />
+      
       <SiteFooter />
     </>
   )

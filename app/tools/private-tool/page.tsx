@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { RelatedTools } from "@/components/related-tools"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Lock, Key } from "lucide-react"
@@ -238,6 +239,9 @@ export default function PrivateToolPage() {
           </div>
         </div>
       </main>
+      
+      <RelatedTools currentToolSlug="private-tool" />
+      
       <SiteFooter />
     </div>
   )

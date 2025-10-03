@@ -12,6 +12,7 @@ import { DiagnosisForm } from "./components/DiagnosisForm"
 import { DiagnosisResult as DiagnosisResultComponent } from "./components/DiagnosisResult"
 import { useAiSeishinnenreiDiagnosis } from "./hooks/useAiSeishinnenreiDiagnosis"
 import { toast } from "@/hooks/use-toast"
+import { RelatedTools } from "@/components/related-tools"
 
 export default function AiSeishinnenreiClientPage() {
   const {
@@ -407,6 +408,9 @@ export default function AiSeishinnenreiClientPage() {
           </div>
         </div>
       </div>
+      
+      <RelatedTools currentToolSlug="ai-seishinnenrei" />
+      
       <SiteFooter />
     </>
   )

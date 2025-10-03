@@ -11,6 +11,7 @@ import { useDice3D } from "./hooks/useDice3D"
 import { Dice3D } from "./components/Dice3D"
 import { Ground, Walls, Lighting } from "./components/Environment3D"
 import { ControlPanel } from "./components/ControlPanel"
+import { RelatedTools } from "@/components/related-tools"
 
 export function Dice3DClientPage() {
   const {
@@ -229,6 +230,8 @@ export function Dice3DClientPage() {
           </div>
         </div>
       </main>
+
+      <RelatedTools currentToolSlug="dice3d" />
 
       <SiteFooter />
     </div>

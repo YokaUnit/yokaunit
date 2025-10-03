@@ -16,6 +16,7 @@ import { useSimpleWarikan } from "./hooks/useSimpleWarikan"
 import { toast } from "@/hooks/use-toast"
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { RelatedTools } from "@/components/related-tools"
 
 export default function WariKanPage() {
   const {
@@ -466,6 +467,8 @@ export default function WariKanPage() {
         </div>
         </div>
       </div>
+      <RelatedTools currentToolSlug="warikan" />
+      
       <SiteFooter />
     </>
   )

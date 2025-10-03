@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
+import { RelatedTools } from "@/components/related-tools"
 import CardStackClientPage from "./CardStackClientPage"
 import { webPageStructuredData, gameStructuredData, faqStructuredData } from "./lib/structured-data"
 
@@ -225,6 +226,9 @@ export default function CardStackPage() {
         </div>
           </div>
         </main>
+        
+        <RelatedTools currentToolSlug="cardstack" />
+        
         <SiteFooter />
       </div>
     </>

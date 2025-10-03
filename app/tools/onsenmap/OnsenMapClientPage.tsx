@@ -4,6 +4,7 @@ import { useState } from "react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
+import { RelatedTools } from "@/components/related-tools"
 import OnsenMapClient from "./OnsenMapClient"
 import RecommendedHotels from "./components/RecommendedHotels"
 import {
@@ -441,6 +442,8 @@ export default function OnsenMapClientPage() {
           </div>
         </div>
       </main>
+
+      <RelatedTools currentToolSlug="onsenmap" />
 
       <SiteFooter />
     </div>

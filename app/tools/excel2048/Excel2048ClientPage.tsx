@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BackgroundAnimation } from "@/components/background-animation"
+import { RelatedTools } from "@/components/related-tools"
 import { useExcel2048Game } from "./hooks/useExcel2048Game"
 import { ExcelInterface } from "./components/ExcelInterface"
 import { GameWindow } from "./components/GameWindow"
@@ -324,6 +325,10 @@ export default function Excel2048ClientPage() {
         onResizeMouseDown={game.handleResizeMouseDown}
         onInitializeGame={game.initializeGame}
       />
+      
+      <RelatedTools currentToolSlug="excel2048" />
+      
+      <SiteFooter />
     </div>
   )
 }

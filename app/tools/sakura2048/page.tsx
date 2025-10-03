@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BackgroundAnimation } from "@/components/background-animation"
+import { RelatedTools } from "@/components/related-tools"
 import { motion } from "framer-motion"
 import { Maximize2, Minimize2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -927,6 +928,8 @@ export default function SakuraEditor() {
           </motion.div>
         </div>
       </main>
+
+      <RelatedTools currentToolSlug="sakura2048" />
 
       <SiteFooter />
       <ScrollToTop />

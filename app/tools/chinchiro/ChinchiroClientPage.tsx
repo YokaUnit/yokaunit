@@ -31,6 +31,7 @@ import Link from "next/link"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
+import { RelatedTools } from "@/components/related-tools"
 import { useMediaQuery } from "@/hooks/use-mobile"
 import { useChinchiroGame } from "./hooks/useChinchiroGame"
 import { Dice } from "./components/Dice"
@@ -511,6 +512,8 @@ export default function ChinchiroClientPage() {
           </div>
         </main>
 
+        <RelatedTools currentToolSlug="chinchiro" />
+        
         <SiteFooter />
       </div>
     </div>

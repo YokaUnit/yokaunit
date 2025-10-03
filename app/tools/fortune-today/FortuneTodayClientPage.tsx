@@ -13,6 +13,7 @@ import { FortuneResult } from "./components/FortuneResult"
 import { FortuneLoading } from "./components/FortuneLoading"
 import { useFortuneTeller } from "./hooks/useFortuneTeller"
 import { toast } from "@/hooks/use-toast"
+import { RelatedTools } from "@/components/related-tools"
 
 export default function FortuneTodayClientPage() {
   const {
@@ -444,6 +445,9 @@ export default function FortuneTodayClientPage() {
           </div>
         </div>
       </div>
+      
+      <RelatedTools currentToolSlug="fortune-today" />
+      
       <SiteFooter />
     </>
   )

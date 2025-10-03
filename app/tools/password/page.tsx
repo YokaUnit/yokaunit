@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { PasswordGenerator } from "@/components/tools/password-generator"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { BackgroundAnimation } from "@/components/background-animation"
+import { RelatedTools } from "@/components/related-tools"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -239,6 +240,9 @@ export default function PasswordGeneratorPage() {
           </div>
         </div>
       </main>
+      
+      <RelatedTools currentToolSlug="password" />
+      
       <SiteFooter />
     </div>
   )

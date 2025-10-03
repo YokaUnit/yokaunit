@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/site-footer';
 import { BackgroundAnimation } from '@/components/background-animation';
 import { ScrollToTop } from '@/components/scroll-to-top';
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { RelatedTools } from '@/components/related-tools';
 import { 
   SEO_METADATA, 
   STRUCTURED_DATA, 
@@ -298,6 +299,9 @@ export default function ConsumptionTaxPage() {
           </section>
         </div>
       </main>
+      
+      <RelatedTools currentToolSlug="consumption-tax" />
+      
       <SiteFooter />
     </div>
   );

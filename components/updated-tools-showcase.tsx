@@ -87,7 +87,7 @@ export function UpdatedToolsShowcase() {
       try {
         // getToolsを使用してupdated_atの降順でソート
         const { tools: updatedToolsData } = await getTools({
-          limit: displayCount,
+          limit: displayCount + 5, // 多めに取得してからソート
           userRole: "basic", // プレミアムツールと非公開ツールを除外
         })
         
@@ -96,7 +96,8 @@ export function UpdatedToolsShowcase() {
           new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         )
         
-        setUpdatedTools(sortedTools)
+        // 指定された数まで制限
+        setUpdatedTools(sortedTools.slice(0, displayCount))
       } catch (error) {
         console.error("Error fetching updated tools:", error)
         setError(error instanceof Error ? error.message : "ツールの取得に失敗しました")
@@ -113,7 +114,7 @@ export function UpdatedToolsShowcase() {
     // デバウンス処理
     const timeoutId = setTimeout(() => {
       fetchUpdatedTools()
-    }, 200) // 少し遅延させて他のコンポーネントとの競合を避ける
+    }, 100) // RelatedToolsと同じ100msに統一
 
     return () => clearTimeout(timeoutId)
   }, [displayCount, toast])
@@ -150,7 +151,7 @@ export function UpdatedToolsShowcase() {
 
         // ツールデータを再取得してlikes_countを更新（最適化）
         const { tools: updatedToolsData } = await getTools({
-          limit: displayCount,
+          limit: displayCount + 5, // 多めに取得してからソート
           userRole: "basic",
         })
         
@@ -158,7 +159,8 @@ export function UpdatedToolsShowcase() {
           new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         )
         
-        setUpdatedTools(sortedTools)
+        // 指定された数まで制限
+        setUpdatedTools(sortedTools.slice(0, displayCount))
       }
     } catch (error) {
       toast({

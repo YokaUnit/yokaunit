@@ -1,20 +1,20 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { Brain, Sparkles, TrendingUp, RotateCcw, Share2 } from "lucide-react"
+import { Shield, Sparkles, TrendingUp, RotateCcw, Share2, Brain, Target, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { Breadcrumbs } from "@/components/breadcrumbs"
-import { DiagnosisForm } from "./components/DiagnosisForm"
-import { DiagnosisResult as DiagnosisResultComponent } from "./components/DiagnosisResult"
-import { useAiSeishinnenreiDiagnosis } from "./hooks/useAiSeishinnenreiDiagnosis"
+import { AIStressCheckForm } from "./components/AIStressCheckForm"
+import { AIStressCheckResult as AIStressCheckResultComponent } from "./components/AIStressCheckResult"
+import { useAIStressCheck } from "./hooks/useAIStressCheck"
 import { toast } from "@/hooks/use-toast"
 import { RelatedTools } from "@/components/related-tools"
 
-export default function AiSeishinnenreiClientPage() {
+export default function AIStressCheckClientPage() {
   const {
     step,
     answers,
@@ -26,8 +26,8 @@ export default function AiSeishinnenreiClientPage() {
     resetDiagnosis,
     nextQuestion,
     previousQuestion,
-    analyzeMentalAgeLevel,
-  } = useAiSeishinnenreiDiagnosis()
+    analyzeStressLevel,
+  } = useAIStressCheck()
 
   const [copied, setCopied] = useState(false)
 
@@ -37,10 +37,10 @@ export default function AiSeishinnenreiClientPage() {
     const webAppStructuredData = {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "AI精神年齢診断",
-      "description": "AI技術を使用してユーザーの精神年齢・心理年齢を分析・診断する無料ツール",
-      "url": "https://yokaunit.com/tools/ai-seishinnenrei",
-      "applicationCategory": "LifestyleApplication",
+      "name": "AIストレス耐性診断",
+      "description": "最新AI技術を使用してユーザーのストレス耐性・メンタルの強さを分析・診断する無料ツール",
+      "url": "https://yokaunit.com/tools/ai-stress-check",
+      "applicationCategory": "HealthApplication",
       "operatingSystem": "Any",
       "browserRequirements": "HTML5, JavaScript",
       "offers": {
@@ -49,15 +49,15 @@ export default function AiSeishinnenreiClientPage() {
         "priceCurrency": "JPY"
       },
       "featureList": [
-        "簡単5つの選択式質問",
-        "AI分析による精神年齢診断",
-        "実年齢との詳細比較",
-        "個別化されたアドバイス",
+        "6つの専門的AI質問による診断",
+        "最新AI分析によるストレス耐性測定",
+        "AI生成個別化アドバイス",
+        "AIリスクレベル判定",
         "完全無料・登録不要",
         "スマホ・PC対応",
-        "結果シェア機能"
+        "AI結果シェア機能"
       ],
-      "screenshot": "https://yokaunit.com/ogp/ai-seishinnenrei-diagnosis.png",
+      "screenshot": "https://yokaunit.com/ogp/ai-stress-check-diagnosis.png",
       "author": {
         "@type": "Organization",
         "name": "YokaUnit",
@@ -79,42 +79,34 @@ export default function AiSeishinnenreiClientPage() {
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "AI精神年齢診断は無料ですか？",
+          "name": "AIストレス耐性診断は無料ですか？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "はい、完全無料でご利用いただけます。登録も不要で、すぐに診断を開始できます。"
+            "text": "はい、最新AI技術を使った診断が完全無料でご利用いただけます。登録も不要で、すぐにAI診断を開始できます。"
           }
         },
         {
           "@type": "Question",
-          "name": "精神年齢診断の精度はどの程度ですか？",
+          "name": "AIストレス耐性診断の精度はどの程度ですか？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AI分析と心理学的アプローチを組み合わせた独自のアルゴリズムにより、高精度な精神年齢診断を提供しています。"
+            "text": "心理学的理論と最新AI分析技術を組み合わせた独自のアルゴリズムにより、高精度なストレス耐性診断を提供しています。"
           }
         },
         {
           "@type": "Question",
-          "name": "どのような質問に答えるのですか？",
+          "name": "AIはどのような分析を行うのですか？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "生活スタイル、趣味、コミュニケーション、ストレス対処、将来観の5つの選択式質問に答えるだけです。約2分で完了します。"
+            "text": "AIが6つの分野（仕事量・プレッシャー・変化への適応・人間関係・回復力・生活習慣）について感情分析と総合評価を行い、個別化されたアドバイスを生成します。"
           }
         },
         {
           "@type": "Question",
-          "name": "精神年齢と実年齢の違いは何ですか？",
+          "name": "AI診断結果はどのように活用できますか？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "実年齢は生まれてからの年数、精神年齢は心理的成熟度を表します。考え方や価値観、行動パターンから精神的な年齢を測定します。"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "診断結果は信頼できますか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "心理学的理論に基づいたAI分析システムを使用しており、参考値として信頼性の高い結果を提供しています。"
+            "text": "AIが分析したストレス耐性を客観的に把握し、メンタルヘルス管理や職場環境の改善、AI推奨のストレス対処法の習得に活用できます。"
           }
         }
       ]
@@ -145,13 +137,13 @@ export default function AiSeishinnenreiClientPage() {
   const handleShare = async () => {
     const url = window.location.href
     const text = result 
-      ? `私の精神年齢は${result.mentalAge}歳でした！実年齢${result.realAge}歳との差は${result.ageDifference > 0 ? '+' : ''}${result.ageDifference}歳です。`
-      : "AI精神年齢診断をやってみました！"
+      ? `私のAIストレス耐性レベルは${result.stressLevel}点でした！AIタイプは「${result.stressType}」です。`
+      : "AIストレス耐性診断をやってみました！"
     
     try {
       if (navigator.share) {
         await navigator.share({
-          title: "AI精神年齢診断結果",
+          title: "AIストレス耐性診断結果",
           text: text,
           url: url,
         })
@@ -180,7 +172,7 @@ export default function AiSeishinnenreiClientPage() {
             items={[
               { label: "ホーム", href: "/" },
               { label: "ツール一覧", href: "/tools" },
-              { label: "AI精神年齢診断", href: "/tools/ai-seishinnenrei" },
+              { label: "AIストレス耐性診断", href: "/tools/ai-stress-check" },
             ]}
           />
 
@@ -188,14 +180,14 @@ export default function AiSeishinnenreiClientPage() {
           {/* ヘッダー */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
-              <div className="bg-gradient-to-r from-purple-500 to-blue-600 p-4 rounded-3xl shadow-xl">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-4 rounded-3xl shadow-xl">
                 <Brain className="h-10 w-10 text-white" />
               </div>
             </div>
-            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">AI精神年齢診断（無料）</h1>
-            <h2 className="text-lg md:text-xl text-gray-600 mb-4">AIがあなたの心理年齢・メンタル年齢を数値化</h2>
+            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">AIストレス耐性診断（無料）</h1>
+            <h2 className="text-lg md:text-xl text-gray-600 mb-4">最新AIがあなたの心の強さ・メンタル耐性を数値化</h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              簡単な5つの選択式質問に答えるだけで、AIがあなたの精神年齢を分析し、実年齢との差を詳しく解説します
+              6つの専門的な質問に答えるだけで、最新AIがあなたのストレス耐性を分析し、個別のアドバイスを提供します
             </p>
           </div>
 
@@ -203,81 +195,82 @@ export default function AiSeishinnenreiClientPage() {
             <>
               {/* 診断説明カード */}
               <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                <h2 className="text-2xl font-bold text-center mb-6">AI精神年齢診断のやり方</h2>
+                <h2 className="text-2xl font-bold text-center mb-6">AIストレス耐性診断のやり方</h2>
                 <div className="grid md:grid-cols-3 gap-6 mb-8">
                   <div className="text-center">
                     <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                       <span className="text-white text-2xl font-bold">1</span>
                     </div>
-                    <h3 className="font-bold mb-2">年齢入力</h3>
-                    <p className="text-sm text-gray-600">まずはあなたの実年齢を入力してください</p>
+                    <h3 className="font-bold mb-2">6つのAI質問</h3>
+                    <p className="text-sm text-gray-600">仕事・人間関係・回復力など6分野のAI質問</p>
                   </div>
                   <div className="text-center">
                     <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                       <span className="text-white text-2xl font-bold">2</span>
                     </div>
-                    <h3 className="font-bold mb-2">5つの質問</h3>
-                    <p className="text-sm text-gray-600">選択式の質問に答えるだけ（約2分）</p>
+                    <h3 className="font-bold mb-2">最新AI分析</h3>
+                    <p className="text-sm text-gray-600">選択式回答を最新AIが総合分析（約3分）</p>
                   </div>
                   <div className="text-center">
                     <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Brain className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="font-bold mb-2">AI分析</h3>
-                    <p className="text-sm text-gray-600">精神年齢と実年齢の差を詳しく分析</p>
+                    <h3 className="font-bold mb-2">AI結果表示</h3>
+                    <p className="text-sm text-gray-600">AIストレス耐性レベルと個別アドバイス</p>
                   </div>
                 </div>
 
                 <div className="text-center">
                   <Button
                     onClick={startDiagnosis}
-                    className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-bold py-4 px-8 rounded-xl text-lg"
+                    className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-xl text-lg"
                   >
                     <Brain className="h-5 w-5 mr-2" />
-                    診断を始める
+                    AI診断を始める
                   </Button>
                 </div>
               </Card>
 
               {/* 最新のツール */}
               <div className="mb-8">
-                <RelatedTools currentToolSlug="ai-seishinnenrei" />
+                <RelatedTools currentToolSlug="ai-stress-check" />
               </div>
 
-              {/* 精神年齢とは */}
+              {/* AIストレス耐性とは */}
               <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                <h2 className="text-2xl font-bold text-center mb-6">精神年齢とは？</h2>
+                <h2 className="text-2xl font-bold text-center mb-6">AIストレス耐性診断とは？</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="font-bold text-lg mb-3 flex items-center">
-                      <div className="bg-purple-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                      <div className="bg-blue-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
                         <Brain className="h-4 w-4 text-white" />
                       </div>
-                      心理的成熟度
+                      AI分析による心の強さ測定
                     </h3>
-                    <p className="text-gray-600 mb-4">考え方や価値観、行動パターンから測定される心の年齢です</p>
+                    <p className="text-gray-600 mb-4">最新AIがストレスや困難な状況に対処し、回復する能力を分析します</p>
                     
                     <h3 className="font-bold text-lg mb-3 flex items-center">
-                      <div className="bg-blue-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                      <div className="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
                         <TrendingUp className="h-4 w-4 text-white" />
                       </div>
-                      実年齢との比較
+                      AIメンタルヘルス指標
                     </h3>
-                    <p className="text-gray-600">実年齢より高ければ大人びており、低ければ若々しい心の持ち主です</p>
+                    <p className="text-gray-600">AIが仕事や人間関係でのパフォーマンスに直結する重要な指標を分析</p>
                   </div>
                   <div>
                     <h3 className="font-bold text-lg mb-3 flex items-center">
-                      <div className="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                      <div className="bg-purple-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
                         <Sparkles className="h-4 w-4 text-white" />
                       </div>
-                      診断できること
+                      AI診断できること
                     </h3>
-                    <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg">
-                      <div className="text-sm text-green-700 space-y-1">
-                        <div>• あなたの精神的な年齢</div>
-                        <div>• 実年齢との差と特徴</div>
-                        <div>• 心理的タイプ診断</div>
-                        <div>• 個別化されたアドバイス</div>
+                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg">
+                      <div className="text-sm text-purple-700 space-y-1">
+                        <div>• AIストレス耐性レベル測定</div>
+                        <div>• AIプレッシャー対応能力分析</div>
+                        <div>• AI変化への適応力評価</div>
+                        <div>• AI回復力・レジリエンス診断</div>
+                        <div>• AI個別改善アドバイス生成</div>
                       </div>
                     </div>
                   </div>
@@ -287,8 +280,8 @@ export default function AiSeishinnenreiClientPage() {
               {/* 特徴 */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
-                  <div className="text-2xl mb-2">⚡</div>
-                  <p className="text-sm font-semibold text-gray-700">2分で完了</p>
+                  <div className="text-2xl mb-2">🤖</div>
+                  <p className="text-sm font-semibold text-gray-700">最新AI分析</p>
                 </Card>
                 <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
                   <div className="text-2xl mb-2">💯</div>
@@ -308,7 +301,7 @@ export default function AiSeishinnenreiClientPage() {
 
           {step === "questions" && (
             <>
-              <DiagnosisForm
+              <AIStressCheckForm
                 answers={answers}
                 currentQuestion={currentQuestion}
                 onUpdateAnswer={updateAnswer}
@@ -319,29 +312,29 @@ export default function AiSeishinnenreiClientPage() {
               
               {/* 診断中も最新のツールを表示 */}
               <div className="mt-8">
-                <RelatedTools currentToolSlug="ai-seishinnenrei" />
+                <RelatedTools currentToolSlug="ai-stress-check" />
               </div>
             </>
           )}
 
           {step === "result" && result && (
             <>
-              <DiagnosisResultComponent result={result} onShare={handleShare} />
+              <AIStressCheckResultComponent result={result} onShare={handleShare} />
               
               <div className="text-center mt-8">
                 <Button
                   onClick={resetDiagnosis}
                   variant="outline"
-                  className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 font-bold py-3 px-6 rounded-xl"
+                  className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50 font-bold py-3 px-6 rounded-xl"
                 >
                   <RotateCcw className="h-5 w-5 mr-2" />
-                  もう一度診断する
+                  もう一度AI診断する
                 </Button>
               </div>
 
               {/* 診断結果後も最新のツールを表示 */}
               <div className="mt-8">
-                <RelatedTools currentToolSlug="ai-seishinnenrei" />
+                <RelatedTools currentToolSlug="ai-stress-check" />
               </div>
             </>
           )}
@@ -350,35 +343,35 @@ export default function AiSeishinnenreiClientPage() {
           <div className="mt-12 space-y-8">
             {/* メイン説明セクション */}
             <section className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">AI精神年齢診断とは？</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">AIストレス耐性診断とは？</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                <strong>AI精神年齢診断</strong>は、心理学的アプローチとAI技術を組み合わせてあなたの精神年齢（心理年齢・メンタル年齢）を分析する無料診断ツールです。
-                わずか5つの選択式質問に答えるだけで、実年齢との差や心理的特徴を詳しく解説します。
+                <strong>AIストレス耐性診断</strong>は、心理学的アプローチと最新AI技術を組み合わせてあなたのストレス耐性・メンタルの強さを分析する無料診断ツールです。
+                6つの専門的な質問に答えるだけで、AIが仕事や人間関係でのストレス対処能力を詳しく解説します。
               </p>
               <p className="text-gray-700 leading-relaxed">
-                生活スタイル、価値観、コミュニケーション方法などから総合的に判定し、
-                あなたの精神的な成熟度を数値化。登録不要で完全無料、スマホからでも簡単にご利用いただけます。
+                AIがプレッシャー耐性、変化への適応力、回復力などを総合的に判定し、
+                あなたのメンタルヘルス状態を数値化。登録不要で完全無料、スマホからでも簡単にAI診断をご利用いただけます。
               </p>
             </section>
 
             {/* 診断の特徴 */}
-            <section className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 shadow-md">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">診断の特徴・メリット</h2>
+            <section className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 shadow-md">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">AI診断の特徴・メリット</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-bold text-lg text-purple-800 mb-3">🧠 高精度AI分析</h3>
+                  <h3 className="font-bold text-lg text-blue-800 mb-3">🤖 最新AI分析技術</h3>
                   <ul className="text-gray-700 space-y-2 text-sm">
-                    <li>• 心理学的理論に基づく分析</li>
-                    <li>• AI技術による高精度診断</li>
-                    <li>• 実年齢との詳細比較</li>
-                    <li>• 個別化されたタイプ判定</li>
+                    <li>• 心理学的理論に基づくAI分析</li>
+                    <li>• 最新AI技術による高精度診断</li>
+                    <li>• AI感情分析と総合評価</li>
+                    <li>• AI個別化タイプ判定</li>
                   </ul>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-blue-800 mb-3">⚡ 簡単・高速</h3>
+                  <h3 className="font-bold text-lg text-cyan-800 mb-3">⚡ 簡単・高速AI診断</h3>
                   <ul className="text-gray-700 space-y-2 text-sm">
-                    <li>• わずか5つの選択式質問</li>
-                    <li>• 約2分で診断完了</li>
+                    <li>• わずか6つのAI質問</li>
+                    <li>• 約3分でAI診断完了</li>
                     <li>• 完全無料・登録不要</li>
                     <li>• スマホ・PC・タブレット対応</li>
                   </ul>
@@ -391,24 +384,24 @@ export default function AiSeishinnenreiClientPage() {
               <h2 className="text-2xl font-bold text-gray-800 mb-4">よくある質問</h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-bold text-gray-800 mb-2">Q. 精神年齢が実年齢と大きく違うのは普通ですか？</h3>
+                  <h3 className="font-bold text-gray-800 mb-2">Q. AIストレス耐性が低いと診断された場合はどうすればいいですか？</h3>
                   <p className="text-gray-700 text-sm">
-                    A. はい、精神年齢と実年齢に差があるのは一般的です。人生経験や価値観、性格によって精神的成熟度は個人差があります。
-                    大人びている人もいれば、若々しい心を持つ人もいて、それぞれに魅力があります。
+                    A. AIが推奨する方法として、まずは十分な休息を取り、規則正しい生活習慣を心がけることが大切です。
+                    AI分析結果に基づいて運動やリラクゼーション技法を取り入れ、必要に応じて専門家に相談することをお勧めします。
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-800 mb-2">Q. 精神年齢は変化しますか？</h3>
+                  <h3 className="font-bold text-gray-800 mb-2">Q. AIストレス耐性は向上させることができますか？</h3>
                   <p className="text-gray-700 text-sm">
-                    A. 精神年齢は人生経験や環境の変化によって変動します。
-                    新しい経験を積んだり、価値観が変わったりすることで、精神年齢も変化していきます。
+                    A. はい、AI分析結果に基づいた適切なトレーニングと生活習慣の改善により、ストレス耐性は向上させることができます。
+                    AIが推奨するマインドフルネス、運動、十分な睡眠などが効果的です。
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-800 mb-2">Q. 診断結果はどのように活用できますか？</h3>
+                  <h3 className="font-bold text-gray-800 mb-2">Q. AI診断結果はどのように活用できますか？</h3>
                   <p className="text-gray-700 text-sm">
-                    A. 自己理解を深めるツールとして活用できます。人間関係や恋愛、キャリア選択の参考にしたり、
-                    自分の特徴を理解することで、より良い人生の選択ができるでしょう。
+                    A. AIが分析したストレス耐性を客観的に把握し、メンタルヘルス管理や職場環境の改善、
+                    AI推奨のストレス対処法の習得に活用できます。キャリア選択の参考にもなります。
                   </p>
                 </div>
               </div>
@@ -417,8 +410,8 @@ export default function AiSeishinnenreiClientPage() {
             {/* 関連キーワード */}
             <section className="text-center">
               <p className="text-xs text-gray-500">
-                <strong>関連キーワード:</strong> AI精神年齢診断 心理年齢 メンタル年齢 精神年齢 無料診断 心理テスト 年齢診断 AI診断 心理分析 
-                メンタル診断 精神年齢テスト 心理年齢チェック 精神的成熟度 心理的年齢 メンタルエイジ
+                <strong>関連キーワード:</strong> AIストレス耐性診断 AIストレス診断 AIメンタル診断 AIストレス耐性 AIストレスチェック AI心理診断 
+                AIメンタルヘルス AIストレス管理 AIプレッシャー耐性 AI回復力診断 AIレジリエンス 無料AI診断 AI診断ツール AI心の強さ
               </p>
             </section>
           </div>

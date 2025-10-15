@@ -254,6 +254,11 @@ export default function AiMoteClientPage() {
                 </div>
               </Card>
 
+              {/* 最新のツール */}
+              <div className="mb-8">
+                <RelatedTools currentToolSlug="ai-mote" />
+              </div>
+
               {/* AIモテ度診断でわかること */}
               <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
                 <h2 className="text-2xl font-bold text-center mb-6">AIモテ度診断でわかること</h2>
@@ -320,12 +325,19 @@ export default function AiMoteClientPage() {
           )}
 
           {step === "questions" && !isAnalyzing && (
-            <DiagnosisForm
-              answers={answers}
-              onUpdateAnswer={updateAnswer}
-              onSubmit={analyzeMoteLevel}
-              isAnalyzing={isAnalyzing}
-            />
+            <>
+              <DiagnosisForm
+                answers={answers}
+                onUpdateAnswer={updateAnswer}
+                onSubmit={analyzeMoteLevel}
+                isAnalyzing={isAnalyzing}
+              />
+              
+              {/* 診断中も最新のツールを表示 */}
+              <div className="mt-8">
+                <RelatedTools currentToolSlug="ai-mote" />
+              </div>
+            </>
           )}
 
           {isAnalyzing && (
@@ -345,6 +357,11 @@ export default function AiMoteClientPage() {
                   <RotateCcw className="h-5 w-5 mr-2" />
                   もう一度診断する
                 </Button>
+              </div>
+
+              {/* 診断結果後も最新のツールを表示 */}
+              <div className="mt-8">
+                <RelatedTools currentToolSlug="ai-mote" />
               </div>
             </>
           )}
@@ -458,8 +475,6 @@ export default function AiMoteClientPage() {
           </div>
         </div>
       </div>
-      
-      <RelatedTools currentToolSlug="ai-mote" />
       
       <SiteFooter />
     </>

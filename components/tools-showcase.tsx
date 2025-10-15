@@ -97,13 +97,18 @@ export function ToolsShowcase() {
             isPopular: true,
           }),
           getTools({
-            limit: displayCount,
-            isNew: true,
+            limit: displayCount + 5, // 多めに取得してからソート
+            userRole: "basic", // プレミアムツールと非公開ツールを除外
           })
         ])
         
+        // 新着ツールは updated_at で降順ソート（最新が先頭）- いいね数順は使わない
+        const sortedNewTools = newResult.tools.sort((a, b) => 
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+        )
+        
         setPopularTools(popularResult.tools)
-        setNewTools(newResult.tools)
+        setNewTools(sortedNewTools.slice(0, displayCount)) // 指定された数まで制限
       } catch (error) {
         console.error("Error fetching tools:", error)
         setError(error instanceof Error ? error.message : "ツールの取得に失敗しました")
@@ -162,13 +167,18 @@ export function ToolsShowcase() {
             isPopular: true,
           }),
           getTools({
-            limit: displayCount,
-            isNew: true,
+            limit: displayCount + 5, // 多めに取得してからソート
+            userRole: "basic", // プレミアムツールと非公開ツールを除外
           })
         ])
         
+        // 新着ツールは updated_at で降順ソート（最新が先頭）- いいね数順は使わない
+        const sortedNewTools = updatedNewResult.tools.sort((a, b) => 
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+        )
+        
         setPopularTools(updatedPopularResult.tools)
-        setNewTools(updatedNewResult.tools)
+        setNewTools(sortedNewTools.slice(0, displayCount)) // 指定された数まで制限
       }
     } catch (error) {
       toast({
@@ -247,7 +257,7 @@ export function ToolsShowcase() {
         <div className="overflow-x-auto pb-2">
           <TabsList className="inline-flex min-w-max">
             <TabsTrigger value="popular">人気のツール</TabsTrigger>
-            <TabsTrigger value="new">新着ツール</TabsTrigger>
+            <TabsTrigger value="new">最新ツール</TabsTrigger>
           </TabsList>
         </div>
 

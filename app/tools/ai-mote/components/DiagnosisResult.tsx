@@ -12,10 +12,11 @@ interface DiagnosisResultProps {
 
 export function DiagnosisResult({ result, onShare }: DiagnosisResultProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "from-red-500 to-pink-500"
-    if (score >= 60) return "from-orange-500 to-red-500"
-    if (score >= 40) return "from-yellow-500 to-orange-500"
-    return "from-blue-500 to-purple-500"
+    if (score >= 85) return "from-red-500 to-pink-500"
+    if (score >= 70) return "from-orange-500 to-red-500"
+    if (score >= 55) return "from-yellow-500 to-orange-500"
+    if (score >= 40) return "from-blue-500 to-purple-500"
+    return "from-gray-500 to-blue-500"
   }
 
   const getScoreEmoji = (score: number) => {
@@ -27,184 +28,187 @@ export function DiagnosisResult({ result, onShare }: DiagnosisResultProps) {
     return "💎"
   }
 
+  const getScoreTitle = (score: number) => {
+    if (score >= 90) return "超絶モテ王"
+    if (score >= 80) return "モテ上級者"
+    if (score >= 70) return "モテ中級者"
+    if (score >= 60) return "モテ初級者"
+    if (score >= 50) return "隠れモテ"
+    return "ダイヤの原石"
+  }
+
   const getScoreMessage = (score: number) => {
-    if (score >= 90) return "超絶モテモテ！"
-    if (score >= 80) return "かなりモテる！"
-    if (score >= 70) return "モテ度高め！"
-    if (score >= 60) return "モテ要素あり！"
-    if (score >= 50) return "隠れモテ！"
-    return "ダイヤの原石！"
+    if (score >= 90) return "圧倒的な魅力の持ち主！"
+    if (score >= 80) return "多くの人を惹きつける魅力！"
+    if (score >= 70) return "十分な魅力を持っている！"
+    if (score >= 60) return "魅力的な要素がたくさん！"
+    if (score >= 50) return "隠れた魅力がいっぱい！"
+    return "磨けば光る素晴らしい素質！"
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 animate-in slide-in-from-bottom-4 duration-700">
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* メイン結果カード */}
-      <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 text-center animate-in fade-in-50 duration-1000">
-        <div className="mb-6">
-          <div className="text-6xl mb-4">{getScoreEmoji(result.score)}</div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">診断結果</h2>
-          <p className="text-gray-600">あなたのAIモテ度は...</p>
+      <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl overflow-hidden">
+        {/* ヘッダー部分 */}
+        <div className={`bg-gradient-to-r ${getScoreColor(result.score)} p-6 text-white text-center relative`}>
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative z-10">
+            <div className="text-6xl mb-3">{getScoreEmoji(result.score)}</div>
+            <h2 className="text-3xl font-bold mb-2">{getScoreTitle(result.score)}</h2>
+            <div className="flex items-center justify-center gap-4 mb-2">
+              <div className="text-5xl font-bold">{result.score}</div>
+              <div className="text-xl opacity-90">/ 100%</div>
+            </div>
+            <div className="text-lg font-medium opacity-90">
+              {getScoreMessage(result.score)}
+            </div>
+          </div>
         </div>
 
-        <div className="mb-8">
-          <div className={`bg-gradient-to-r ${getScoreColor(result.score)} w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl transition-all duration-300 hover:scale-105`}>
-            <span className="text-white text-4xl font-bold">{result.score}%</span>
-          </div>
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">{getScoreMessage(result.score)}</h3>
+        {/* コンテンツ部分 */}
+        <div className="p-6">
+          {/* タイプ説明 */}
           <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-4 mb-6">
-            <h4 className="text-xl font-bold text-purple-800 mb-2">{result.type}</h4>
-            <p className="text-purple-700 leading-relaxed">{result.description}</p>
+            <h3 className="text-xl font-bold text-purple-800 mb-2 text-center">
+              {result.type}
+            </h3>
+            <p className="text-purple-700 leading-relaxed text-center">
+              {result.description}
+            </p>
+          </div>
+
+          {/* シェアボタン */}
+          <div className="text-center">
+            <Button
+              onClick={onShare}
+              className={`bg-gradient-to-r ${getScoreColor(result.score)} hover:opacity-90 text-white font-bold py-3 px-8 rounded-xl shadow-lg`}
+            >
+              <Share2 className="h-5 w-5 mr-2" />
+              結果をシェア
+            </Button>
           </div>
         </div>
-
-        <Button
-          onClick={onShare}
-          className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-lg"
-        >
-          <Share2 className="h-5 w-5 mr-2" />
-          結果をシェア
-        </Button>
       </Card>
 
       {/* 詳細スコア */}
-      <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 animate-in slide-in-from-left-4 duration-700 delay-300">
-        <h3 className="text-2xl font-bold text-center mb-8">詳細スコア</h3>
-        
-        <div className="space-y-6">
-          {/* ポジティブ度 */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center">
-                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 w-10 h-10 rounded-full flex items-center justify-center mr-3">
-                  <Sparkles className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg">ポジティブ度</h4>
-                  <p className="text-sm text-gray-600">前向きさと明るい表現力</p>
-                </div>
+      <div className="grid md:grid-cols-3 gap-4">
+        {/* ポジティブ度 */}
+        <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-0 shadow-lg p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-orange-200/30 rounded-full -mr-10 -mt-10"></div>
+          <div className="relative z-10">
+            <div className="flex items-center mb-4">
+              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 w-12 h-12 rounded-full flex items-center justify-center mr-3 shadow-lg">
+                <Sparkles className="h-6 w-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-orange-600">{result.positiveScore}%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div 
-                className="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full transition-all duration-1000"
-                style={{ width: `${result.positiveScore}%` }}
-              />
-            </div>
-          </div>
-
-          {/* 社交性 */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center">
-                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-10 h-10 rounded-full flex items-center justify-center mr-3">
-                  <Users className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg">社交性</h4>
-                  <p className="text-sm text-gray-600">コミュニケーション能力</p>
-                </div>
+              <div>
+                <h4 className="font-bold text-lg text-gray-800">ポジティブ度</h4>
+                <p className="text-xs text-orange-600">前向きさと明るさ</p>
               </div>
-              <span className="text-2xl font-bold text-blue-600">{result.socialScore}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div 
-                className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full transition-all duration-1000"
-                style={{ width: `${result.socialScore}%` }}
-              />
-            </div>
-          </div>
-
-          {/* 共感力 */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center">
-                <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-10 h-10 rounded-full flex items-center justify-center mr-3">
-                  <Heart className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg">共感力</h4>
-                  <p className="text-sm text-gray-600">相手への思いやりと理解力</p>
-                </div>
+            
+            <div className="text-center mb-4">
+              <div className="text-4xl font-bold text-orange-600 mb-2">{result.positiveScore}%</div>
+              <div className="w-full bg-orange-200 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full transition-all duration-1000"
+                  style={{ width: `${result.positiveScore}%` }}
+                />
               </div>
-              <span className="text-2xl font-bold text-green-600">{result.empathyScore}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div 
-                className="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full transition-all duration-1000"
-                style={{ width: `${result.empathyScore}%` }}
-              />
+            
+            <div className="bg-orange-100/50 rounded-lg p-3">
+              <div className="text-xs text-orange-700 text-center">
+                {result.positiveScore >= 80 ? "✨ 超ポジティブ！" : 
+                 result.positiveScore >= 60 ? "😊 明るい性格" :
+                 result.positiveScore >= 40 ? "🌟 前向き" : "💎 伸びしろあり"}
+              </div>
             </div>
           </div>
+        </Card>
+
+        {/* 社交性 */}
+        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 shadow-lg p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-blue-200/30 rounded-full -mr-10 -mt-10"></div>
+          <div className="relative z-10">
+            <div className="flex items-center mb-4">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 rounded-full flex items-center justify-center mr-3 shadow-lg">
+                <Users className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h4 className="font-bold text-lg text-gray-800">社交性</h4>
+                <p className="text-xs text-blue-600">コミュ力と親しみやすさ</p>
+              </div>
+            </div>
+            
+            <div className="text-center mb-4">
+              <div className="text-4xl font-bold text-blue-600 mb-2">{result.socialScore}%</div>
+              <div className="w-full bg-blue-200 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full transition-all duration-1000"
+                  style={{ width: `${result.socialScore}%` }}
+                />
+              </div>
+            </div>
+            
+            <div className="bg-blue-100/50 rounded-lg p-3">
+              <div className="text-xs text-blue-700 text-center">
+                {result.socialScore >= 80 ? "🎉 超社交的！" : 
+                 result.socialScore >= 60 ? "👥 人気者" :
+                 result.socialScore >= 40 ? "🤝 親しみやすい" : "🌱 成長中"}
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* 共感力 */}
+        <Card className="bg-gradient-to-br from-pink-50 to-purple-50 border-0 shadow-lg p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-pink-200/30 rounded-full -mr-10 -mt-10"></div>
+          <div className="relative z-10">
+            <div className="flex items-center mb-4">
+              <div className="bg-gradient-to-r from-pink-500 to-purple-500 w-12 h-12 rounded-full flex items-center justify-center mr-3 shadow-lg">
+                <Heart className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h4 className="font-bold text-lg text-gray-800">共感力</h4>
+                <p className="text-xs text-pink-600">思いやりと理解力</p>
+              </div>
+            </div>
+            
+            <div className="text-center mb-4">
+              <div className="text-4xl font-bold text-pink-600 mb-2">{result.empathyScore}%</div>
+              <div className="w-full bg-pink-200 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
+                  style={{ width: `${result.empathyScore}%` }}
+                />
+              </div>
+            </div>
+            
+            <div className="bg-pink-100/50 rounded-lg p-3">
+              <div className="text-xs text-pink-700 text-center">
+                {result.empathyScore >= 80 ? "💖 超共感的！" : 
+                 result.empathyScore >= 60 ? "🤗 思いやり上手" :
+                 result.empathyScore >= 40 ? "💕 優しい心" : "🌸 温かい人"}
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* AIアドバイス */}
+      <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-0 shadow-lg p-6">
+        <div className="flex items-center mb-4">
+          <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+            <Trophy className="h-5 w-5 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-800">AIモテ度アップアドバイス</h3>
         </div>
+        <p className="text-gray-700 leading-relaxed">
+          {result.advice}
+        </p>
       </Card>
 
-      {/* アドバイスカード */}
-      <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-0 shadow-xl p-8 animate-in slide-in-from-right-4 duration-700 delay-500">
-        <div className="text-center mb-6">
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Trophy className="h-8 w-8 text-white" />
-          </div>
-          <h3 className="text-2xl font-bold text-purple-800 mb-2">モテ度アップのアドバイス</h3>
-        </div>
-        
-        <div className="bg-white/70 rounded-xl p-6">
-          <p className="text-purple-700 leading-relaxed text-lg">{result.advice}</p>
-        </div>
-      </Card>
-
-      {/* シェア用カード風デザイン */}
-      <Card className="bg-gradient-to-r from-pink-500 to-purple-600 text-white border-0 shadow-xl p-8 text-center">
-        <div className="mb-4">
-          <Star className="h-12 w-12 mx-auto mb-3" />
-          <h3 className="text-2xl font-bold mb-2">AIモテ度診断結果</h3>
-        </div>
-        
-        <div className="bg-white/20 rounded-xl p-6 mb-6">
-          <div className="text-4xl font-bold mb-2">{result.score}%</div>
-          <div className="text-xl font-semibold mb-3">{result.type}</div>
-          <div className="grid grid-cols-3 gap-4 text-sm">
-            <div>
-              <div className="font-bold">ポジティブ度</div>
-              <div>{result.positiveScore}%</div>
-            </div>
-            <div>
-              <div className="font-bold">社交性</div>
-              <div>{result.socialScore}%</div>
-            </div>
-            <div>
-              <div className="font-bold">共感力</div>
-              <div>{result.empathyScore}%</div>
-            </div>
-          </div>
-        </div>
-        
-        <p className="text-sm opacity-90">あなたも無料で診断してみよう！</p>
-        <p className="text-xs opacity-75 mt-1">yokaunit.com</p>
-      </Card>
-
-      {/* 関連コンテンツ */}
-      <Card className="bg-gray-50/80 backdrop-blur-sm border-0 shadow-md p-6">
-        <h3 className="font-bold text-gray-800 mb-4 text-center">🎯 診断結果を活かそう</h3>
-        <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
-          <div>
-            <h4 className="font-semibold mb-2">💬 コミュニケーションのコツ</h4>
-            <p>相手の話をよく聞き、共感を示すことで好印象を与えられます。自然な笑顔と相づちを心がけましょう。</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">✨ 魅力アップの方法</h4>
-            <p>自分らしさを大切にしつつ、相手への思いやりを忘れずに。ポジティブな言葉遣いを意識してみてください。</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">🌟 恋愛での活かし方</h4>
-            <p>診断結果を参考に、自分の強みを活かしたアプローチを心がけてみてください。</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">🎪 友達と楽しもう</h4>
-            <p>結果をシェアして友達と比較したり、一緒に診断を楽しんでみてください。</p>
-          </div>
-        </div>
-      </Card>
     </div>
   )
 }

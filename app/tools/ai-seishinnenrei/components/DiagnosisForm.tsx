@@ -25,7 +25,7 @@ export function DiagnosisForm({
   onPreviousQuestion,
   isAnalyzing 
 }: DiagnosisFormProps) {
-  const [ageInput, setAgeInput] = useState(answers.age?.toString() || "")
+  const [ageInput, setAgeInput] = useState(answers.age && answers.age > 0 ? answers.age.toString() : "")
 
   // 年齢入力画面
   if (currentQuestion === -1 || !answers.age || answers.age === 0) {
@@ -54,10 +54,10 @@ export function DiagnosisForm({
                   type="number"
                   value={ageInput}
                   onChange={(e) => setAgeInput(e.target.value)}
-                  placeholder="25"
+                  placeholder="20"
                   min="1"
                   max="100"
-                  className="text-3xl font-bold text-center py-4 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:ring-blue-400"
+                  className="text-3xl font-bold text-center py-4 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:ring-blue-400 placeholder:text-gray-300 placeholder:font-normal bg-white"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-gray-500 font-bold">
                   歳

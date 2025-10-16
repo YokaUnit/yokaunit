@@ -9,6 +9,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
+import { CategoryTools } from "@/components/category-tools"
 import { useExcel2048Game } from "./hooks/useExcel2048Game"
 import { ExcelInterface } from "./components/ExcelInterface"
 import { GameWindow } from "./components/GameWindow"
@@ -326,6 +327,7 @@ export default function Excel2048ClientPage() {
         onInitializeGame={game.initializeGame}
       />
       
+      <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="excel2048" limit={8} />
       <RelatedTools currentToolSlug="excel2048" />
       
       <SiteFooter />

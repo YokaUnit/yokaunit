@@ -5,6 +5,7 @@ import { BackgroundAnimation } from "@/components/background-animation"
 import { BombCardGameClient } from "./BombCardGameClient"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
+import { CategoryTools } from "@/components/category-tools"
 
 export const metadata: Metadata = {
   title: "爆弾カードゲーム | YokaUnit",
@@ -33,6 +34,7 @@ export default function BombCardGamePage() {
         </div>
       </main>
       
+      <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="bombcard" limit={8} />
       <RelatedTools currentToolSlug="bombcard" />
       
       <SiteFooter />

@@ -7,6 +7,7 @@ import { UuidGenerator } from "@/components/tools/uuid-generator"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
+import { CategoryTools } from "@/components/category-tools"
 import Link from "next/link"
 
 export default function UuidGeneratorClientPage() {
@@ -294,6 +295,7 @@ export default function UuidGeneratorClientPage() {
         </div>
       </main>
       
+      <CategoryTools category="セキュリティ" title="関連ツール（セキュリティ）" currentToolSlug="uuid" limit={8} />
       <RelatedTools currentToolSlug="uuid" />
       
       <SiteFooter />

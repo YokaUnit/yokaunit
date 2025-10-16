@@ -32,6 +32,7 @@ import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
+import { CategoryTools } from "@/components/category-tools"
 import { useMediaQuery } from "@/hooks/use-mobile"
 import { useChinchiroGame } from "./hooks/useChinchiroGame"
 import { Dice } from "./components/Dice"
@@ -512,6 +513,7 @@ export default function ChinchiroClientPage() {
           </div>
         </main>
 
+        <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="chinchiro" limit={8} />
         <RelatedTools currentToolSlug="chinchiro" />
         
         <SiteFooter />

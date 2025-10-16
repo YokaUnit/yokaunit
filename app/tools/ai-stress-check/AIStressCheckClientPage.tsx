@@ -13,6 +13,7 @@ import { AIStressCheckResult as AIStressCheckResultComponent } from "./component
 import { useAIStressCheck } from "./hooks/useAIStressCheck"
 import { toast } from "@/hooks/use-toast"
 import { RelatedTools } from "@/components/related-tools"
+import { CategoryTools } from "@/components/category-tools"
 
 export default function AIStressCheckClientPage() {
   const {
@@ -231,6 +232,10 @@ export default function AIStressCheckClientPage() {
                 </div>
               </Card>
 
+              {/* 関連ツール（カテゴリ: 診断） */}
+              <div className="mb-8">
+                <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="ai-stress-check" limit={8} />
+              </div>
               {/* 最新のツール */}
               <div className="mb-8">
                 <RelatedTools currentToolSlug="ai-stress-check" />
@@ -310,6 +315,10 @@ export default function AIStressCheckClientPage() {
                 isAnalyzing={isAnalyzing}
               />
               
+              {/* 診断中も関連ツール（診断）を表示 */}
+              <div className="mt-8">
+                <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="ai-stress-check" limit={8} />
+              </div>
               {/* 診断中も最新のツールを表示 */}
               <div className="mt-8">
                 <RelatedTools currentToolSlug="ai-stress-check" />
@@ -332,6 +341,10 @@ export default function AIStressCheckClientPage() {
                 </Button>
               </div>
 
+              {/* 診断結果後も関連ツール（診断）を表示 */}
+              <div className="mt-8">
+                <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="ai-stress-check" limit={8} />
+              </div>
               {/* 診断結果後も最新のツールを表示 */}
               <div className="mt-8">
                 <RelatedTools currentToolSlug="ai-stress-check" />

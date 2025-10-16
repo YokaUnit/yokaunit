@@ -14,6 +14,7 @@ import { FortuneLoading } from "./components/FortuneLoading"
 import { useFortuneTeller } from "./hooks/useFortuneTeller"
 import { toast } from "@/hooks/use-toast"
 import { RelatedTools } from "@/components/related-tools"
+import { CategoryTools } from "@/components/category-tools"
 
 export default function FortuneTodayClientPage() {
   const {
@@ -255,7 +256,17 @@ export default function FortuneTodayClientPage() {
                   </div>
                 </Card>
 
-                {/* 占いでわかること */}
+              {/* 関連ツール（カテゴリ: 診断） */}
+              <div className="mb-8">
+                <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="fortune-today" limit={8} />
+              </div>
+
+              {/* 最新のツール（このページでは上部に移動）*/}
+              <div className="mb-8">
+                <RelatedTools currentToolSlug="fortune-today" />
+              </div>
+
+              {/* 占いでわかること */}
                 <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
                   <h2 className="text-2xl font-bold text-center mb-6">今日の運勢AIでわかること</h2>
                   <div className="grid md:grid-cols-2 gap-6">
@@ -446,7 +457,7 @@ export default function FortuneTodayClientPage() {
         </div>
       </div>
       
-      <RelatedTools currentToolSlug="fortune-today" />
+      {/* 下部の最新ツールは上部へ移動済みのため削除 */}
       
       <SiteFooter />
     </>

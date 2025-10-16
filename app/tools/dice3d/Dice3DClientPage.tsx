@@ -12,6 +12,7 @@ import { Dice3D } from "./components/Dice3D"
 import { Ground, Walls, Lighting } from "./components/Environment3D"
 import { ControlPanel } from "./components/ControlPanel"
 import { RelatedTools } from "@/components/related-tools"
+import { CategoryTools } from "@/components/category-tools"
 
 export function Dice3DClientPage() {
   const {
@@ -401,6 +402,7 @@ export function Dice3DClientPage() {
         </div>
       </main>
 
+      <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="dice3d" limit={8} />
       <RelatedTools currentToolSlug="dice3d" />
 
       <SiteFooter />

@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
+import { CategoryTools } from "@/components/category-tools"
 import { motion } from "framer-motion"
 import { Maximize2, Minimize2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -929,6 +930,7 @@ export default function SakuraEditor() {
         </div>
       </main>
 
+      <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="sakura2048" limit={8} />
       <RelatedTools currentToolSlug="sakura2048" />
 
       <SiteFooter />

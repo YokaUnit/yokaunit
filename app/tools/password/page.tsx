@@ -4,6 +4,7 @@ import { PasswordGenerator } from "@/components/tools/password-generator"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
+import { CategoryTools } from "@/components/category-tools"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -241,6 +242,7 @@ export default function PasswordGeneratorPage() {
         </div>
       </main>
       
+      <CategoryTools category="セキュリティ" title="関連ツール（セキュリティ）" currentToolSlug="password" limit={8} />
       <RelatedTools currentToolSlug="password" />
       
       <SiteFooter />

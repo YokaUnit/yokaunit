@@ -6,6 +6,7 @@ import { SocialRequestBanner } from "@/components/social-request-banner"
 import { AdminMessage } from "@/components/admin-message"
 import { CorporateSection } from "@/components/corporate-section"
 import { MembershipSection } from "@/components/membership-section"
+import { ViewedTools } from "@/components/viewed-tools"
 import { PopularTools } from "@/components/popular-tools"
 import { UpdatedToolsShowcase } from "@/components/updated-tools-showcase"
 import { SiteHeader } from "@/components/site-header"
@@ -86,6 +87,7 @@ export default function Home() {
               <AdminMessage />
               <CorporateSection />
               <MembershipSection />
+              <ViewedTools />
               <PopularTools />
             </div>
           </div>

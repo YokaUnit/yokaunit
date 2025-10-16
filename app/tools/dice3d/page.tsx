@@ -1,5 +1,6 @@
 import { Dice3DClientPage } from "./Dice3DClientPage"
 import type { Metadata } from "next"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "サイコロ｜無料オンラインサイコロ・3Dサイコロシミュレーター - YokaUnit",
@@ -204,6 +205,7 @@ export default function Dice3DPage() {
         }}
       />
 
+      <ViewCounter toolSlug="dice3d" />
       <Dice3DClientPage />
     </>
   )

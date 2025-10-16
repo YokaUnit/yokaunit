@@ -6,6 +6,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { CategoryTools } from "@/components/category-tools"
 import { RelatedTools } from "@/components/related-tools"
 import RussianSweetsClient from "./RussianSweetsClient"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "ロシアンスイーツ｜お菓子の外れを引いたら負け！2人で遊べるブラウザゲーム | YokaUnit",
@@ -56,6 +57,7 @@ export default function RussianSweetsPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
+      <ViewCounter toolSlug="russian-sweets" />
       <BackgroundAnimation />
       <SiteHeader />
       <main className="flex-1 relative z-10">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import AiMoteClientPage from "./AiMoteClientPage"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "AIモテ度診断｜無料でできる恋愛相性・モテ診断ツール",
@@ -53,5 +54,10 @@ export const metadata: Metadata = {
 }
 
 export default function AiMotePage() {
-  return <AiMoteClientPage />
+  return (
+    <>
+      <ViewCounter toolSlug="ai-mote" />
+      <AiMoteClientPage />
+    </>
+  )
 }

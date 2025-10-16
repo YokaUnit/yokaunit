@@ -5,6 +5,7 @@ import { BackgroundAnimation } from "@/components/background-animation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ViewCounter } from "@/components/view-counter"
 import CardStackClientPage from "./CardStackClientPage"
 import { webPageStructuredData, gameStructuredData, faqStructuredData } from "./lib/structured-data"
 
@@ -113,6 +114,7 @@ const breadcrumbItems = [
 export default function CardStackPage() {
   return (
     <>
+      <ViewCounter toolSlug="cardstack" />
       {/* 構造化データ */}
       <script
         type="application/ld+json"

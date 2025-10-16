@@ -17,6 +17,7 @@ export interface Tool {
   is_popular: boolean
   is_active: boolean
   likes_count: number
+  view_count: number
   created_at: string
   updated_at: string
 }
@@ -139,4 +140,17 @@ export async function getCategories(): Promise<string[]> {
 
   const categories = Array.from(new Set(data?.map((item) => item.category) || []))
   return categories
+}
+
+export async function incrementViewCount(slug: string): Promise<void> {
+  const supabase = createServerSupabaseClient()
+
+  const { error } = await supabase.rpc("increment_view_count", {
+    slug_to_update: slug,
+  })
+
+  if (error) {
+    console.error("Error incrementing view count:", error)
+    // エラーが発生してもページ表示は継続するため、throwしない
+  }
 }

@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import ThreeCardBattleClient from "./ThreeCardBattleClient"
 import { CategoryTools } from "@/components/category-tools"
 import { RelatedTools } from "@/components/related-tools"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "3カード選択バトル｜当たりを当ててスコアを競う無料ゲーム | YokaUnit",
@@ -64,6 +65,7 @@ export default function ThreeCardBattlePage() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
+      <ViewCounter toolSlug="3cardbattle" />
       <BackgroundAnimation />
       <SiteHeader />
       <main className="flex-1 relative z-10">

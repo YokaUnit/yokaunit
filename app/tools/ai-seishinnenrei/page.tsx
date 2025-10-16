@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import AiSeishinnenreiClientPage from "./AiSeishinnenreiClientPage"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "AI精神年齢診断｜無料で本格チェック＆心理テスト・実年齢との差も分析",
@@ -53,5 +54,10 @@ export const metadata: Metadata = {
 }
 
 export default function AiSeishinnenreiPage() {
-  return <AiSeishinnenreiClientPage />
+  return (
+    <>
+      <ViewCounter toolSlug="ai-seishinnenrei" />
+      <AiSeishinnenreiClientPage />
+    </>
+  )
 }

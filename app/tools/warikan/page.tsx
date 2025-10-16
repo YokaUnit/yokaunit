@@ -17,6 +17,7 @@ import { toast } from "@/hooks/use-toast"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { RelatedTools } from "@/components/related-tools"
+import { ViewCounter } from "@/components/view-counter"
 
 export default function WariKanPage() {
   const {
@@ -156,6 +157,7 @@ export default function WariKanPage() {
 
   return (
     <>
+      <ViewCounter toolSlug="warikan" />
       <SiteHeader />
       <div className="min-h-screen relative">
         <BackgroundAnimation />

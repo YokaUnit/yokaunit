@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import UuidGeneratorClientPage from "./UuidGeneratorClientPage"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "UUID生成ツール｜PostgreSQL対応のUUIDを無料生成・開発者向けツール | yokaunit",
@@ -98,5 +99,10 @@ export const metadata: Metadata = {
 }
 
 export default function UuidGeneratorPage() {
-  return <UuidGeneratorClientPage />
+  return (
+    <>
+      <ViewCounter toolSlug="uuid" />
+      <UuidGeneratorClientPage />
+    </>
+  )
 }

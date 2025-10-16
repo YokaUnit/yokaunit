@@ -6,6 +6,7 @@ import { BombCardGameClient } from "./BombCardGameClient"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "爆弾カードゲーム | YokaUnit",
@@ -21,6 +22,7 @@ const breadcrumbItems = [
 export default function BombCardGamePage() {
   return (
     <div className="min-h-screen flex flex-col relative">
+      <ViewCounter toolSlug="bombcard" />
       <BackgroundAnimation />
       <SiteHeader />
       <main className="flex-1 relative z-10">

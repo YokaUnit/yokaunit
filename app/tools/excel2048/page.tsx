@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Excel2048ClientPage from "./Excel2048ClientPage"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "Excel風2048｜エクセルそっくり見た目の2048パズルゲーム・仕事中でもバレない無料ゲーム | yokaunit",
@@ -104,5 +105,10 @@ export const metadata: Metadata = {
 }
 
 export default function Excel2048Page() {
-  return <Excel2048ClientPage />
+  return (
+    <>
+      <ViewCounter toolSlug="excel2048" />
+      <Excel2048ClientPage />
+    </>
+  )
 }

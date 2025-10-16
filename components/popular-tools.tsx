@@ -47,7 +47,7 @@ export function PopularTools() {
           <CardHeader className="pb-2 pt-3 px-3">
             <CardTitle className="text-base font-semibold text-blue-900 flex items-center">
               <TrendingUp className="h-4 w-4 mr-1.5 text-blue-500" />
-              人気のツール
+              いいね数の多いツール
             </CardTitle>
           </CardHeader>
           <CardContent className="p-3">
@@ -76,7 +76,7 @@ export function PopularTools() {
         <CardHeader className="pb-2 pt-3 px-3">
           <CardTitle className="text-base font-semibold text-blue-900 flex items-center">
             <TrendingUp className="h-4 w-4 mr-1.5 text-blue-500" />
-            人気のツール
+            いいね数の多いツール
           </CardTitle>
         </CardHeader>
         <CardContent className="p-3">

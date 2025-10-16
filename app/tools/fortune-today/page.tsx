@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import FortuneTodayClientPage from "./FortuneTodayClientPage"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "今日の運勢｜無料占い・星座占い・恋愛運・仕事運・金運 - YokaUnit",
@@ -220,6 +221,7 @@ export default function FortuneTodayPage() {
         }}
       />
 
+      <ViewCounter toolSlug="fortune-today" />
       <FortuneTodayClientPage />
     </>
   )

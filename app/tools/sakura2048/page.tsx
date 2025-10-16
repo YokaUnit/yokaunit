@@ -8,6 +8,7 @@ import { ScrollToTop } from "@/components/scroll-to-top"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ViewCounter } from "@/components/view-counter"
 import { motion } from "framer-motion"
 import { Maximize2, Minimize2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -873,6 +874,7 @@ export default function SakuraEditor() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col relative">
+      <ViewCounter toolSlug="sakura2048" />
       <BackgroundAnimation />
       <SiteHeader />
       

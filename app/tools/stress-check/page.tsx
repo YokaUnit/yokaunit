@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import StressCheckClientPage from "./StressCheckClientPage"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "ストレス耐性診断｜無料AI診断で心の強さをチェック - YokaUnit",
@@ -65,5 +66,10 @@ export const metadata: Metadata = {
 }
 
 export default function StressCheckPage() {
-  return <StressCheckClientPage />
+  return (
+    <>
+      <ViewCounter toolSlug="stress-check" />
+      <StressCheckClientPage />
+    </>
+  )
 }

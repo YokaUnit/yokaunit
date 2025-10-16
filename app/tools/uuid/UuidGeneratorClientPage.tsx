@@ -8,12 +8,14 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ViewCounter } from "@/components/view-counter"
 import Link from "next/link"
 
 export default function UuidGeneratorClientPage() {
   return (
     <>
       <div className="flex min-h-screen flex-col relative">
+        <ViewCounter toolSlug="uuid" />
         <BackgroundAnimation />
         <SiteHeader />
         <main className="flex-1 relative z-10">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import OnsenMapClientPage from "./OnsenMapClientPage"
+import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
   title: "2025年温泉ランキングマップ | 日本全国の名湯100選 | yokaunit",
@@ -20,5 +21,10 @@ export const metadata: Metadata = {
 }
 
 export default function OnsenMapPage() {
-  return <OnsenMapClientPage />
+  return (
+    <>
+      <ViewCounter toolSlug="onsenmap" />
+      <OnsenMapClientPage />
+    </>
+  )
 }

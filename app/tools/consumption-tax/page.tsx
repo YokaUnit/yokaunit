@@ -8,6 +8,7 @@ import { BackgroundAnimation } from '@/components/background-animation';
 import { ScrollToTop } from '@/components/scroll-to-top';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { RelatedTools } from '@/components/related-tools';
+import { ViewCounter } from '@/components/view-counter';
 import { 
   SEO_METADATA, 
   STRUCTURED_DATA, 
@@ -53,6 +54,7 @@ export const metadata: Metadata = {
 export default function ConsumptionTaxPage() {
   return (
     <div className="flex min-h-screen flex-col">
+      <ViewCounter toolSlug="consumption-tax" />
       {/* 構造化データ */}
       <script
         type="application/ld+json"

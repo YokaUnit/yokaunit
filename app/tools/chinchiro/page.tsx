@@ -1,5 +1,6 @@
 import ChinchiroClientPage from "./ChinchiroClientPage"
 import type { Metadata } from "next"
+import { ViewCounter } from "@/components/view-counter"
 
 // メタデータ
 export const metadata: Metadata = {
@@ -42,5 +43,10 @@ export const metadata: Metadata = {
 }
 
 export default function ChinchiroPage() {
-  return <ChinchiroClientPage />
+  return (
+    <>
+      <ViewCounter toolSlug="chinchiro" />
+      <ChinchiroClientPage />
+    </>
+  )
 }

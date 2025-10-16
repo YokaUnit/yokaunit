@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ViewCounter } from "@/components/view-counter"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -97,6 +98,7 @@ export const metadata: Metadata = {
 export default function PasswordGeneratorPage() {
   return (
     <div className="flex min-h-screen flex-col relative">
+      <ViewCounter toolSlug="password" />
       <BackgroundAnimation />
       <SiteHeader />
       <main className="flex-1 relative z-10">

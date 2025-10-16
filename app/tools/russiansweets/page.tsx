@@ -57,7 +57,7 @@ export default function RussianSweetsPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      <ViewCounter toolSlug="russian-sweets" />
+      <ViewCounter toolSlug="russiansweets" />
       <BackgroundAnimation />
       <SiteHeader />
       <main className="flex-1 relative z-10">

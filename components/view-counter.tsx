@@ -1,22 +1,28 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { incrementViewCount } from "@/lib/actions/tools"
 
 interface ViewCounterProps {
   toolSlug: string
 }
 
+// ブラウザタブ（ページライフサイクル）内での二重カウント防止用フラグ
+declare global {
+  interface Window {
+    __yokaViewCounter?: Record<string, boolean>
+  }
+}
+
 export function ViewCounter({ toolSlug }: ViewCounterProps) {
-  const hasCountedRef = useRef(false)
-
   useEffect(() => {
-    if (hasCountedRef.current) return
-    hasCountedRef.current = true
-    incrementViewCount(toolSlug)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (typeof window === "undefined") return
+    if (!window.__yokaViewCounter) window.__yokaViewCounter = {}
+    if (window.__yokaViewCounter[toolSlug]) return
 
-  // このコンポーネントは表示要素を持たない
+    window.__yokaViewCounter[toolSlug] = true
+    incrementViewCount(toolSlug)
+  }, [toolSlug])
+
   return null
 }

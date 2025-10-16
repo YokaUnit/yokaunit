@@ -141,14 +141,6 @@ export default function ThreeCardBattleClient() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      {turnBanner && (
-        <div className="fixed inset-x-0 top-16 z-30 flex justify-center pointer-events-none">
-          <div className="pointer-events-auto inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-extrabold shadow-lg animate-bounce">
-            <span>🎮</span>
-            <span>{turnBanner} のターン！</span>
-          </div>
-        </div>
-      )}
 
       {phase === "setup" && (
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border p-6">
@@ -225,24 +217,33 @@ export default function ThreeCardBattleClient() {
               </div>
             )}
 
-            <div className="mt-4">{renderCards(pendingReveal)}</div>
+            <div className="mt-4 relative">
+              {turnBanner && (
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+                  <div className="pointer-events-auto inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-fuchsia-600 via-pink-500 to-rose-500 text-white text-lg sm:text-xl font-extrabold shadow-2xl ring-1 ring-white/40 whitespace-nowrap">
+                    <span className="drop-shadow whitespace-nowrap">{turnBanner} のターン！</span>
+                    <span className="w-2 h-2 rounded-full bg-white/90 animate-ping" />
+                  </div>
+                </div>
+              )}
+              {renderCards(pendingReveal)}
+            </div>
 
-            {pendingReveal && winningCard === null && (
-              <div className="mt-4 flex justify-center">
-                <button
-                  onClick={revealWinning}
-                  className="px-5 py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 shadow"
-                >
-                  当たりを見る
-                </button>
-              </div>
-            )}
+            <div className="mt-4 flex justify-center">
+              <button
+                onClick={revealWinning}
+                disabled={!(pendingReveal && winningCard === null)}
+                className={`${pendingReveal && winningCard === null
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer'
+                    : 'bg-gray-300 text-white cursor-not-allowed'} px-5 py-3 rounded-xl font-bold shadow`}
+                aria-disabled={!(pendingReveal && winningCard === null)}
+                title={pendingReveal && winningCard === null ? '当たりを表示' : '全員の選択が終わると押せます'}
+              >
+                当たりを見る
+              </button>
+            </div>
 
-            {winningCard !== null && (
-              <div className="text-center mt-4">
-                <div className="inline-block px-4 py-2 rounded-full bg-green-100 text-green-800 font-bold">当たりは {['A','B','C'][winningCard]}！</div>
-              </div>
-            )}
+            {/* 当たりテキスト表示は不要のため削除 */}
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">

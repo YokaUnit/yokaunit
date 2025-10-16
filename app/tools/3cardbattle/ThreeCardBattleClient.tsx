@@ -283,11 +283,7 @@ export default function ThreeCardBattleClient() {
                 {history.slice().reverse().map((h, idx) => {
                   const winners = h.picks.filter((pk) => pk.hit)
                   const winningLabel = ['A','B','C'][h.winning]
-                  const winningBadgeClass = h.winning === 0
-                    ? 'bg-rose-50 text-rose-700 border-rose-200'
-                    : h.winning === 1
-                      ? 'bg-amber-50 text-amber-700 border-amber-200'
-                      : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  const winningBadgeClass = 'bg-rose-50 text-rose-700 border-rose-200'
                   return (
                     <div key={idx} className="border rounded-lg p-2 bg-white">
                       <div className="flex flex-wrap items-center gap-2 mb-1">

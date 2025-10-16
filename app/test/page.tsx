@@ -95,8 +95,8 @@ export default function TestPage() {
     setTimeout(() => {
       if (!isInfinite && currentRound >= rounds) {
         setPhase("result");
-        return;
-      }
+          return;
+        }
       setCurrentRound((r) => r + 1);
       setCurrentPlayerIndex(0);
       setSelections({});
@@ -321,9 +321,9 @@ export default function TestPage() {
                       <li key={p.id} className={`flex items-center justify-between rounded-xl border px-4 py-3 ${idx===0? 'bg-yellow-50 border-yellow-300':'bg-white'}`}>
                         <span className="font-semibold text-gray-800">{idx+1}位 {p.name}</span>
                         <span className="text-gray-700">{p.score} pt</span>
-                      </li>
-                    ))}
-                  </ul>
+          </li>
+        ))}
+      </ul>
                 </div>
 
                 <div className="flex items-center justify-center gap-3">

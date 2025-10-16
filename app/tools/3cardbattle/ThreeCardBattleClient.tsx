@@ -24,6 +24,7 @@ export default function ThreeCardBattleClient() {
     Array<{ round: number; winning: number; picks: Array<{ playerId: number; pick: number; hit: boolean }> }>
   >([])
   const [turnBanner, setTurnBanner] = useState<string | null>(null)
+  const [pendingReveal, setPendingReveal] = useState<boolean>(false)
 
   const sortedLeaderboard = useMemo(() => [...players].sort((a, b) => b.score - a.score), [players])
 
@@ -49,7 +50,7 @@ export default function ThreeCardBattleClient() {
   }
 
   const handlePick = (cardIndex: number) => {
-    if (winningCard !== null) return
+    if (winningCard !== null || pendingReveal) return
     const player = players[currentPlayerIndex]
     const nextSel = { ...selections, [player.id]: cardIndex }
     setSelections(nextSel)
@@ -65,12 +66,17 @@ export default function ThreeCardBattleClient() {
       }, 50)
       return
     }
+    // Last player picked → wait for manual reveal
+    setPendingReveal(true)
+  }
 
+  const revealWinning = () => {
+    if (pendingReveal === false || winningCard !== null) return
     const winning = Math.floor(Math.random() * 3)
     setWinningCard(winning)
 
     const picks = players.map((p) => {
-      const pick = nextSel[p.id]
+      const pick = selections[p.id]
       const hit = pick === winning
       return { playerId: p.id, pick, hit }
     })
@@ -87,6 +93,7 @@ export default function ThreeCardBattleClient() {
       setCurrentPlayerIndex(0)
       setSelections({})
       setWinningCard(null)
+      setPendingReveal(false)
       setTimeout(() => {
         const first = players[0]?.name || "Player 1"
         setTurnBanner(`${first}`)
@@ -196,13 +203,40 @@ export default function ThreeCardBattleClient() {
               <div className="text-gray-700 text-sm">ラウンド {currentRound}{!isInfinite && ` / ${rounds}`}</div>
               <div className="text-gray-700 text-sm">ターン: <span className="font-bold text-blue-700">{players[currentPlayerIndex].name}</span></div>
             </div>
+            <div className="mt-3 flex items-center gap-2">
+              <button
+                onClick={startGame}
+                className="px-3 py-2 rounded-lg text-xs bg-blue-600 text-white font-semibold hover:bg-blue-700"
+                title="同じ設定でやり直す"
+              >
+                同じ設定でやり直す
+              </button>
+              <button
+                onClick={() => setPhase('setup')}
+                className="px-3 py-2 rounded-lg text-xs border font-semibold text-gray-700 bg-white hover:bg-gray-50"
+                title="設定に戻る"
+              >
+                設定に戻る
+              </button>
+            </div>
             {!isInfinite && (
               <div className="mt-3 w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-blue-500 to-cyan-500" style={{ width: `${(currentRound - 1) / rounds * 100}%` }} />
               </div>
             )}
 
-            <div className="mt-4">{renderCards(false)}</div>
+            <div className="mt-4">{renderCards(pendingReveal)}</div>
+
+            {pendingReveal && winningCard === null && (
+              <div className="mt-4 flex justify-center">
+                <button
+                  onClick={revealWinning}
+                  className="px-5 py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 shadow"
+                >
+                  当たりを見る
+                </button>
+              </div>
+            )}
 
             {winningCard !== null && (
               <div className="text-center mt-4">
@@ -243,22 +277,46 @@ export default function ThreeCardBattleClient() {
             </div>
 
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow border p-4">
-              <h2 className="font-bold mb-3">履歴</h2>
-              <div className="text-xs text-gray-600 space-y-2 max-h-64 overflow-auto pr-1">
-                {history.slice().reverse().map((h, idx) => (
-                  <div key={idx} className="border rounded-lg p-2 bg-white">
-                    <div className="mb-1 font-semibold">R{h.round} 当たり: {['A','B','C'][h.winning]}</div>
-                    <div className="grid grid-cols-2 gap-1">
-                      {h.picks.map((pk) => (
-                        <div key={`${h.round}-${pk.playerId}`} className="flex items-center justify-between text-gray-700">
-                          <span>#{pk.playerId}</span>
-                          <span>{['A','B','C'][pk.pick]}</span>
-                          <span className={`font-bold ${pk.hit ? 'text-green-600' : 'text-gray-400'}`}>{pk.hit ? '✓' : '-'}</span>
+              <h2 className="font-bold mb-3">履歴（当たりのみ）</h2>
+              <div className="text-sm text-gray-700 space-y-2 max-h-64 overflow-auto pr-1">
+                {history.slice().reverse().map((h, idx) => {
+                  const winners = h.picks.filter((pk) => pk.hit)
+                  const winningLabel = ['A','B','C'][h.winning]
+                  const winningBadgeClass = h.winning === 0
+                    ? 'bg-rose-50 text-rose-700 border-rose-200'
+                    : h.winning === 1
+                      ? 'bg-amber-50 text-amber-700 border-amber-200'
+                      : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  return (
+                    <div key={idx} className="border rounded-lg p-2 bg-white">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-semibold">
+                          ラウンド {h.round}
+                        </span>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full border font-semibold ${winningBadgeClass}`}>
+                          当たりカード: {winningLabel}
+                        </span>
+                      </div>
+                      {winners.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {winners.map((pk) => {
+                            const name = players.find((p) => p.id === pk.playerId)?.name || `Player #${pk.playerId}`
+                            return (
+                              <span
+                                key={`${h.round}-${pk.playerId}`}
+                                className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-300"
+                              >
+                                {name}
+                              </span>
+                            )
+                          })}
                         </div>
-                      ))}
+                      ) : (
+                        <div className="text-gray-400">当たりなし</div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
                 {history.length === 0 && <div className="text-center text-gray-400">まだ履歴はありません</div>}
               </div>
             </div>

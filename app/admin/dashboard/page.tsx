@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { useRouter } from "next/navigation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Clock, MessageSquare, Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react"
+import { getTools, type Tool } from "@/lib/actions/tools"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
@@ -33,6 +34,8 @@ export default function AdminDashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [inProgressTools, setInProgressTools] = useState<InProgressTool[]>([])
   const [developerMessages, setDeveloperMessages] = useState<DeveloperMessage[]>([])
+  const [viewTools, setViewTools] = useState<Tool[]>([])
+  const [isLoadingViews, setIsLoadingViews] = useState(true)
   const [editingTool, setEditingTool] = useState<InProgressTool | null>(null)
   const [isAddingTool, setIsAddingTool] = useState(false)
   const [newTool, setNewTool] = useState({
@@ -72,9 +75,17 @@ export default function AdminDashboardPage() {
 
   const loadData = async () => {
     try {
-      const [tools, messages] = await Promise.all([getInProgressTools(), getDeveloperMessages()])
+      const [tools, messages, allTools] = await Promise.all([
+        getInProgressTools(),
+        getDeveloperMessages(),
+        getTools({ limit: 200, userRole: "admin" }),
+      ])
       setInProgressTools(tools)
       setDeveloperMessages(messages)
+      // 閲覧数順（降順）にソート
+      const sortedByViews = (allTools.tools || []).sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
+      setViewTools(sortedByViews)
+      setIsLoadingViews(false)
     } catch (error) {
       console.error("Error loading data:", error)
       toast.error("データの読み込みに失敗しました")
@@ -232,6 +243,9 @@ export default function AdminDashboardPage() {
                 </TabsTrigger>
                 <TabsTrigger value="messages" className="data-[state=active]:bg-white">
                   開発者メッセージ
+                </TabsTrigger>
+                <TabsTrigger value="views" className="data-[state=active]:bg-white">
+                  閲覧数
                 </TabsTrigger>
               </TabsList>
 
@@ -507,6 +521,56 @@ export default function AdminDashboardPage() {
                         ))}
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="views" className="mt-4">
+                <Card className="bg-white border-amber-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Eye className="h-5 w-5 mr-2 text-amber-600" />
+                      閲覧数ダッシュボード
+                    </CardTitle>
+                    <CardDescription>
+                      `tools`テーブルの`view_count`で降順に表示します。
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoadingViews ? (
+                      <div className="text-sm text-gray-600">読み込み中...</div>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full text-sm">
+                          <thead>
+                            <tr className="text-left border-b">
+                              <th className="py-2 pr-4">タイトル</th>
+                              <th className="py-2 pr-4">スラッグ</th>
+                              <th className="py-2 pr-4">閲覧数</th>
+                              <th className="py-2 pr-4">いいね数</th>
+                              <th className="py-2 pr-4">公開</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {viewTools.map((t) => (
+                              <tr key={t.id} className="border-b hover:bg-amber-50/50">
+                                <td className="py-2 pr-4">
+                                  <a href={t.href} className="text-amber-700 hover:underline" target="_blank" rel="noreferrer">
+                                    {t.title}
+                                  </a>
+                                </td>
+                                <td className="py-2 pr-4 text-gray-600">{t.slug}</td>
+                                <td className="py-2 pr-4 tabular-nums">{(t.view_count ?? 0).toLocaleString()}</td>
+                                <td className="py-2 pr-4 tabular-nums">{(t.likes_count ?? 0).toLocaleString()}</td>
+                                <td className="py-2 pr-4">
+                                  <Badge variant={t.is_active ? "default" : "secondary"}>{t.is_active ? "公開" : "非公開"}</Badge>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>

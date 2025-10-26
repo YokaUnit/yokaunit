@@ -9,8 +9,80 @@ import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
 
 export const metadata: Metadata = {
-  title: "爆弾カードゲーム | YokaUnit",
-  description: "みんなで楽しめる爆弾カードゲーム。カードを選んで爆弾を避けよう！",
+  title: "爆弾カードゲーム｜みんなで楽しめる無料パーティーゲーム・ブラウザゲーム | YokaUnit",
+  description: "【完全無料】みんなで楽しめる爆弾カードゲーム！カードを選んで爆弾を避けよう！最後まで生き残った人の勝利です。スマホ・PC対応で登録不要。パーティー・飲み会・イベントに最適な無料ブラウザゲーム。",
+  keywords: [
+    "爆弾カードゲーム",
+    "パーティーゲーム",
+    "カードゲーム",
+    "無料ゲーム",
+    "ブラウザゲーム",
+    "スマホゲーム",
+    "PCゲーム",
+    "飲み会ゲーム",
+    "イベントゲーム",
+    "みんなでゲーム",
+    "マルチプレイ",
+    "オンラインゲーム",
+    "登録不要",
+    "即プレイ",
+    "YokaUnit",
+    "ヨカユニット",
+    "爆弾ゲーム",
+    "運試しゲーム",
+    "確率ゲーム",
+    "ハラハラゲーム",
+    "緊張感",
+    "盛り上がるゲーム",
+    "簡単ゲーム",
+    "ルール簡単",
+    "子どもも楽しめる",
+    "大人も楽しめる",
+    "家族ゲーム",
+    "友達ゲーム",
+    "同僚ゲーム",
+    "学級レク",
+    "懇親会",
+    "歓送迎会"
+  ],
+  openGraph: {
+    title: "爆弾カードゲーム｜みんなで楽しめる無料パーティーゲーム・ブラウザゲーム",
+    description: "【完全無料】みんなで楽しめる爆弾カードゲーム！カードを選んで爆弾を避けよう！最後まで生き残った人の勝利です。スマホ・PC対応で登録不要。パーティー・飲み会・イベントに最適。",
+    url: "https://yokaunit.com/tools/bombcard",
+    siteName: "YokaUnit",
+    images: [
+      {
+        url: "/ogp/bombcard-game.png",
+        width: 1200,
+        height: 630,
+        alt: "爆弾カードゲーム - みんなで楽しめる無料パーティーゲーム"
+      }
+    ],
+    locale: "ja_JP",
+    type: "website"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "爆弾カードゲーム💣｜みんなで楽しめる無料パーティーゲーム",
+    description: "【完全無料】みんなで楽しめる爆弾カードゲーム✨ カードを選んで爆弾を避けよう🎯 最後まで生き残った人の勝利🏆 スマホ・PC対応で登録不要📱",
+    images: ["/ogp/bombcard-game.png"],
+    creator: "@yokaunit",
+    site: "@yokaunit"
+  },
+  alternates: {
+    canonical: "https://yokaunit.com/tools/bombcard"
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1
+    }
+  }
 }
 
 const breadcrumbItems = [

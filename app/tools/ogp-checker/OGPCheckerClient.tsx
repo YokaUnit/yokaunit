@@ -93,6 +93,12 @@ export function OGPCheckerClient() {
 
   const handleImageError = (imageUrl: string) => {
     setImageLoading(prev => ({ ...prev, [imageUrl]: false }))
+    console.warn(`Failed to load image: ${imageUrl}`)
+  }
+
+  const getProxiedImageUrl = (originalUrl: string) => {
+    if (!originalUrl) return ''
+    return `/api/ogp-checker?imageUrl=${encodeURIComponent(originalUrl)}`
   }
 
   const calculateSEOScore = (metaData: OGPMetaData): number => {
@@ -232,7 +238,9 @@ export function OGPCheckerClient() {
       const imageUrls = [data.image, data.twitterImage].filter(Boolean)
       const initialLoadingState: {[key: string]: boolean} = {}
       imageUrls.forEach(url => {
-        initialLoadingState[url] = true
+        if (url) {
+          initialLoadingState[url] = true
+        }
       })
       setImageLoading(initialLoadingState)
     } catch (err) {
@@ -640,7 +648,7 @@ export function OGPCheckerClient() {
                             </div>
                           )}
                           <img 
-                            src={metaData.image} 
+                            src={getProxiedImageUrl(metaData.image)} 
                             alt="OGP画像" 
                             className={`w-full h-24 md:h-32 object-cover rounded border ${imageLoading[metaData.image] === false ? 'block' : 'hidden'}`}
                             onError={() => handleImageError(metaData.image!)}
@@ -698,7 +706,7 @@ export function OGPCheckerClient() {
                             {metaData.image ? (
                               <div className="relative">
                                 <img 
-                                  src={metaData.image} 
+                                  src={getProxiedImageUrl(metaData.image)} 
                                   alt="OGP画像" 
                                   className="w-16 h-16 md:w-20 md:h-20 object-cover rounded"
                                   onError={() => handleImageError(metaData.image!)}
@@ -736,7 +744,7 @@ export function OGPCheckerClient() {
                             {metaData.twitterImage ? (
                               <div className="relative">
                                 <img 
-                                  src={metaData.twitterImage} 
+                                  src={getProxiedImageUrl(metaData.twitterImage)} 
                                   alt="Twitter画像" 
                                   className="w-16 h-16 md:w-20 md:h-20 object-cover rounded"
                                   onError={() => handleImageError(metaData.twitterImage!)}

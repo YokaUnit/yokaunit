@@ -2,11 +2,19 @@ import { NextRequest, NextResponse } from "next/server"
 
 // メモリキャッシュ（本番環境ではRedis等を使用推奨）
 const cache = new Map<string, { data: any; timestamp: number }>()
+const imageCache = new Map<string, { data: ArrayBuffer; contentType: string; timestamp: number }>()
 const CACHE_DURATION = 5 * 60 * 1000 // 5分
+const IMAGE_CACHE_DURATION = 30 * 60 * 1000 // 30分
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const url = searchParams.get("url")
+  const imageUrl = searchParams.get("imageUrl")
+
+  // 画像プロキシ機能
+  if (imageUrl) {
+    return await proxyImage(imageUrl)
+  }
 
   if (!url) {
     return NextResponse.json({ error: "URL parameter is required" }, { status: 400 })
@@ -73,6 +81,65 @@ export async function GET(request: NextRequest) {
     )
     errorResponse.headers.set('Access-Control-Allow-Origin', '*')
     return errorResponse
+  }
+}
+
+async function proxyImage(imageUrl: string) {
+  try {
+    // URLの検証
+    new URL(imageUrl)
+  } catch {
+    return NextResponse.json({ error: "Invalid image URL format" }, { status: 400 })
+  }
+
+  // 画像キャッシュチェック
+  const cached = imageCache.get(imageUrl)
+  if (cached && Date.now() - cached.timestamp < IMAGE_CACHE_DURATION) {
+    return new NextResponse(cached.data, {
+      headers: {
+        'Content-Type': cached.contentType,
+        'Cache-Control': 'public, max-age=1800', // 30分キャッシュ
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
+  }
+
+  try {
+    const response = await fetch(imageUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; OGP-Checker/1.0)',
+        'Accept': 'image/*',
+      },
+      timeout: 10000,
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+    }
+
+    const imageData = await response.arrayBuffer()
+    const contentType = response.headers.get('content-type') || 'image/jpeg'
+
+    // 画像キャッシュに保存
+    imageCache.set(imageUrl, { 
+      data: imageData, 
+      contentType, 
+      timestamp: Date.now() 
+    })
+
+    return new NextResponse(imageData, {
+      headers: {
+        'Content-Type': contentType,
+        'Cache-Control': 'public, max-age=1800', // 30分キャッシュ
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
+  } catch (error) {
+    console.error("Error fetching image:", error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to fetch image" },
+      { status: 500 }
+    )
   }
 }
 

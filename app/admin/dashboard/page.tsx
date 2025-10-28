@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { useRouter } from "next/navigation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
-import { Clock, MessageSquare, Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react"
+import { Clock, MessageSquare, Plus, Edit, Trash2, Eye, EyeOff, Copy } from "lucide-react"
 import { getTools, type Tool } from "@/lib/actions/tools"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -194,6 +194,17 @@ export default function AdminDashboardPage() {
     } catch (error) {
       console.error("Error toggling message active:", error)
       toast.error("メッセージの表示切り替えに失敗しました")
+    }
+  }
+
+  const handleCopyAllTitles = async () => {
+    try {
+      const titles = viewTools.map(tool => tool.title).join('\n')
+      await navigator.clipboard.writeText(titles)
+      toast.success(`${viewTools.length}個のタイトルをクリップボードにコピーしました`)
+    } catch (error) {
+      console.error("Error copying titles:", error)
+      toast.error("タイトルのコピーに失敗しました")
     }
   }
 
@@ -528,13 +539,27 @@ export default function AdminDashboardPage() {
               <TabsContent value="views" className="mt-4">
                 <Card className="bg-white border-amber-200">
                   <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Eye className="h-5 w-5 mr-2 text-amber-600" />
-                      閲覧数ダッシュボード
-                    </CardTitle>
-                    <CardDescription>
-                      `tools`テーブルの`view_count`で降順に表示します。
-                    </CardDescription>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="flex items-center">
+                          <Eye className="h-5 w-5 mr-2 text-amber-600" />
+                          閲覧数ダッシュボード
+                        </CardTitle>
+                        <CardDescription>
+                          `tools`テーブルの`view_count`で降順に表示します。
+                        </CardDescription>
+                      </div>
+                      <Button
+                        onClick={handleCopyAllTitles}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2 text-amber-600 border-amber-300 hover:bg-amber-50"
+                        disabled={isLoadingViews || viewTools.length === 0}
+                      >
+                        <Copy className="h-4 w-4" />
+                        タイトル一括コピー
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     {isLoadingViews ? (

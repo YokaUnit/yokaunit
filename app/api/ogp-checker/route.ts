@@ -6,20 +6,7 @@ const imageCache = new Map<string, { data: ArrayBuffer; contentType: string; tim
 const CACHE_DURATION = 5 * 60 * 1000 // 5分
 const IMAGE_CACHE_DURATION = 30 * 60 * 1000 // 30分
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
-  const url = searchParams.get("url")
-  const imageUrl = searchParams.get("imageUrl")
-
-  // 画像プロキシ機能
-  if (imageUrl) {
-    return await proxyImage(imageUrl)
-  }
-
-  if (!url) {
-    return NextResponse.json({ error: "URL parameter is required" }, { status: 400 })
-  }
-
+async function handleOGPCheck(request: NextRequest, url: string) {
   try {
     // URLの検証
     new URL(url)
@@ -81,6 +68,38 @@ export async function GET(request: NextRequest) {
     )
     errorResponse.headers.set('Access-Control-Allow-Origin', '*')
     return errorResponse
+  }
+}
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url)
+  const url = searchParams.get("url")
+  const imageUrl = searchParams.get("imageUrl")
+
+  // 画像プロキシ機能
+  if (imageUrl) {
+    return await proxyImage(imageUrl)
+  }
+
+  if (!url) {
+    return NextResponse.json({ error: "URL parameter is required" }, { status: 400 })
+  }
+
+  return await handleOGPCheck(request, url)
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { url } = body
+
+    if (!url) {
+      return NextResponse.json({ error: "URL is required in request body" }, { status: 400 })
+    }
+
+    return await handleOGPCheck(request, url)
+  } catch (error) {
+    return NextResponse.json({ error: "Invalid JSON in request body" }, { status: 400 })
   }
 }
 

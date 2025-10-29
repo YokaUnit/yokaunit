@@ -199,17 +199,17 @@ export default function AiMoteClientPage() {
             ]}
           />
 
-          <div className="max-w-4xl mx-auto mt-6">
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
           {/* ヘッダー */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center mb-4">
-              <div className="bg-gradient-to-r from-pink-500 to-purple-600 p-4 rounded-3xl shadow-xl">
-                <Heart className="h-10 w-10 text-white" />
+          <div className="text-center mb-6 md:mb-8">
+            <div className="flex items-center justify-center mb-3 md:mb-4">
+              <div className="bg-gradient-to-r from-pink-500 to-purple-600 p-3 md:p-4 rounded-3xl shadow-xl">
+                <Heart className="h-8 w-8 md:h-10 md:w-10 text-white" />
               </div>
             </div>
-            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">AIモテ度診断（無料）</h1>
-            <h2 className="text-lg md:text-xl text-gray-600 mb-4">AIがあなたの恋愛モテ度を数値化</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">
+            <h1 className="text-xl md:text-4xl font-bold text-gray-900 mb-2">AIモテ度診断（無料）</h1>
+            <h2 className="text-base md:text-xl text-gray-600 mb-3 md:mb-4">AIがあなたの恋愛モテ度を数値化</h2>
+            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4">
               最新のAI技術があなたの文章を分析し、ポジティブ度・社交性・共感力から総合的なモテ度を診断します
             </p>
           </div>
@@ -217,81 +217,81 @@ export default function AiMoteClientPage() {
           {step === "intro" && (
             <>
               {/* 診断説明カード */}
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                <h2 className="text-2xl font-bold text-center mb-6">AIモテ度診断のやり方</h2>
-                <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">AIモテ度診断のやり方</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
                   <div className="text-center">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-white text-2xl font-bold">1</span>
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                      <span className="text-white text-lg md:text-2xl font-bold">1</span>
                     </div>
-                    <h3 className="font-bold mb-2">3つの質問に回答</h3>
-                    <p className="text-sm text-gray-600">理想のデートプランや恋愛観など、自由に文章で回答してください</p>
+                    <h3 className="font-bold mb-2 text-sm md:text-base">3つの質問に回答</h3>
+                    <p className="text-xs md:text-sm text-gray-600">理想のデートプランや恋愛観など、自由に文章で回答してください</p>
                   </div>
                   <div className="text-center">
-                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Brain className="h-8 w-8 text-white" />
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                      <Brain className="h-6 w-6 md:h-8 md:w-8 text-white" />
                     </div>
-                    <h3 className="font-bold mb-2">AIが文章を分析</h3>
-                    <p className="text-sm text-gray-600">最新AI技術で文章からポジティブ度・社交性・共感力を解析</p>
+                    <h3 className="font-bold mb-2 text-sm md:text-base">AIが文章を分析</h3>
+                    <p className="text-xs md:text-sm text-gray-600">最新AI技術で文章からポジティブ度・社交性・共感力を解析</p>
                   </div>
                   <div className="text-center">
-                    <div className="bg-gradient-to-r from-pink-500 to-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Sparkles className="h-8 w-8 text-white" />
+                    <div className="bg-gradient-to-r from-pink-500 to-red-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                      <Sparkles className="h-6 w-6 md:h-8 md:w-8 text-white" />
                     </div>
-                    <h3 className="font-bold mb-2">モテ度を数値化</h3>
-                    <p className="text-sm text-gray-600">0-100%でモテ度を表示。あなたのタイプも診断します</p>
+                    <h3 className="font-bold mb-2 text-sm md:text-base">モテ度を数値化</h3>
+                    <p className="text-xs md:text-sm text-gray-600">0-100%でモテ度を表示。あなたのタイプも診断します</p>
                   </div>
                 </div>
 
                 <div className="text-center">
                   <Button
                     onClick={startDiagnosis}
-                    className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-lg"
+                    className="w-full md:w-auto bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl text-base md:text-lg touch-manipulation"
                   >
-                    <Heart className="h-5 w-5 mr-2" />
+                    <Heart className="h-4 w-4 md:h-5 md:w-5 mr-2" />
                     診断を始める
                   </Button>
                 </div>
               </Card>
 
               {/* 最新のツール */}
-              <div className="mb-8">
+              <div className="mb-6 md:mb-8">
                 <RelatedTools currentToolSlug="ai-mote" />
               </div>
 
               {/* AIモテ度診断でわかること */}
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                <h2 className="text-2xl font-bold text-center mb-6">AIモテ度診断でわかること</h2>
-                <div className="grid md:grid-cols-2 gap-6">
+              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">AIモテ度診断でわかること</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
-                    <h3 className="font-bold text-lg mb-3 flex items-center">
-                      <div className="bg-yellow-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                        <Sparkles className="h-4 w-4 text-white" />
+                    <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                      <div className="bg-yellow-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                        <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </div>
                       ポジティブ度
                     </h3>
-                    <p className="text-gray-600 mb-4">前向きな表現や明るい言葉遣いを分析し、相手に与える印象の良さを測定</p>
+                    <p className="text-sm md:text-base text-gray-600 mb-4">前向きな表現や明るい言葉遣いを分析し、相手に与える印象の良さを測定</p>
                     
-                    <h3 className="font-bold text-lg mb-3 flex items-center">
-                      <div className="bg-blue-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                        <Users className="h-4 w-4 text-white" />
+                    <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                      <div className="bg-blue-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                        <Users className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </div>
                       社交性
                     </h3>
-                    <p className="text-gray-600">人との関わりや活動的な表現から、コミュニケーション能力を評価</p>
+                    <p className="text-sm md:text-base text-gray-600">人との関わりや活動的な表現から、コミュニケーション能力を評価</p>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-3 flex items-center">
-                      <div className="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                        <Heart className="h-4 w-4 text-white" />
+                    <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                      <div className="bg-green-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                        <Heart className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </div>
                       共感力
                     </h3>
-                    <p className="text-gray-600 mb-4">相手の気持ちを理解する表現や思いやりのある言葉を分析</p>
+                    <p className="text-sm md:text-base text-gray-600 mb-4">相手の気持ちを理解する表現や思いやりのある言葉を分析</p>
                     
-                    <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-lg">
-                      <h4 className="font-bold text-purple-800 mb-2">診断できるタイプ例</h4>
-                      <div className="text-sm text-purple-700 space-y-1">
+                    <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-3 md:p-4 rounded-lg">
+                      <h4 className="font-bold text-purple-800 mb-2 text-sm md:text-base">診断できるタイプ例</h4>
+                      <div className="text-xs md:text-sm text-purple-700 space-y-1">
                         <div>• 聞き上手モテ型</div>
                         <div>• 隠れモテ型</div>
                         <div>• アクティブモテ型</div>

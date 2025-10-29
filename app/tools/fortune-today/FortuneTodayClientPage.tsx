@@ -182,22 +182,22 @@ export default function FortuneTodayClientPage() {
             ]}
           />
 
-          <div className="max-w-4xl mx-auto mt-6">
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
             {/* ヘッダー */}
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center mb-4">
-                <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-3xl shadow-xl">
-                  <Star className="h-10 w-10 text-white" />
+            <div className="text-center mb-6 md:mb-8">
+              <div className="flex items-center justify-center mb-3 md:mb-4">
+                <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 md:p-4 rounded-3xl shadow-xl">
+                  <Star className="h-8 w-8 md:h-10 md:w-10 text-white" />
                 </div>
               </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+              <h1 className="text-xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4">
                 🔮 今日の運勢｜無料占い・星座占い
               </h1>
-              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+              <p className="text-sm md:text-xl text-gray-600 max-w-3xl mx-auto mb-4 md:mb-6 px-4">
                 <strong>今日の運勢を無料で占える星座占いツール。</strong>12星座別に<strong>総合運・恋愛運・仕事運・金運</strong>を診断し、
                 ラッキー行動とアドバイスを提供。<strong>毎日更新される運勢で今日一日を素敵に過ごそう。</strong>
               </p>
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
+              <div className="flex flex-wrap justify-center gap-2 mb-4 md:mb-6">
                 {[
                   { label: '🆓 完全無料', color: 'bg-green-100 text-green-800' },
                   { label: '🔮 12星座対応', color: 'bg-purple-100 text-purple-800' },
@@ -208,7 +208,7 @@ export default function FortuneTodayClientPage() {
                 ].map((tag) => (
                   <span
                     key={tag.label}
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${tag.color}`}
+                    className={`inline-flex items-center px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium ${tag.color}`}
                   >
                     {tag.label}
                   </span>
@@ -219,111 +219,111 @@ export default function FortuneTodayClientPage() {
             {step === "intro" && (
               <>
                 {/* 占い説明カード */}
-                <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                  <h2 className="text-2xl font-bold text-center mb-6">今日の運勢占いのやり方</h2>
-                  <div className="grid md:grid-cols-3 gap-6 mb-8">
+                <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
+                  <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">今日の運勢占いのやり方</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
                     <div className="text-center">
-                      <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-white text-2xl font-bold">1</span>
+                      <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <span className="text-white text-lg md:text-2xl font-bold">1</span>
                       </div>
-                      <h3 className="font-bold mb-2">星座を選択</h3>
-                      <p className="text-sm text-gray-600">12星座からあなたの星座を選んでください</p>
+                      <h3 className="font-bold mb-2 text-sm md:text-base">星座を選択</h3>
+                      <p className="text-xs md:text-sm text-gray-600">12星座からあなたの星座を選んでください</p>
                     </div>
                     <div className="text-center">
-                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Sparkles className="h-8 w-8 text-white" />
+                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <Sparkles className="h-6 w-6 md:h-8 md:w-8 text-white" />
                       </div>
-                      <h3 className="font-bold mb-2">今日の行動を入力</h3>
-                      <p className="text-sm text-gray-600">プレゼン、デート、勉強など今日の予定を入力</p>
+                      <h3 className="font-bold mb-2 text-sm md:text-base">今日の行動を入力</h3>
+                      <p className="text-xs md:text-sm text-gray-600">プレゼン、デート、勉強など今日の予定を入力</p>
                     </div>
                     <div className="text-center">
-                      <div className="bg-gradient-to-r from-pink-500 to-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Star className="h-8 w-8 text-white" />
+                      <div className="bg-gradient-to-r from-pink-500 to-red-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <Star className="h-6 w-6 md:h-8 md:w-8 text-white" />
                       </div>
-                      <h3 className="font-bold mb-2">運勢を確認</h3>
-                      <p className="text-sm text-gray-600">4つの運勢とアドバイスを確認</p>
+                      <h3 className="font-bold mb-2 text-sm md:text-base">運勢を確認</h3>
+                      <p className="text-xs md:text-sm text-gray-600">4つの運勢とアドバイスを確認</p>
                     </div>
                   </div>
 
                   <div className="text-center">
                     <Button
                       onClick={startFortune}
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-xl text-lg"
+                      className="w-full md:w-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl text-base md:text-lg touch-manipulation"
                     >
-                      <Star className="h-5 w-5 mr-2" />
+                      <Star className="h-4 w-4 md:h-5 md:w-5 mr-2" />
                       占いを始める
                     </Button>
                   </div>
                 </Card>
 
               {/* 関連ツール（カテゴリ: 診断） */}
-              <div className="mb-8">
+              <div className="mb-6 md:mb-8">
                 <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="fortune-today" limit={8} />
               </div>
 
               {/* 最新のツール（このページでは上部に移動）*/}
-              <div className="mb-8">
+              <div className="mb-6 md:mb-8">
                 <RelatedTools currentToolSlug="fortune-today" />
               </div>
 
               {/* 占いでわかること */}
-                <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                  <h2 className="text-2xl font-bold text-center mb-6">今日の運勢AIでわかること</h2>
-                  <div className="grid md:grid-cols-2 gap-6">
+                <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
+                  <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">今日の運勢AIでわかること</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                      <h3 className="font-bold text-lg mb-3 flex items-center">
-                        <div className="bg-yellow-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                          <Star className="h-4 w-4 text-white" />
+                      <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                        <div className="bg-yellow-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                          <Star className="h-3 w-3 md:h-4 md:w-4 text-white" />
                         </div>
                         総合運
                       </h3>
-                      <p className="text-gray-600 mb-4">今日一日の全体的な運気を0-100で数値化</p>
+                      <p className="text-sm md:text-base text-gray-600 mb-4">今日一日の全体的な運気を0-100で数値化</p>
                       
-                      <h3 className="font-bold text-lg mb-3 flex items-center">
-                        <div className="bg-red-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                          <Heart className="h-4 w-4 text-white" />
+                      <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                        <div className="bg-red-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                          <Heart className="h-3 w-3 md:h-4 md:w-4 text-white" />
                         </div>
                         恋愛運
                       </h3>
-                      <p className="text-gray-600">恋愛関係や人間関係での運気を診断</p>
+                      <p className="text-sm md:text-base text-gray-600">恋愛関係や人間関係での運気を診断</p>
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-3 flex items-center">
-                        <div className="bg-blue-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                          <Star className="h-4 w-4 text-white" />
+                      <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                        <div className="bg-blue-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                          <Star className="h-3 w-3 md:h-4 md:w-4 text-white" />
                         </div>
                         仕事運
                       </h3>
-                      <p className="text-gray-600 mb-4">仕事や学業での成功度を予測</p>
+                      <p className="text-sm md:text-base text-gray-600 mb-4">仕事や学業での成功度を予測</p>
                       
-                      <h3 className="font-bold text-lg mb-3 flex items-center">
-                        <div className="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                      <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                        <div className="bg-green-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
                           <span className="text-white text-xs">¥</span>
                         </div>
                         金運
                       </h3>
-                      <p className="text-gray-600">お金に関する運気と注意点</p>
+                      <p className="text-sm md:text-base text-gray-600">お金に関する運気と注意点</p>
                     </div>
                   </div>
                 </Card>
 
                 {/* 特徴 */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
-                    <div className="text-2xl mb-2">🔮</div>
-                    <p className="text-sm font-semibold text-gray-700">12星座対応</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
+                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
+                    <div className="text-xl md:text-2xl mb-2">🔮</div>
+                    <p className="text-xs md:text-sm font-semibold text-gray-700">12星座対応</p>
                   </Card>
-                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
-                    <div className="text-2xl mb-2">💯</div>
-                    <p className="text-sm font-semibold text-gray-700">完全無料</p>
+                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
+                    <div className="text-xl md:text-2xl mb-2">💯</div>
+                    <p className="text-xs md:text-sm font-semibold text-gray-700">完全無料</p>
                   </Card>
-                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
-                    <div className="text-2xl mb-2">🔒</div>
-                    <p className="text-sm font-semibold text-gray-700">登録不要</p>
+                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
+                    <div className="text-xl md:text-2xl mb-2">🔒</div>
+                    <p className="text-xs md:text-sm font-semibold text-gray-700">登録不要</p>
                   </Card>
-                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
-                    <div className="text-2xl mb-2">📱</div>
-                    <p className="text-sm font-semibold text-gray-700">スマホ対応</p>
+                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
+                    <div className="text-xl md:text-2xl mb-2">📱</div>
+                    <p className="text-xs md:text-sm font-semibold text-gray-700">スマホ対応</p>
                   </Card>
                 </div>
               </>

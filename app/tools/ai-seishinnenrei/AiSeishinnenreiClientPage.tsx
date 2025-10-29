@@ -185,17 +185,17 @@ export default function AiSeishinnenreiClientPage() {
             ]}
           />
 
-          <div className="max-w-4xl mx-auto mt-6">
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
           {/* ヘッダー */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center mb-4">
-              <div className="bg-gradient-to-r from-purple-500 to-blue-600 p-4 rounded-3xl shadow-xl">
-                <Brain className="h-10 w-10 text-white" />
+          <div className="text-center mb-6 md:mb-8">
+            <div className="flex items-center justify-center mb-3 md:mb-4">
+              <div className="bg-gradient-to-r from-purple-500 to-blue-600 p-3 md:p-4 rounded-3xl shadow-xl">
+                <Brain className="h-8 w-8 md:h-10 md:w-10 text-white" />
               </div>
             </div>
-            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">AI精神年齢診断（無料）</h1>
-            <h2 className="text-lg md:text-xl text-gray-600 mb-4">AIがあなたの心理年齢・メンタル年齢を数値化</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">
+            <h1 className="text-xl md:text-4xl font-bold text-gray-900 mb-2">AI精神年齢診断（無料）</h1>
+            <h2 className="text-base md:text-xl text-gray-600 mb-3 md:mb-4">AIがあなたの心理年齢・メンタル年齢を数値化</h2>
+            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4">
               簡単な5つの選択式質問に答えるだけで、AIがあなたの精神年齢を分析し、実年齢との差を詳しく解説します
             </p>
           </div>
@@ -203,82 +203,82 @@ export default function AiSeishinnenreiClientPage() {
           {step === "intro" && (
             <>
               {/* 診断説明カード */}
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                <h2 className="text-2xl font-bold text-center mb-6">AI精神年齢診断のやり方</h2>
-                <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">AI精神年齢診断のやり方</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
                   <div className="text-center">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-white text-2xl font-bold">1</span>
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                      <span className="text-white text-lg md:text-2xl font-bold">1</span>
                     </div>
-                    <h3 className="font-bold mb-2">年齢入力</h3>
-                    <p className="text-sm text-gray-600">まずはあなたの実年齢を入力してください</p>
+                    <h3 className="font-bold mb-2 text-sm md:text-base">年齢入力</h3>
+                    <p className="text-xs md:text-sm text-gray-600">まずはあなたの実年齢を入力してください</p>
                   </div>
                   <div className="text-center">
-                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-white text-2xl font-bold">2</span>
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                      <span className="text-white text-lg md:text-2xl font-bold">2</span>
                     </div>
-                    <h3 className="font-bold mb-2">5つの質問</h3>
-                    <p className="text-sm text-gray-600">選択式の質問に答えるだけ（約2分）</p>
+                    <h3 className="font-bold mb-2 text-sm md:text-base">5つの質問</h3>
+                    <p className="text-xs md:text-sm text-gray-600">選択式の質問に答えるだけ（約2分）</p>
                   </div>
                   <div className="text-center">
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Brain className="h-8 w-8 text-white" />
+                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                      <Brain className="h-6 w-6 md:h-8 md:w-8 text-white" />
                     </div>
-                    <h3 className="font-bold mb-2">AI分析</h3>
-                    <p className="text-sm text-gray-600">精神年齢と実年齢の差を詳しく分析</p>
+                    <h3 className="font-bold mb-2 text-sm md:text-base">AI分析</h3>
+                    <p className="text-xs md:text-sm text-gray-600">精神年齢と実年齢の差を詳しく分析</p>
                   </div>
                 </div>
 
                 <div className="text-center">
                   <Button
                     onClick={startDiagnosis}
-                    className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-bold py-4 px-8 rounded-xl text-lg"
+                    className="w-full md:w-auto bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl text-base md:text-lg touch-manipulation"
                   >
-                    <Brain className="h-5 w-5 mr-2" />
+                    <Brain className="h-4 w-4 md:h-5 md:w-5 mr-2" />
                     診断を始める
                   </Button>
                 </div>
               </Card>
 
               {/* 関連ツール（カテゴリ: 診断） */}
-              <div className="mb-8">
+              <div className="mb-6 md:mb-8">
                 <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="ai-seishinnenrei" limit={8} />
               </div>
               {/* 最新のツール */}
-              <div className="mb-8">
+              <div className="mb-6 md:mb-8">
                 <RelatedTools currentToolSlug="ai-seishinnenrei" />
               </div>
 
               {/* 精神年齢とは */}
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                <h2 className="text-2xl font-bold text-center mb-6">精神年齢とは？</h2>
-                <div className="grid md:grid-cols-2 gap-6">
+              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">精神年齢とは？</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
-                    <h3 className="font-bold text-lg mb-3 flex items-center">
-                      <div className="bg-purple-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                        <Brain className="h-4 w-4 text-white" />
+                    <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                      <div className="bg-purple-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                        <Brain className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </div>
                       心理的成熟度
                     </h3>
-                    <p className="text-gray-600 mb-4">考え方や価値観、行動パターンから測定される心の年齢です</p>
+                    <p className="text-sm md:text-base text-gray-600 mb-4">考え方や価値観、行動パターンから測定される心の年齢です</p>
                     
-                    <h3 className="font-bold text-lg mb-3 flex items-center">
-                      <div className="bg-blue-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                        <TrendingUp className="h-4 w-4 text-white" />
+                    <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                      <div className="bg-blue-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                        <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </div>
                       実年齢との比較
                     </h3>
-                    <p className="text-gray-600">実年齢より高ければ大人びており、低ければ若々しい心の持ち主です</p>
+                    <p className="text-sm md:text-base text-gray-600">実年齢より高ければ大人びており、低ければ若々しい心の持ち主です</p>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-3 flex items-center">
-                      <div className="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                        <Sparkles className="h-4 w-4 text-white" />
+                    <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                      <div className="bg-green-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                        <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </div>
                       診断できること
                     </h3>
-                    <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg">
-                      <div className="text-sm text-green-700 space-y-1">
+                    <div className="bg-gradient-to-r from-green-50 to-blue-50 p-3 md:p-4 rounded-lg">
+                      <div className="text-xs md:text-sm text-green-700 space-y-1">
                         <div>• あなたの精神的な年齢</div>
                         <div>• 実年齢との差と特徴</div>
                         <div>• 心理的タイプ診断</div>
@@ -290,22 +290,22 @@ export default function AiSeishinnenreiClientPage() {
               </Card>
 
               {/* 特徴 */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
-                  <div className="text-2xl mb-2">⚡</div>
-                  <p className="text-sm font-semibold text-gray-700">2分で完了</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
+                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
+                  <div className="text-xl md:text-2xl mb-2">⚡</div>
+                  <p className="text-xs md:text-sm font-semibold text-gray-700">2分で完了</p>
                 </Card>
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
-                  <div className="text-2xl mb-2">💯</div>
-                  <p className="text-sm font-semibold text-gray-700">完全無料</p>
+                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
+                  <div className="text-xl md:text-2xl mb-2">💯</div>
+                  <p className="text-xs md:text-sm font-semibold text-gray-700">完全無料</p>
                 </Card>
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
-                  <div className="text-2xl mb-2">🔒</div>
-                  <p className="text-sm font-semibold text-gray-700">登録不要</p>
+                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
+                  <div className="text-xl md:text-2xl mb-2">🔒</div>
+                  <p className="text-xs md:text-sm font-semibold text-gray-700">登録不要</p>
                 </Card>
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-4 text-center">
-                  <div className="text-2xl mb-2">📱</div>
-                  <p className="text-sm font-semibold text-gray-700">スマホ対応</p>
+                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
+                  <div className="text-xl md:text-2xl mb-2">📱</div>
+                  <p className="text-xs md:text-sm font-semibold text-gray-700">スマホ対応</p>
                 </Card>
               </div>
             </>

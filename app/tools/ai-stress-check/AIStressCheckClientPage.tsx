@@ -177,17 +177,17 @@ export default function AIStressCheckClientPage() {
             ]}
           />
 
-          <div className="max-w-4xl mx-auto mt-6">
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
             {/* ヘッダー */}
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center mb-4">
-                <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-4 rounded-3xl shadow-xl">
-                  <Brain className="h-10 w-10 text-white" />
+            <div className="text-center mb-6 md:mb-8">
+              <div className="flex items-center justify-center mb-3 md:mb-4">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-3 md:p-4 rounded-3xl shadow-xl">
+                  <Brain className="h-8 w-8 md:h-10 md:w-10 text-white" />
                 </div>
               </div>
-              <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">AIストレス耐性診断（無料）</h1>
-              <h2 className="text-lg md:text-xl text-gray-600 mb-4">最新AIがあなたの心の強さ・メンタル耐性を数値化</h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">
+              <h1 className="text-xl md:text-4xl font-bold text-gray-900 mb-2">AIストレス耐性診断（無料）</h1>
+              <h2 className="text-base md:text-xl text-gray-600 mb-3 md:mb-4">最新AIがあなたの心の強さ・メンタル耐性を数値化</h2>
+              <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4">
                 6つの専門的な質問に答えるだけで、最新AIがあなたのストレス耐性を分析し、個別のアドバイスを提供します
               </p>
             </div>
@@ -195,82 +195,82 @@ export default function AIStressCheckClientPage() {
             {step === "intro" && (
               <>
                 {/* 診断説明カード */}
-                <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                  <h2 className="text-2xl font-bold text-center mb-6">AIストレス耐性診断のやり方</h2>
-                  <div className="grid md:grid-cols-3 gap-6 mb-8">
+                <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
+                  <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">AIストレス耐性診断のやり方</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
                     <div className="text-center">
-                      <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-white text-2xl font-bold">1</span>
+                      <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <span className="text-white text-lg md:text-2xl font-bold">1</span>
                       </div>
-                      <h3 className="font-bold mb-2">6つのAI質問</h3>
-                      <p className="text-sm text-gray-600">仕事・人間関係・回復力など6分野のAI質問</p>
+                      <h3 className="font-bold mb-2 text-sm md:text-base">6つのAI質問</h3>
+                      <p className="text-xs md:text-sm text-gray-600">仕事・人間関係・回復力など6分野のAI質問</p>
                     </div>
                     <div className="text-center">
-                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-white text-2xl font-bold">2</span>
+                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <span className="text-white text-lg md:text-2xl font-bold">2</span>
                       </div>
-                      <h3 className="font-bold mb-2">最新AI分析</h3>
-                      <p className="text-sm text-gray-600">選択式回答を最新AIが総合分析（約3分）</p>
+                      <h3 className="font-bold mb-2 text-sm md:text-base">最新AI分析</h3>
+                      <p className="text-xs md:text-sm text-gray-600">選択式回答を最新AIが総合分析（約3分）</p>
                     </div>
                     <div className="text-center">
-                      <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Brain className="h-8 w-8 text-white" />
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <Brain className="h-6 w-6 md:h-8 md:w-8 text-white" />
                       </div>
-                      <h3 className="font-bold mb-2">AI結果表示</h3>
-                      <p className="text-sm text-gray-600">AIストレス耐性レベルと個別アドバイス</p>
+                      <h3 className="font-bold mb-2 text-sm md:text-base">AI結果表示</h3>
+                      <p className="text-xs md:text-sm text-gray-600">AIストレス耐性レベルと個別アドバイス</p>
                     </div>
                   </div>
 
                   <div className="text-center">
                     <Button
                       onClick={startDiagnosis}
-                      className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-xl text-lg"
+                      className="w-full md:w-auto bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl text-base md:text-lg touch-manipulation"
                     >
-                      <Brain className="h-5 w-5 mr-2" />
+                      <Brain className="h-4 w-4 md:h-5 md:w-5 mr-2" />
                       AI診断を始める
                     </Button>
                   </div>
                 </Card>
 
                 {/* 関連ツール（カテゴリ: 診断） */}
-                <div className="mb-8">
+                <div className="mb-6 md:mb-8">
                   <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="ai-stress-check" limit={8} />
                 </div>
                 {/* 最新のツール */}
-                <div className="mb-8">
+                <div className="mb-6 md:mb-8">
                   <RelatedTools currentToolSlug="ai-stress-check" />
                 </div>
 
                 {/* AIストレス耐性とは */}
-                <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 mb-8">
-                  <h2 className="text-2xl font-bold text-center mb-6">AIストレス耐性診断とは？</h2>
-                  <div className="grid md:grid-cols-2 gap-6">
+                <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
+                  <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">AIストレス耐性診断とは？</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                      <h3 className="font-bold text-lg mb-3 flex items-center">
-                        <div className="bg-blue-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                          <Brain className="h-4 w-4 text-white" />
+                      <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                        <div className="bg-blue-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                          <Brain className="h-3 w-3 md:h-4 md:w-4 text-white" />
                         </div>
                         AI分析による心の強さ測定
                       </h3>
-                      <p className="text-gray-600 mb-4">最新AIがストレスや困難な状況に対処し、回復する能力を分析します</p>
+                      <p className="text-sm md:text-base text-gray-600 mb-4">最新AIがストレスや困難な状況に対処し、回復する能力を分析します</p>
                       
-                      <h3 className="font-bold text-lg mb-3 flex items-center">
-                        <div className="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                          <TrendingUp className="h-4 w-4 text-white" />
+                      <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                        <div className="bg-green-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                          <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-white" />
                         </div>
                         AIメンタルヘルス指標
                       </h3>
-                      <p className="text-gray-600">AIが仕事や人間関係でのパフォーマンスに直結する重要な指標を分析</p>
+                      <p className="text-sm md:text-base text-gray-600">AIが仕事や人間関係でのパフォーマンスに直結する重要な指標を分析</p>
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-3 flex items-center">
-                        <div className="bg-purple-500 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                          <Sparkles className="h-4 w-4 text-white" />
+                      <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
+                        <div className="bg-purple-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
+                          <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-white" />
                         </div>
                         AI診断できること
                       </h3>
-                      <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg">
-                        <div className="text-sm text-purple-700 space-y-1">
+                      <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-3 md:p-4 rounded-lg">
+                        <div className="text-xs md:text-sm text-purple-700 space-y-1">
                           <div>• AIストレス耐性レベル測定</div>
                           <div>• AIプレッシャー対応能力分析</div>
                           <div>• AI変化への適応力評価</div>

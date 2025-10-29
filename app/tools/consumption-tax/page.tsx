@@ -299,6 +299,227 @@ export default function ConsumptionTaxPage() {
               </div>
             </div>
           </section>
+
+          {/* SEO記事 */}
+          <section className="mb-16">
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-lg">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">💰 消費税計算完全ガイド：税制・会計・経理の科学</h2>
+              
+              <div className="space-y-6">
+                <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">💰</span>
+                    消費税の基礎知識
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">消費税の仕組み</h4>
+                      <ul className="text-sm text-gray-600 space-y-2">
+                        <li>• <strong>税率</strong>: 現在10%（軽減税率8%）</li>
+                        <li>• <strong>課税対象</strong>: 国内取引・輸入取引</li>
+                        <li>• <strong>納税義務者</strong>: 事業者</li>
+                        <li>• <strong>申告・納付</strong>: 原則年2回</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">計算方法</h4>
+                      <ul className="text-sm text-gray-600 space-y-2">
+                        <li>• <strong>税込計算</strong>: 税抜価格 × 1.1</li>
+                        <li>• <strong>税抜計算</strong>: 税込価格 ÷ 1.1</li>
+                        <li>• <strong>税額計算</strong>: 税込価格 - 税抜価格</li>
+                        <li>• <strong>端数処理</strong>: 切り捨て・切り上げ・四捨五入</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">📊</span>
+                    会計処理と経理実務
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">売上税額の処理</h4>
+                      <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                        売上時: 税込金額で記録<br/>
+                        消費税: 売上税額として分離<br/>
+                        申告時: 納付税額として処理<br/>
+                        仕訳: 借方・貸方の適切な処理
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        売上に含まれる消費税の
+                        適切な会計処理。
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">仕入税額控除</h4>
+                      <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                        仕入時: 税込金額で記録<br/>
+                        消費税: 仕入税額として分離<br/>
+                        控除: 売上税額から差し引き<br/>
+                        還付: 控除超過時の還付
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        仕入に含まれる消費税の
+                        控除処理。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">📱</span>
+                    デジタル化と税務効率化
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">電子帳簿保存法</h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1 text-purple-600">電子保存要件</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• 適切な形式での保存</li>
+                            <li>• 税務調査への対応</li>
+                            <li>• 改ざん防止機能</li>
+                            <li>• 検索機能の確保</li>
+                          </ul>
+                        </div>
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1 text-blue-600">インボイス制度</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• 適格請求書等保存方式</li>
+                            <li>• 仕入税額控除の要件変更</li>
+                            <li>• 書類管理の厳格化</li>
+                            <li>• システム更新の必要性</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">クラウド会計の活用</h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• <strong>自動仕訳</strong>: 取引データの自動仕訳化</li>
+                        <li>• <strong>消費税計算</strong>: 自動計算機能の活用</li>
+                        <li>• <strong>データ連携</strong>: 銀行・クレジットカード連携</li>
+                        <li>• <strong>精度向上</strong>: 手作業ミスの防止</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">🎯</span>
+                    実務での活用場面
+                  </h3>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">小売業・サービス業</h4>
+                      <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                        価格表示<br/>
+                        税込・税抜価格<br/>
+                        消費者への情報提供<br/>
+                        信頼関係の構築
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        商品・サービスの価格表示
+                        における消費税処理。
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">製造業・建設業</h4>
+                      <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                        原材料仕入<br/>
+                        製品販売<br/>
+                        複数段階の処理<br/>
+                        適切な税務申告
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        複数段階での消費税
+                        発生と処理。
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">IT・ソフトウェア業</h4>
+                      <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                        ソフトウェア販売<br/>
+                        クラウドサービス<br/>
+                        ライセンス料<br/>
+                        サブスクリプション
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        デジタル商品・サービスの
+                        消費税処理。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-red-50 p-6 rounded-lg border-l-4 border-red-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">💡</span>
+                    実践的な計算テクニック
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">暗算での計算方法</h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1 text-red-600">10%税率</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• 税額: 金額 ÷ 10</li>
+                            <li>• 税込: 金額 × 1.1</li>
+                            <li>• 税抜: 金額 ÷ 1.1</li>
+                            <li>• 暗算: 金額の10%</li>
+                          </ul>
+                        </div>
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1 text-green-600">8%税率</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• 税額: 金額 ÷ 12.5</li>
+                            <li>• 税込: 金額 × 1.08</li>
+                            <li>• 税抜: 金額 ÷ 1.08</li>
+                            <li>• 暗算: 金額の8%</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">エクセルでの計算式</h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• <strong>税込計算</strong>: =A1*(1+0.1)</li>
+                        <li>• <strong>税抜計算</strong>: =A1/(1+0.1)</li>
+                        <li>• <strong>税額計算</strong>: =A1-A1/(1+0.1)</li>
+                        <li>• <strong>端数処理</strong>: ROUND関数の活用</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-center pt-6 border-t border-gray-200">
+                  <p className="text-sm text-gray-500">
+                    消費税計算は、事業運営において重要な基礎知識です。
+                    正確な計算と適切な処理で、税務リスクを最小化し、経営の安定化を図りましょう。
+                  </p>
+                  <div className="mt-4 flex justify-center gap-4 text-xs text-gray-400">
+                    <span>#消費税計算</span>
+                    <span>#税制</span>
+                    <span>#会計</span>
+                    <span>#経理</span>
+                    <span>#税務効率化</span>
+                    <span>#YokaUnit</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
       

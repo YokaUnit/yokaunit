@@ -11,18 +11,42 @@ export function Sakura2048Client() {
     const newBoard = Array(4)
       .fill(null)
       .map(() => Array(4).fill(0))
-    // 初期配置
-    addRandomTile(newBoard)
-    addRandomTile(newBoard)
     return newBoard
   })
   const [score, setScore] = useState(0)
-  const [bestScore, setBestScore] = useState(() => {
-    if (typeof window !== "undefined") {
-      return Number.parseInt(localStorage.getItem("sakura2048-best") || "0")
+  const [bestScore, setBestScore] = useState(0)
+
+  // ランダムな位置に2または4を追加
+  function addRandomTile(board: number[][]) {
+    const emptyCells: [number, number][] = []
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (board[i][j] === 0) {
+          emptyCells.push([i, j])
+        }
+      }
     }
-    return 0
-  })
+    if (emptyCells.length > 0) {
+      const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)]
+      board[row][col] = Math.random() < 0.9 ? 2 : 4
+    }
+  }
+
+  // ゲームの初期化とlocalStorageからベストスコアを読み込み
+  useEffect(() => {
+    const savedBestScore = localStorage.getItem("sakura2048-best")
+    if (savedBestScore) {
+      setBestScore(Number.parseInt(savedBestScore))
+    }
+    
+    // ゲームボードの初期化
+    const newBoard = Array(4)
+      .fill(null)
+      .map(() => Array(4).fill(0))
+    addRandomTile(newBoard)
+    addRandomTile(newBoard)
+    setBoard(newBoard)
+  }, [])
 
   // SEO設定を強化
   useEffect(() => {
@@ -74,22 +98,6 @@ export function Sakura2048Client() {
   const [showColors, setShowColors] = useState(false)
   const [currentTab, setCurrentTab] = useState<"game" | "help">("game")
   const [isFullscreen, setIsFullscreen] = useState(false)
-
-  // ランダムな位置に2または4を追加
-  function addRandomTile(board: number[][]) {
-    const emptyCells: [number, number][] = []
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-        if (board[i][j] === 0) {
-          emptyCells.push([i, j])
-        }
-      }
-    }
-    if (emptyCells.length > 0) {
-      const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)]
-      board[row][col] = Math.random() < 0.9 ? 2 : 4
-    }
-  }
 
   // 配列を左に移動・マージ
   function moveLeft(row: number[]): { newRow: number[]; points: number } {

@@ -403,6 +403,191 @@ export function Dice3DClientPage() {
       </main>
 
       <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="dice3d" limit={8} />
+      
+      {/* SEO記事 */}
+      <section className="bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-lg mx-4 mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">🎲 サイコロ完全ガイド：物理演算・確率論・ゲーム文化の科学</h2>
+        
+        <div className="space-y-6">
+          <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <span className="text-2xl">🎯</span>
+              サイコロの歴史と文化的意義
+            </h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">古代の起源</h4>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• <strong>メソポタミア</strong>: 最古のサイコロ発見</li>
+                  <li>• <strong>古代エジプト</strong>: 神聖な儀式での使用</li>
+                  <li>• <strong>ギリシャ・ローマ</strong>: 娯楽として普及</li>
+                  <li>• <strong>中世ヨーロッパ</strong>: 騎士道文化との融合</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">日本の伝統</h4>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• <strong>双六</strong>: 江戸時代の庶民娯楽</li>
+                  <li>• <strong>すごろく</strong>: 教育的なゲーム</li>
+                  <li>• <strong>チンチロ</strong>: 伝統的な賭博ゲーム</li>
+                  <li>• <strong>現代</strong>: デジタル時代への継承</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <span className="text-2xl">🔬</span>
+              物理演算と3Dシミュレーション
+            </h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">物理法則</h4>
+                <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                  重力<br/>
+                  摩擦力<br/>
+                  弾性衝突<br/>
+                  空気抵抗
+                </div>
+                <p className="text-sm text-gray-600">
+                  サイコロの動きを決定する
+                  基本的な物理要素。
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">3Dエンジン</h4>
+                <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                  リアルタイム<br/>
+                  物理演算<br/>
+                  レンダリング<br/>
+                  アニメーション
+                </div>
+                <p className="text-sm text-gray-600">
+                  現実的なサイコロの
+                  挙動を再現する技術。
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">確率の公平性</h4>
+                <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                  製造精度<br/>
+                  摩耗の影響<br/>
+                  偏りの検出<br/>
+                  補正アルゴリズム
+                </div>
+                <p className="text-sm text-gray-600">
+                  公平な結果を保証する
+                  技術的な配慮。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <span className="text-2xl">📊</span>
+              確率論と統計分析
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">基本的な確率</h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-white p-3 rounded">
+                    <h5 className="font-semibold text-sm mb-1 text-green-600">単一サイコロ</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• 各面: 1/6 = 16.67%</li>
+                      <li>• 期待値: 3.5</li>
+                      <li>• 分散: 2.92</li>
+                      <li>• 標準偏差: 1.71</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white p-3 rounded">
+                    <h5 className="font-semibold text-sm mb-1 text-blue-600">複数サイコロ</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• 合計値の分布</li>
+                      <li>• 正規分布への近似</li>
+                      <li>• 中心極限定理</li>
+                      <li>• 統計的検定</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">実用的な応用</h4>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• <strong>ゲーム設計</strong>: バランス調整と難易度設定</li>
+                  <li>• <strong>品質管理</strong>: 製造プロセスの監視</li>
+                  <li>• <strong>統計学教育</strong>: 確率概念の理解</li>
+                  <li>• <strong>研究ツール</strong>: ランダムサンプリング</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <span className="text-2xl">🎮</span>
+              現代ゲーム文化でのサイコロ
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">ゲームジャンル</h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-white p-3 rounded">
+                    <h5 className="font-semibold text-sm mb-1">テーブルトークRPG</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• ダンジョンズ&ドラゴンズ</li>
+                      <li>• クトゥルフ神話TRPG</li>
+                      <li>• ソードワールド</li>
+                      <li>• カタン</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white p-3 rounded">
+                    <h5 className="font-semibold text-sm mb-1">ボードゲーム</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• モノポリー</li>
+                      <li>• バックギャモン</li>
+                      <li>• ヤッツィー</li>
+                      <li>• チンチロ</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">デジタル化の影響</h4>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• <strong>オンラインゲーム</strong>: 遠隔地でのプレイ</li>
+                  <li>• <strong>VR/AR</strong>: 没入感のある体験</li>
+                  <li>• <strong>AI対戦</strong>: 人工知能との対戦</li>
+                  <li>• <strong>統計分析</strong>: プレイデータの活用</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center pt-6 border-t border-gray-200">
+            <p className="text-sm text-gray-500">
+              サイコロは、人類の歴史と共に歩んできた重要な道具です。
+              現代の技術により、より公平で楽しいゲーム体験を提供しています。
+            </p>
+            <div className="mt-4 flex justify-center gap-4 text-xs text-gray-400">
+              <span>#サイコロ</span>
+              <span>#3D物理演算</span>
+              <span>#確率論</span>
+              <span>#ゲーム文化</span>
+              <span>#統計学</span>
+              <span>#YokaUnit</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      
       <RelatedTools currentToolSlug="dice3d" />
 
       <SiteFooter />

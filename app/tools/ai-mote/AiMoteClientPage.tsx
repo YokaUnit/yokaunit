@@ -464,6 +464,231 @@ export default function AiMoteClientPage() {
               </div>
             </section>
 
+            {/* SEO記事 */}
+            <section className="bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-lg">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">💕 AIモテ度診断完全ガイド：恋愛心理学・AI分析・魅力向上の科学</h2>
+              
+              <div className="space-y-6">
+                <div className="bg-pink-50 p-6 rounded-lg border-l-4 border-pink-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">🧠</span>
+                    AI診断の科学的根拠
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">心理学理論</h4>
+                      <ul className="text-sm text-gray-600 space-y-2">
+                        <li>• <strong>第一印象理論</strong>: 初回接触時の印象形成</li>
+                        <li>• <strong>魅力の法則</strong>: 対称性・黄金比・平均顔効果</li>
+                        <li>• <strong>社会的証明</strong>: 他者からの評価の影響</li>
+                        <li>• <strong>類似性の法則</strong>: 共通点による親近感</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">AI分析技術</h4>
+                      <ul className="text-sm text-gray-600 space-y-2">
+                        <li>• <strong>機械学習</strong>: パターン認識と予測</li>
+                        <li>• <strong>自然言語処理</strong>: テキスト分析</li>
+                        <li>• <strong>統計分析</strong>: 相関関係の特定</li>
+                        <li>• <strong>データマイニング</strong>: 隠れたパターン発見</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">💡</span>
+                    魅力向上の実践的アプローチ
+                  </h3>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">外見的要素</h4>
+                      <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                        清潔感<br/>
+                        スタイル<br/>
+                        表情<br/>
+                        姿勢
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        第一印象を決定する
+                        視覚的な要素。
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">内面的要素</h4>
+                      <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                        自信<br/>
+                        共感力<br/>
+                        ユーモア<br/>
+                        誠実性
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        長期的な関係性に
+                        影響する要素。
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">コミュニケーション</h4>
+                      <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                        聞く力<br/>
+                        話す技術<br/>
+                        非言語<br/>
+                        共感表現
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        人間関係構築の
+                        基盤となるスキル。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">📊</span>
+                    診断結果の活用方法
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">自己分析</h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1 text-green-600">強みの認識</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• 既存の魅力要素の確認</li>
+                            <li>• 自信の向上</li>
+                            <li>• 自己肯定感の向上</li>
+                            <li>• 個性の活かし方</li>
+                          </ul>
+                        </div>
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1 text-blue-600">改善点の特定</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• 具体的な改善目標</li>
+                            <li>• 優先順位の設定</li>
+                            <li>• 行動計画の立案</li>
+                            <li>• 進捗の測定</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">継続的改善</h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• <strong>定期的な診断</strong>: 変化の追跡と評価</li>
+                        <li>• <strong>目標設定</strong>: 具体的で達成可能な目標</li>
+                        <li>• <strong>行動変容</strong>: 習慣化による持続的改善</li>
+                        <li>• <strong>フィードバック</strong>: 他者からの意見収集</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">🎯</span>
+                    恋愛心理学の基礎知識
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">魅力の心理学</h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1">物理的魅力</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• 対称性の重要性</li>
+                            <li>• 平均顔効果</li>
+                            <li>• 黄金比の適用</li>
+                            <li>• 文化的基準</li>
+                          </ul>
+                        </div>
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1">性格的魅力</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• 誠実性の価値</li>
+                            <li>• ユーモアの効果</li>
+                            <li>• 共感能力</li>
+                            <li>• 自信の表現</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">関係性の構築</h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• <strong>類似性の法則</strong>: 共通点による親近感</li>
+                        <li>• <strong>近接性の効果</strong>: 物理的距離の影響</li>
+                        <li>• <strong>相互性の原理</strong>: 好意の返報性</li>
+                        <li>• <strong>社会的証明</strong>: 他者からの評価</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">🌟</span>
+                    AI診断の限界と注意点
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">診断の限界</h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1 text-yellow-600">技術的制約</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• データの限界</li>
+                            <li>• アルゴリズムの偏見</li>
+                            <li>• 個人差の考慮不足</li>
+                            <li>• 文化的背景の違い</li>
+                          </ul>
+                        </div>
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1 text-blue-600">人間の複雑性</h5>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            <li>• 感情の多様性</li>
+                            <li>• 状況による変化</li>
+                            <li>• 成長と学習</li>
+                            <li>• 個人的価値観</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">健全な活用方法</h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• <strong>参考程度の活用</strong>: 絶対的な判断材料としない</li>
+                        <li>• <strong>自己理解のツール</strong>: 内省のきっかけとして活用</li>
+                        <li>• <strong>改善の指針</strong>: 成長の方向性を考える材料</li>
+                        <li>• <strong>楽しみの要素</strong>: ゲーム感覚での活用</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-center pt-6 border-t border-gray-200">
+                  <p className="text-sm text-gray-500">
+                    AIモテ度診断は、自己理解と魅力向上のためのツールです。
+                    結果を参考に、自分らしい魅力を磨いていきましょう。
+                  </p>
+                  <div className="mt-4 flex justify-center gap-4 text-xs text-gray-400">
+                    <span>#AI診断</span>
+                    <span>#恋愛心理学</span>
+                    <span>#魅力向上</span>
+                    <span>#自己分析</span>
+                    <span>#モテ度</span>
+                    <span>#YokaUnit</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* 関連キーワード */}
             <section className="text-center">
               <p className="text-xs text-gray-500">

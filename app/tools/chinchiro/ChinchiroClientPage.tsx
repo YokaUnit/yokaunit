@@ -489,26 +489,342 @@ export default function ChinchiroClientPage() {
               </TabsContent>
             </Tabs>
 
-            {/* SEO用のコンテンツ */}
-            <div className="prose max-w-none text-sm">
-              <h2 className="text-xl font-bold mb-3">3Dチンチロサイコロゲームについて</h2>
-              <p className="mb-4">
-                この<strong>3Dチンチロサイコロゲーム</strong>は、物理エンジンを使用してリアルなサイコロの動きを再現した
-                <strong>無料ブラウザゲーム</strong>
-                です。スマートフォンでもPCでも、どちらでも快適に遊べるサイコロシミュレーターとして設計されています。
-              </p>
+            {/* SEO記事セクション */}
+            <div className="max-w-4xl mx-auto mt-16">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">🎲 チンチロ完全ガイド：物理演算・確率論・日本の伝統ゲーム文化</h2>
+                
+                <div className="prose max-w-none text-gray-700 space-y-6">
+                  <div className="bg-amber-50 p-6 rounded-lg border-l-4 border-amber-500">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">🎯</span>
+                      チンチロの歴史と文化的背景
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed mb-4">
+                      チンチロ（チンチロリン）は、日本で古くから親しまれている
+                      サイコロを使った伝統的なゲームです。その名前の由来は諸説ありますが、
+                      「チンチロ」という音がサイコロの転がる音を表現しているとされています。
+                    </p>
+                    <p className="text-gray-700 leading-relaxed">
+                      特に飲み会や宴会の場で楽しまれ、単純なルールながら
+                      運と戦略のバランスが絶妙な、日本独特のゲーム文化を
+                      代表する存在です。
+                    </p>
+                  </div>
 
-              <h3 className="text-lg font-bold mb-2">物理演算によるリアルな動き</h3>
-              <p className="mb-4">
-                従来のランダム数値生成とは異なり、実際の物理法則に基づいてサイコロが転がります。重力、摩擦、反発などの
-                <strong>物理演算</strong>により、本物のサイコロを振っているような臨場感を味わえます。
-              </p>
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <span className="text-2xl">🎲</span>
+                        チンチロの基本ルールと用語
+                      </h3>
+                      <div className="space-y-4">
+                        <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                          <h4 className="font-semibold text-gray-900 mb-2">基本ルール</h4>
+                          <ul className="text-sm text-gray-600 space-y-1">
+                            <li>• 3つのサイコロを振る</li>
+                            <li>• 出た目の組み合わせで勝敗を決める</li>
+                            <li>• ゾロ目（同じ目3つ）が最高</li>
+                            <li>• しょんべん（枠外）は最悪</li>
+                          </ul>
+                        </div>
+                        
+                        <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+                          <h4 className="font-semibold text-gray-900 mb-2">重要な用語</h4>
+                          <ul className="text-sm text-gray-600 space-y-1">
+                            <li>• <strong>ゾロ目</strong>: 同じ目が3つ揃う</li>
+                            <li>• <strong>シゴロ</strong>: 4,5,6の組み合わせ</li>
+                            <li>• <strong>ヒフミ</strong>: 1,2,3の組み合わせ</li>
+                            <li>• <strong>しょんべん</strong>: 枠外に出る</li>
+                          </ul>
+                        </div>
+                        
+                        <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                          <h4 className="font-semibold text-gray-900 mb-2">勝敗の判定</h4>
+                          <ul className="text-sm text-gray-600 space-y-1">
+                            <li>• ゾロ目 > シゴロ > ヒフミ > その他</li>
+                            <li>• 同じ組み合わせは合計で比較</li>
+                            <li>• しょんべんは即座に負け</li>
+                            <li>• 引き分けの場合は再戦</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
 
-              <h3 className="text-lg font-bold mb-2">飲み会でも使えるミニゲーム</h3>
-              <p className="mb-4">
-                チンチロリンは日本の伝統的なゲームで、<strong>飲み会でも使えるミニゲーム</strong>
-                として親しまれています。 「しょんべん」という独特な用語も含め、本格的なチンチロの雰囲気を楽しめます。
-              </p>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <span className="text-2xl">🔬</span>
+                        物理演算と3D技術
+                      </h3>
+                      <div className="space-y-4">
+                        <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                          <h4 className="font-semibold text-gray-900 mb-2">物理エンジン</h4>
+                          <ul className="text-sm text-gray-600 space-y-1">
+                            <li>• 重力と慣性の法則</li>
+                            <li>• 摩擦と反発の計算</li>
+                            <li>• 衝突検出と応答</li>
+                            <li>• リアルタイム演算</li>
+                          </ul>
+                        </div>
+                        
+                        <div className="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                          <h4 className="font-semibold text-gray-900 mb-2">3Dレンダリング</h4>
+                          <ul className="text-sm text-gray-600 space-y-1">
+                            <li>• WebGL技術の活用</li>
+                            <li>• ライティングとシャドウ</li>
+                            <li>• テクスチャマッピング</li>
+                            <li>• アニメーション制御</li>
+                          </ul>
+                        </div>
+                        
+                        <div className="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-500">
+                          <h4 className="font-semibold text-gray-900 mb-2">技術的メリット</h4>
+                          <ul className="text-sm text-gray-600 space-y-1">
+                            <li>• 本物のサイコロ感</li>
+                            <li>• 予測不可能な動き</li>
+                            <li>• 視覚的な楽しさ</li>
+                            <li>• 没入感の向上</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg border border-green-200">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">📊</span>
+                      確率論と数学的分析
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">各組み合わせの確率</h4>
+                        <ul className="text-sm text-gray-600 space-y-2">
+                          <li>• <strong>ゾロ目</strong>: 6/216 = 2.78%</li>
+                          <li>• <strong>シゴロ</strong>: 6/216 = 2.78%</li>
+                          <li>• <strong>ヒフミ</strong>: 6/216 = 2.78%</li>
+                          <li>• <strong>その他の組み合わせ</strong>: 198/216 = 91.67%</li>
+                          <li>• <strong>しょんべん</strong>: 物理演算により変動</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">統計的分析</h4>
+                        <ul className="text-sm text-gray-600 space-y-2">
+                          <li>• <strong>期待値計算</strong>: 各結果の価値と確率</li>
+                          <li>• <strong>分散分析</strong>: 結果のばらつき</li>
+                          <li>• <strong>相関分析</strong>: 物理パラメータとの関係</li>
+                          <li>• <strong>仮説検定</strong>: ランダム性の検証</li>
+                          <li>• <strong>モンテカルロ法</strong>: シミュレーション分析</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 p-6 rounded-lg">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">🎪</span>
+                      チンチロの社会的・文化的意義
+                    </h3>
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">コミュニケーション</h4>
+                        <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                          アイスブレイク<br/>
+                          世代間交流<br/>
+                          文化継承<br/>
+                          共同体験
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          年齢や立場を超えて
+                          楽しめる共通体験。
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">心理的効果</h4>
+                        <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                          緊張と解放<br/>
+                          期待と不安<br/>
+                          達成感<br/>
+                          ストレス解消
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          運の要素による
+                          心理的な起伏。
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">教育的価値</h4>
+                        <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                          確率の理解<br/>
+                          数学的思考<br/>
+                          リスク管理<br/>
+                          意思決定
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          遊びながら学べる
+                          数学的要素。
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-red-50 p-6 rounded-lg border-l-4 border-red-500">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">⚠️</span>
+                      責任あるゲームプレイ
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">適切な楽しみ方</h4>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1 text-red-600">避けるべき行為</h5>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              <li>• 過度な賭け事</li>
+                              <li>• 依存的なプレイ</li>
+                              <li>• 他人への強要</li>
+                              <li>• 未成年への不適切な使用</li>
+                            </ul>
+                          </div>
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1 text-green-600">推奨される使い方</h5>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              <li>• 適度な時間でのプレイ</li>
+                              <li>• 楽しさを重視</li>
+                              <li>• 全員が納得するルール</li>
+                              <li>• 教育的な活用</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">健全なゲーム文化</h4>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• <strong>娯楽性重視</strong>: 勝敗よりも楽しさを優先</li>
+                          <li>• <strong>社会的交流</strong>: 人とのつながりを大切に</li>
+                          <li>• <strong>文化的理解</strong>: 伝統ゲームの価値を尊重</li>
+                          <li>• <strong>教育的活用</strong>: 学習機会としての活用</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-indigo-50 p-6 rounded-lg border-l-4 border-indigo-500">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">🌐</span>
+                      デジタル時代のチンチロ
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">オンライン化のメリット</h4>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1">技術的メリット</h5>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              <li>• 正確な物理演算</li>
+                              <li>• リアルタイム結果</li>
+                              <li>• 履歴の自動保存</li>
+                              <li>• マルチプラットフォーム対応</li>
+                            </ul>
+                          </div>
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1">社会的メリット</h5>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              <li>• 遠隔地との交流</li>
+                              <li>• アクセシビリティ向上</li>
+                              <li>• 文化的継承</li>
+                              <li>• グローバルな普及</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">YokaUnit 3Dチンチロの特徴</h4>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• <strong>高精度物理演算</strong>: リアルなサイコロの動きを再現</li>
+                          <li>• <strong>3Dレンダリング</strong>: 美しいビジュアルとアニメーション</li>
+                          <li>• <strong>モバイル対応</strong>: スマホ・タブレットで快適プレイ</li>
+                          <li>• <strong>履歴機能</strong>: 過去の結果を記録・分析</li>
+                          <li>• <strong>音響効果</strong>: 臨場感のあるサウンド</li>
+                          <li>• <strong>プライバシー保護</strong>: ブラウザ内完結でデータ漏洩なし</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border border-blue-200">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">🎭</span>
+                      チンチロと日本のゲーム文化
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">伝統的なゲーム文化</h4>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1">歴史的背景</h5>
+                            <p className="text-xs text-gray-600">
+                              江戸時代から続く
+                              庶民の娯楽文化
+                            </p>
+                          </div>
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1">地域性</h5>
+                            <p className="text-xs text-gray-600">
+                              地方ごとに異なる
+                              ルールと文化
+                            </p>
+                          </div>
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1">社会的役割</h5>
+                            <p className="text-xs text-gray-600">
+                              コミュニティの
+                              結束を深める役割
+                            </p>
+                          </div>
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1">現代への継承</h5>
+                            <p className="text-xs text-gray-600">
+                              デジタル時代でも
+                              愛され続ける文化
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">文化的価値</h4>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• <strong>無形文化財</strong>: 日本の伝統的な娯楽文化</li>
+                          <li>• <strong>世代間交流</strong>: 年齢を超えた共通体験</li>
+                          <li>• <strong>地域コミュニティ</strong>: 地域の結束を深める</li>
+                          <li>• <strong>国際交流</strong>: 日本文化の海外発信</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-center pt-6 border-t border-gray-200">
+                    <p className="text-sm text-gray-500">
+                      YokaUnitの3Dチンチロサイコロは、日本の伝統ゲーム文化を
+                      最新技術で再現した革新的なゲームです。
+                      この記事が、チンチロの魅力と文化的価値の理解に役立てば幸いです。
+                    </p>
+                    <div className="mt-4 flex justify-center gap-4 text-xs text-gray-400">
+                      <span>#チンチロ</span>
+                      <span>#サイコロゲーム</span>
+                      <span>#物理演算</span>
+                      <span>#3Dゲーム</span>
+                      <span>#日本文化</span>
+                      <span>#伝統ゲーム</span>
+                      <span>#YokaUnit</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </main>

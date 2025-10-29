@@ -452,6 +452,240 @@ export default function FortuneTodayClientPage() {
                   ))}
                 </div>
               </section>
+
+              {/* SEO記事 */}
+              <section className="bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">🔮 今日の運勢占い完全ガイド：星座学・運勢分析・AI占いの科学</h2>
+                
+                <div className="space-y-6">
+                  <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">🌟</span>
+                      星座学の歴史と文化的背景
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">古代の起源</h4>
+                        <ul className="text-sm text-gray-600 space-y-2">
+                          <li>• <strong>バビロニア文明</strong>: 星座学の起源</li>
+                          <li>• <strong>ギリシャ・ローマ</strong>: 体系化の時代</li>
+                          <li>• <strong>12星座</strong>: 太陽の軌道に基づく分類</li>
+                          <li>• <strong>4元素</strong>: 火・土・風・水の分類</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">現代への発展</h4>
+                        <ul className="text-sm text-gray-600 space-y-2">
+                          <li>• <strong>西洋占星術</strong>: 現代の基礎</li>
+                          <li>• <strong>3性質</strong>: 活動宮・固定宮・柔軟宮</li>
+                          <li>• <strong>個性分析</strong>: 性格特性の分類</li>
+                          <li>• <strong>運勢予測</strong>: 未来への洞察</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">🔬</span>
+                      運勢分析の科学的アプローチ
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">確率論と統計学</h4>
+                        <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                          過去データ分析<br/>
+                          成功確率算出<br/>
+                          リスク要因特定<br/>
+                          客観的評価
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          データに基づく
+                          科学的な運勢分析。
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">心理学と行動科学</h4>
+                        <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                          性格特性分析<br/>
+                          認知バイアス<br/>
+                          行動パターン<br/>
+                          自己実現予言
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          心理学的知見を
+                          活用した分析。
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">🤖</span>
+                      AI技術を活用した現代の占い
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">機械学習によるパターン認識</h4>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1 text-green-600">データ分析</h5>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              <li>• 大量データの処理</li>
+                              <li>• 複雑なパターン認識</li>
+                              <li>• 予測精度の向上</li>
+                              <li>• 個別化された分析</li>
+                            </ul>
+                          </div>
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1 text-blue-600">学習アルゴリズム</h5>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              <li>• 成功事例の学習</li>
+                              <li>• 失敗事例の分析</li>
+                              <li>• 最適化されたアドバイス</li>
+                              <li>• 継続的な改善</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">自然言語処理による感情分析</h4>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• <strong>テキスト分析</strong>: ユーザー入力の感情解析</li>
+                          <li>• <strong>意図理解</strong>: 行動や目標の分析</li>
+                          <li>• <strong>心理状態</strong>: 感情状態の把握</li>
+                          <li>• <strong>パーソナライズ</strong>: 個別化されたアドバイス</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-red-50 p-6 rounded-lg border-l-4 border-red-500">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">♈</span>
+                      12星座の特性と運勢の関係
+                    </h3>
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">火の星座</h4>
+                        <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                          牡羊座 ♈<br/>
+                          獅子座 ♌<br/>
+                          射手座 ♐
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          情熱的で積極的な
+                          リーダーシップ型。
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">土の星座</h4>
+                        <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                          牡牛座 ♉<br/>
+                          乙女座 ♍<br/>
+                          山羊座 ♑
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          実用的で安定した
+                          着実な努力型。
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3">風の星座</h4>
+                        <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                          双子座 ♊<br/>
+                          天秤座 ♎<br/>
+                          水瓶座 ♒
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          知的で社交的な
+                          コミュニケーション型。
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4">
+                      <h4 className="font-semibold text-gray-900 mb-3">水の星座</h4>
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1">蟹座 ♋</h5>
+                          <p className="text-xs text-gray-600">感情的で保護的な</p>
+                        </div>
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1">蠍座 ♏</h5>
+                          <p className="text-xs text-gray-600">神秘的で深い洞察力</p>
+                        </div>
+                        <div className="bg-white p-3 rounded">
+                          <h5 className="font-semibold text-sm mb-1">魚座 ♓</h5>
+                          <p className="text-xs text-gray-600">直感的で創造的</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">🎯</span>
+                      運勢占いの活用方法
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">日常的な活用</h4>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1">自己理解</h5>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              <li>• 性格特性の把握</li>
+                              <li>• 強みと弱みの認識</li>
+                              <li>• 行動パターンの理解</li>
+                              <li>• 価値観の明確化</li>
+                            </ul>
+                          </div>
+                          <div className="bg-white p-3 rounded">
+                            <h5 className="font-semibold text-sm mb-1">意思決定支援</h5>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              <li>• 選択肢の評価</li>
+                              <li>• リスクの分析</li>
+                              <li>• タイミングの判断</li>
+                              <li>• 行動指針の設定</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">長期的な活用</h4>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• <strong>目標設定</strong>: 星座特性を活かした目標設定</li>
+                          <li>• <strong>人間関係</strong>: 相性の理解と改善</li>
+                          <li>• <strong>キャリア</strong>: 適性に基づく職業選択</li>
+                          <li>• <strong>ライフスタイル</strong>: 個性に合った生活設計</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-center pt-6 border-t border-gray-200">
+                    <p className="text-sm text-gray-500">
+                      今日の運勢占いは、自己理解と意思決定のためのツールです。
+                      結果を参考に、より良い一日を過ごしましょう。
+                    </p>
+                    <div className="mt-4 flex justify-center gap-4 text-xs text-gray-400">
+                      <span>#運勢占い</span>
+                      <span>#星座学</span>
+                      <span>#AI占い</span>
+                      <span>#12星座</span>
+                      <span>#運勢分析</span>
+                      <span>#YokaUnit</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
         </div>

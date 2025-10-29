@@ -8,7 +8,7 @@ import { ViewCounter } from "@/components/view-counter"
 import { OGPCheckerClient } from "./OGPCheckerClient"
 
 export const metadata: Metadata = {
-  title: "【2024年最新】OGPチェッカー｜無料メタデータ・SNS最適化ツール - ブロガー・SEO必携",
+  title: "OGPチェッカー｜無料メタデータ・SNS最適化ツール - ブロガー・SEO必携",
   description: "【完全無料・登録不要】OGPチェッカーでメタデータ・OGP画像・Twitter Card・Facebook Cardを瞬時にチェック！SEOスコア分析・改善提案・バッチチェック対応。ブロガー・マーケター・SEO担当者必携の最強ツール。",
   keywords: [
     "OGPチェッカー",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     "オンラインツール"
   ],
   openGraph: {
-    title: "【2024年最新】OGPチェッカー｜無料メタデータ・SNS最適化ツール - ブロガー・SEO必携",
+    title: "OGPチェッカー｜無料メタデータ・SNS最適化ツール - ブロガー・SEO必携",
     description: "【完全無料・登録不要】OGPチェッカーでメタデータ・OGP画像・Twitter Card・Facebook Cardを瞬時にチェック！SEOスコア分析・改善提案・バッチチェック対応。ブロガー・マーケター・SEO担当者必携の最強ツール。",
     url: "https://yokaunit.com/tools/ogp-checker",
     siteName: "YokaUnit",
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
         url: "/ogp/ogp-checker-tool.png",
         width: 1200,
         height: 630,
-        alt: "【2024年最新】OGPチェッカー - 無料メタデータ・SNS最適化ツール"
+        alt: "OGPチェッカー - 無料メタデータ・SNS最適化ツール"
       }
     ],
     locale: "ja_JP",
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "【2024年最新】OGPチェッカー🔍｜無料メタデータ・SNS最適化ツール",
+    title: "OGPチェッカー🔍｜無料メタデータ・SNS最適化ツール",
     description: "【完全無料・登録不要】OGPチェッカーでメタデータ・OGP画像・Twitter Card・Facebook Cardを瞬時にチェック✨ SEOスコア分析・改善提案・バッチチェック対応📊 ブロガー・マーケター・SEO担当者必携の最強ツール🛠️",
     images: ["/ogp/ogp-checker-tool.png"],
     creator: "@yokaunit",

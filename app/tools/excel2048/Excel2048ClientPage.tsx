@@ -414,7 +414,7 @@ export default function Excel2048ClientPage() {
               </section>
             </div>
           </div>
-        </div>
+        </main>
       </div>
       
       <SiteFooter />

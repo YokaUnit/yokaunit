@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
-import { CardStackClient } from "./CardStackClient"
+import CardStackClientPage from "./CardStackClientPage"
 
 export const metadata: Metadata = {
   title: "トランプ山札めくるだけ｜ハイ&ロー・ジョーカーロシアンルーレット・マーク予想ゲーム【無料】 - YokaUnit",
@@ -102,7 +102,7 @@ export default function CardStackPage() {
               </div>
 
               {/* メインゲーム */}
-              <CardStackClient />
+              <CardStackClientPage />
 
               {/* 関連ツール */}
               <div className="mt-8">
@@ -391,7 +391,7 @@ export default function CardStackPage() {
               </section>
             </div>
           </div>
-        </div>
+        </main>
       </div>
       
       <SiteFooter />

@@ -405,10 +405,16 @@ export function OGPCheckerClient() {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
             OGPチェッカー（無料）
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-4">
             メタデータ・OGP画像・Twitter Card・Facebook Cardを瞬時にチェック！
             SEOスコア分析・改善提案・バッチチェック対応
           </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-2xl mx-auto">
+            <p className="text-sm text-blue-800 text-center">
+              <strong>URLを入力してあなたのWebサイトのOGP設定をチェックしましょう！</strong><br />
+              無料でメタデータの最適化状況を詳細分析します
+            </p>
+          </div>
         </motion.div>
 
         {/* メインコンテンツ */}
@@ -470,15 +476,25 @@ export function OGPCheckerClient() {
               </Card>
 
               {/* エラー表示 */}
-              {error && (
-                <Alert variant="destructive">
-                  <XCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+              <AnimatePresence>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Alert variant="destructive" className="mb-6">
+                      <XCircle className="h-4 w-4" />
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* 結果表示 - 詳細なタブ機能 */}
-              {metaData && (
+              <AnimatePresence>
+                {metaData && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -1187,7 +1203,8 @@ export function OGPCheckerClient() {
                     </CardContent>
                   </Card>
                 </motion.div>
-              )}
+                )}
+              </AnimatePresence>
             </TabsContent>
 
             {/* バッチチェックタブ */}
@@ -1251,12 +1268,14 @@ export function OGPCheckerClient() {
               </Card>
 
               {/* バッチ結果表示 */}
-              {results.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
+              <AnimatePresence>
+                {results.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5 }}
+                  >
                   <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
                     <CardHeader>
                       <div className="flex items-center justify-between">
@@ -1361,8 +1380,9 @@ export function OGPCheckerClient() {
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </TabsContent>
 
             {/* 履歴タブ */}

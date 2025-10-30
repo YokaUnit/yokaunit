@@ -13,7 +13,7 @@ import { toast } from "@/hooks/use-toast"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 
-export function WarikanClient() {
+export default function WarikanClient() {
   const {
     totalAmount,
     peopleCount,

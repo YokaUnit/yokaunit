@@ -10,7 +10,7 @@ import RussianSweetsClient from "./RussianSweetsClient"
 import { ViewCounter } from "@/components/view-counter"
 
 export async function generateMetadata(): Promise<Metadata> {
-  return generateToolMetadata("russian-sweets", {
+  return generateToolMetadata("russiansweets", {
     title: "ロシアンスイーツ｜お菓子の外れを引いたら負け！2人で遊べるブラウザゲーム | YokaUnit",
     description:
       "今SNSで話題の“お菓子ロシアンゲーム”をYokaUnitで無料プレイ。2人で交互にスイーツを選び、相手が決めた“外れ”を引いたら即アウト！スマホ1台で手軽に遊べる、運と心理戦が交錯するドキドキ対戦ツール。",

@@ -2,7 +2,13 @@ import type { Metadata } from "next"
 import { getToolBySlug } from "@/lib/actions/tools"
 
 export async function generateToolMetadata(slug: string, defaults: Partial<Metadata> = {}): Promise<Metadata> {
-  const tool = await getToolBySlug(slug)
+  let tool: Awaited<ReturnType<typeof getToolBySlug>> = null
+  try {
+    tool = await getToolBySlug(slug)
+  } catch (_err) {
+    // If not found or multiple rows, silently fall back to common OGP
+    tool = null
+  }
 
   const imageUrl = tool?.image_url || "/ogp/yokaunit-common.png"
 

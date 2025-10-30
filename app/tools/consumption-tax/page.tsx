@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { generateToolMetadata } from '@/lib/tool-metadata';
 import { TaxCalculator } from './components/TaxCalculator';
 import { CalculationHistory } from './components/CalculationHistory';
 import { ConsumptionTaxProvider } from './context/ConsumptionTaxContext';
@@ -16,40 +17,28 @@ import {
   BREADCRUMB_STRUCTURED_DATA 
 } from './lib/seo-data';
 
-export const metadata: Metadata = {
-  title: SEO_METADATA.title,
-  description: SEO_METADATA.description,
-  keywords: SEO_METADATA.keywords.join(', '),
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  return generateToolMetadata('consumption-tax', {
     title: SEO_METADATA.title,
     description: SEO_METADATA.description,
-    type: 'website',
-    url: SEO_METADATA.canonical,
-    images: [
-      {
-        url: SEO_METADATA.ogImage,
-        width: 1200,
-        height: 630,
-        alt: '消費税計算機｜税込・税抜・税額を瞬時に計算 - YokaUnit',
-      },
-    ],
-    siteName: 'YokaUnit',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: '消費税計算機💰税込・税抜・税額を瞬時に計算｜無料オンライン計算機',
-    description: '消費税10%・8%の計算が瞬時にできる無料オンライン計算機✨ 軽減税率対応・履歴保存・CSV出力機能付き📊 経理・会計・確定申告に便利🆓',
-    images: [SEO_METADATA.ogImage],
-    creator: '@yokaunit',
-  },
-  alternates: {
-    canonical: SEO_METADATA.canonical,
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+    keywords: SEO_METADATA.keywords.join(', '),
+    openGraph: {
+      title: SEO_METADATA.title,
+      description: SEO_METADATA.description,
+      type: 'website',
+      url: SEO_METADATA.canonical,
+      siteName: 'YokaUnit',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: '消費税計算機💰税込・税抜・税額を瞬時に計算｜無料オンライン計算機',
+      description: '消費税10%・8%の計算が瞬時にできる無料オンライン計算機✨ 軽減税率対応・履歴保存・CSV出力機能付き📊 経理・会計・確定申告に便利🆓',
+      creator: '@yokaunit',
+    },
+    alternates: { canonical: SEO_METADATA.canonical },
+    robots: { index: true, follow: true },
+  });
+}
 
 export default function ConsumptionTaxPage() {
   return (

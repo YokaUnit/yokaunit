@@ -752,17 +752,20 @@ export function OGPCheckerClient() {
                                 <Smartphone className="h-4 w-4" />
                                 モバイルプレビュー
                               </h4>
-                              <div className="border rounded-lg p-3 bg-gray-50 max-w-xs mx-auto">
+                          <div className="border rounded-lg p-3 bg-gray-50 max-w-xs mx-auto">
                                 <div className="bg-white rounded p-2">
-                                  {metaData.image && (
-                                    <img
-                                      src={getProxiedImageUrl(metaData.image)}
-                                      alt="Mobile Preview"
-                                      className="w-full h-20 object-cover rounded mb-2"
-                                      onLoad={() => handleImageLoad(metaData.image!)}
-                                      onError={() => handleImageError(metaData.image!)}
-                                    />
-                                  )}
+                                  {(() => {
+                                    const displayImg = metaData.image || metaData.twitterImage
+                                    return displayImg ? (
+                                      <img
+                                        src={getProxiedImageUrl(displayImg)}
+                                        alt="Mobile Preview"
+                                        className="w-full h-20 object-cover rounded mb-2"
+                                        onLoad={() => handleImageLoad(displayImg)}
+                                        onError={() => handleImageError(displayImg)}
+                                      />
+                                    ) : null
+                                  })()}
                                   <h6 className="font-semibold text-xs text-gray-900">
                                     {metaData.title || "タイトルなし"}
                                   </h6>
@@ -781,15 +784,18 @@ export function OGPCheckerClient() {
                               <div className="border rounded-lg p-3 bg-gray-50">
                                 <div className="bg-white rounded p-3">
                                   <div className="flex gap-3">
-                                    {metaData.image && (
-                                      <img
-                                        src={getProxiedImageUrl(metaData.image)}
-                                        alt="Desktop Preview"
-                                        className="w-20 h-20 object-cover rounded"
-                                        onLoad={() => handleImageLoad(metaData.image!)}
-                                        onError={() => handleImageError(metaData.image!)}
-                                      />
-                                    )}
+                                    {(() => {
+                                      const displayImg = metaData.image || metaData.twitterImage
+                                      return displayImg ? (
+                                        <img
+                                          src={getProxiedImageUrl(displayImg)}
+                                          alt="Desktop Preview"
+                                          className="w-20 h-20 object-cover rounded"
+                                          onLoad={() => handleImageLoad(displayImg)}
+                                          onError={() => handleImageError(displayImg)}
+                                        />
+                                      ) : null
+                                    })()}
                                     <div className="flex-1">
                                       <h6 className="font-semibold text-sm text-gray-900">
                                         {metaData.title || "タイトルなし"}

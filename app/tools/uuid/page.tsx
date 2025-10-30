@@ -7,8 +7,10 @@ import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
 import type { Metadata } from "next"
+import { generateToolMetadata } from "@/lib/tool-metadata"
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return generateToolMetadata("uuid", {
   title: "UUID生成ツール｜PostgreSQL対応・履歴管理・バリデーション機能付き無料ツール",
   description:
     "YokaUnitのUUID生成ツール！PostgreSQL対応・履歴管理・お気に入り・CSVエクスポート・バリデーション機能完備。v1～v5、Nil UUID対応。開発者必携の高機能UUIDジェネレーター。ブラウザ内完結でプライバシー完全保護。プロ仕様の開発ツール。",
@@ -100,14 +102,6 @@ export const metadata: Metadata = {
     title: "UUID生成ツール｜PostgreSQL対応・履歴管理・バリデーション機能付き - YokaUnit",
     description:
       "PostgreSQL対応・履歴管理・お気に入り・CSVエクスポート・バリデーション機能完備のUUID生成ツール！v1～v5、Nil UUID対応。開発者必携の高機能UUIDジェネレーター。ブラウザ内完結でプライバシー完全保護。プロ仕様の開発ツール。",
-    images: [
-      {
-        url: "/ogp/yokaunit-common.png",
-        width: 1200,
-        height: 630,
-        alt: "YokaUnit UUID生成ツール - PostgreSQL対応・履歴管理・バリデーション機能付き",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -116,7 +110,6 @@ export const metadata: Metadata = {
     title: "UUID生成ツール🔧｜PostgreSQL対応・履歴管理・バリデーション機能付き",
     description:
       "PostgreSQL対応・履歴管理・お気に入り・CSVエクスポート・バリデーション機能完備✨ v1～v5、Nil UUID対応🛠️ 開発者必携の高機能UUIDジェネレーター🚀 プロ仕様の開発ツール📱",
-    images: ["/ogp/yokaunit-common.png"],
   },
   verification: {
     google: "your-google-verification-code",
@@ -127,6 +120,7 @@ export const metadata: Metadata = {
     "apple-mobile-web-app-status-bar-style": "default",
     "format-detection": "telephone=no",
   },
+  })
 }
 
 export default function UuidGeneratorPage() {

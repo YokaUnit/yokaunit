@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { generateToolMetadata } from "@/lib/tool-metadata"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -8,44 +9,44 @@ import { RelatedTools } from "@/components/related-tools"
 import RussianSweetsClient from "./RussianSweetsClient"
 import { ViewCounter } from "@/components/view-counter"
 
-export const metadata: Metadata = {
-  title: "ロシアンスイーツ｜お菓子の外れを引いたら負け！2人で遊べるブラウザゲーム | YokaUnit",
-  description:
-    "今SNSで話題の“お菓子ロシアンゲーム”をYokaUnitで無料プレイ。2人で交互にスイーツを選び、相手が決めた“外れ”を引いたら即アウト！スマホ1台で手軽に遊べる、運と心理戦が交錯するドキドキ対戦ツール。",
-  keywords: [
-    "ロシアンスイーツ",
-    "お菓子 ロシアン ゲーム",
-    "お菓子 外れ ゲーム",
-    "お菓子 ゲーム 友達",
-    "お菓子 罰ゲーム",
-    "ブラウザ ロシアン ゲーム",
-    "二人用 ゲーム",
-    "2人 プレイ 無料",
-    "心理戦 ゲーム",
-    "パーティーゲーム",
-    "スマホ1台 ゲーム",
-    "修学旅行 ゲーム",
-    "罰ゲーム 付き ゲーム",
-  ],
-  openGraph: {
-    title: "ロシアンスイーツ｜お菓子の外れを引いたら負け！2人用ゲーム",
+export async function generateMetadata(): Promise<Metadata> {
+  return generateToolMetadata("russian-sweets", {
+    title: "ロシアンスイーツ｜お菓子の外れを引いたら負け！2人で遊べるブラウザゲーム | YokaUnit",
     description:
-      "お菓子ロシアンゲームを無料で。お互いの“外れ”を設定し、散らばるスイーツから交互に選択。外れを引いたら即アウト！スマホ1台でOK。",
-    url: "https://yokaunit.com/tools/russian-sweets",
-    siteName: "YokaUnit",
-    images: [{ url: "/ogp/yokaunit-common.png", width: 1200, height: 630, alt: "ロシアンスイーツ - YokaUnit" }],
-    locale: "ja_JP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "ロシアンスイーツ｜お菓子の外れを引いたら負け！",
-    description: "SNSで話題の“お菓子ロシアンゲーム”を無料プレイ。2人で交互に選び、外れを引いたら即アウト。スマホ1台で遊べる心理×運ゲー。",
-    images: ["/ogp/yokaunit-common.png"],
-    site: "@yokaunit",
-    creator: "@yokaunit",
-  },
-  alternates: { canonical: "https://yokaunit.com/tools/russian-sweets" },
+      "今SNSで話題の“お菓子ロシアンゲーム”をYokaUnitで無料プレイ。2人で交互にスイーツを選び、相手が決めた“外れ”を引いたら即アウト！スマホ1台で手軽に遊べる、運と心理戦が交錯するドキドキ対戦ツール。",
+    keywords: [
+      "ロシアンスイーツ",
+      "お菓子 ロシアン ゲーム",
+      "お菓子 外れ ゲーム",
+      "お菓子 ゲーム 友達",
+      "お菓子 罰ゲーム",
+      "ブラウザ ロシアン ゲーム",
+      "二人用 ゲーム",
+      "2人 プレイ 無料",
+      "心理戦 ゲーム",
+      "パーティーゲーム",
+      "スマホ1台 ゲーム",
+      "修学旅行 ゲーム",
+      "罰ゲーム 付き ゲーム",
+    ],
+    openGraph: {
+      title: "ロシアンスイーツ｜お菓子の外れを引いたら負け！2人用ゲーム",
+      description:
+        "お菓子ロシアンゲームを無料で。お互いの“外れ”を設定し、散らばるスイーツから交互に選択。外れを引いたら即アウト！スマホ1台でOK。",
+      url: "https://yokaunit.com/tools/russian-sweets",
+      siteName: "YokaUnit",
+      locale: "ja_JP",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "ロシアンスイーツ｜お菓子の外れを引いたら負け！",
+      description: "SNSで話題の“お菓子ロシアンゲーム”を無料プレイ。2人で交互に選び、外れを引いたら即アウト。スマホ1台で遊べる心理×運ゲー。",
+      site: "@yokaunit",
+      creator: "@yokaunit",
+    },
+    alternates: { canonical: "https://yokaunit.com/tools/russian-sweets" },
+  })
 }
 
 export default function RussianSweetsPage() {

@@ -244,10 +244,7 @@ export default function AiSeishinnenreiClientPage() {
               <div className="mb-6 md:mb-8">
                 <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="ai-seishinnenrei" limit={8} />
               </div>
-              {/* 最新のツール */}
-              <div className="mb-6 md:mb-8">
-                <RelatedTools currentToolSlug="ai-seishinnenrei" />
-              </div>
+
 
               {/* 精神年齢とは */}
               <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
@@ -326,10 +323,7 @@ export default function AiSeishinnenreiClientPage() {
               <div className="mt-8">
                 <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="ai-seishinnenrei" limit={8} />
               </div>
-              {/* 診断中も最新のツールを表示 */}
-              <div className="mt-8">
-                <RelatedTools currentToolSlug="ai-seishinnenrei" />
-              </div>
+
             </>
           )}
 
@@ -352,10 +346,7 @@ export default function AiSeishinnenreiClientPage() {
               <div className="mt-8">
                 <CategoryTools category="診断" title="関連ツール（診断）" currentToolSlug="ai-seishinnenrei" limit={8} />
               </div>
-              {/* 診断結果後も最新のツールを表示 */}
-              <div className="mt-8">
-                <RelatedTools currentToolSlug="ai-seishinnenrei" />
-              </div>
+
             </>
           )}
 
@@ -776,8 +767,13 @@ export default function AiSeishinnenreiClientPage() {
           </div>
         </div>
       </div>
-      
-      <SiteFooter />
+	  
+	      {/* ページ最下部に最新のツール */}
+	      <div className="max-w-4xl mx-auto mt-12 px-4">
+	        <RelatedTools currentToolSlug="ai-seishinnenrei" />
+	      </div>
+
+	      <SiteFooter />
     </>
   )
 }

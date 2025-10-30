@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { generateToolMetadata } from "@/lib/tool-metadata"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -9,11 +10,12 @@ import { CategoryTools } from "@/components/category-tools"
 import { RelatedTools } from "@/components/related-tools"
 import { ViewCounter } from "@/components/view-counter"
 
-export const metadata: Metadata = {
-  title: "3カード選択バトル｜当たりを当ててスコアを競う無料ゲーム | YokaUnit",
-  description:
-    "3カード選択バトルは、3枚のカードから当たりを選ぶシンプルな無料ブラウザゲーム。プレイヤー数とラウンド数（無限可）を設定してスコアを競えます。スマホ・PC対応。",
-  keywords: [
+export async function generateMetadata(): Promise<Metadata> {
+  return generateToolMetadata("3cardbattle", {
+    title: "3カード選択バトル｜当たりを当ててスコアを競う無料ゲーム | YokaUnit",
+    description:
+      "3カード選択バトルは、3枚のカードから当たりを選ぶシンプルな無料ブラウザゲーム。プレイヤー数とラウンド数（無限可）を設定してスコアを競えます。スマホ・PC対応。",
+    keywords: [
     "3カード選択バトル",
     "カードゲーム",
     "三択",
@@ -24,36 +26,26 @@ export const metadata: Metadata = {
     "スコア",
     "YokaUnit",
     "ヨカユニット",
-  ],
-  openGraph: {
-    title: "3カード選択バトル｜当たりを当ててスコアを競う無料ゲーム",
-    description:
-      "3カード選択バトルは、3枚のカードから当たりを選ぶシンプルな無料ゲーム。プレイヤー数とラウンド（無限対応）を設定してみんなで対戦。スマホ・PC対応。",
-    url: "https://yokaunit.com/tools/3cardbattle",
-    siteName: "YokaUnit",
-    images: [
-      {
-        url: "/ogp/yokaunit-common.png",
-        width: 1200,
-        height: 630,
-        alt: "3カード選択バトル - YokaUnit",
-      },
     ],
-    locale: "ja_JP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "3カード選択バトル｜当たりを当ててスコアを競う無料ゲーム",
-    description:
-      "3カード選択バトルは、3枚のカードから当たりを選ぶ無料ブラウザゲーム。プレイヤー数とラウンド（無限）を設定して、みんなでスコアを競おう。",
-    images: ["/ogp/yokaunit-common.png"],
-    site: "@yokaunit",
-    creator: "@yokaunit",
-  },
-  alternates: {
-    canonical: "https://yokaunit.com/tools/3cardbattle",
-  },
+    openGraph: {
+      title: "3カード選択バトル｜当たりを当ててスコアを競う無料ゲーム",
+      description:
+        "3カード選択バトルは、3枚のカードから当たりを選ぶシンプルな無料ゲーム。プレイヤー数とラウンド（無限対応）を設定してみんなで対戦。スマホ・PC対応。",
+      url: "https://yokaunit.com/tools/3cardbattle",
+      siteName: "YokaUnit",
+      locale: "ja_JP",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "3カード選択バトル｜当たりを当ててスコアを競う無料ゲーム",
+      description:
+        "3カード選択バトルは、3枚のカードから当たりを選ぶ無料ブラウザゲーム。プレイヤー数とラウンド（無限）を設定して、みんなでスコアを競おう。",
+      site: "@yokaunit",
+      creator: "@yokaunit",
+    },
+    alternates: { canonical: "https://yokaunit.com/tools/3cardbattle" },
+  })
 }
 
 export default function ThreeCardBattlePage() {

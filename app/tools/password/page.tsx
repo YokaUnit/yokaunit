@@ -7,8 +7,10 @@ import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
 import type { Metadata } from "next"
+import { generateToolMetadata } from "@/lib/tool-metadata"
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return generateToolMetadata("password", {
         title: "パスワード生成ツール｜AI分析・履歴管理・エクスポート機能付き無料ツール",
   description:
     "YokaUnitのパスワード生成ツール！AI強度分析・履歴管理・お気に入り・CSVエクスポート・プリセット機能完備。ハッキング対策に最適な高強度パスワードを瞬時に作成。ブラウザ内完結でプライバシー完全保護。セキュリティ専門家推奨のプロ仕様ツール。",
@@ -62,14 +64,6 @@ export const metadata: Metadata = {
       "AI強度分析・履歴管理・お気に入り・CSVエクスポート・プリセット機能完備のパスワード生成ツール！ハッキング対策に最適な高強度パスワードを瞬時に作成。ブラウザ内完結でプライバシー完全保護。プロ仕様のセキュリティツール。",
     url: "https://yokaunit.com/tools/password",
     siteName: "YokaUnit",
-    images: [
-      {
-        url: "/ogp/yokaunit-common.png",
-        width: 1200,
-        height: 630,
-          alt: "YokaUnitパスワード生成ツール - AI分析・履歴管理・エクスポート機能付き",
-      },
-    ],
     locale: "ja_JP",
     type: "website",
   },
@@ -78,7 +72,6 @@ export const metadata: Metadata = {
     title: "パスワード生成ツール🔐 AI分析・履歴管理・エクスポート機能付き",
     description:
       "AI強度分析・履歴管理・お気に入り・CSVエクスポート・プリセット機能完備✨ ハッキング対策に最適な高強度パスワードを瞬時に作成🛡️ プロ仕様のセキュリティツール📱",
-    images: ["/ogp/yokaunit-common.png"],
     creator: "@yokaunit",
     site: "@yokaunit",
   },
@@ -102,6 +95,7 @@ export const metadata: Metadata = {
     "apple-mobile-web-app-status-bar-style": "default",
     "format-detection": "telephone=no",
   },
+  })
 }
 
 export default function PasswordGeneratorPage() {

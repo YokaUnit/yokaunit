@@ -27,18 +27,22 @@ async function handleOGPCheck(request: NextRequest, url: string) {
   }
 
   try {
-    // HTMLを取得
+    // HTMLを取得（AbortControllerでタイムアウト制御）
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 10000)
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; OGP-Checker/1.0)',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language': 'ja,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate',
         'Connection': 'keep-alive',
       },
       redirect: 'follow',
-      timeout: 10000,
+      signal: controller.signal,
+      // Next.js fetch caches by default in some modes; we want fresh content for checks
+      cache: 'no-store',
     })
+    clearTimeout(timeoutId)
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -124,13 +128,19 @@ async function proxyImage(imageUrl: string) {
   }
 
   try {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 10000)
     const response = await fetch(imageUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; OGP-Checker/1.0)',
-        'Accept': 'image/*',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+        'Referer': new URL(imageUrl).origin,
       },
-      timeout: 10000,
+      redirect: 'follow',
+      signal: controller.signal,
+      cache: 'no-store',
     })
+    clearTimeout(timeoutId)
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -165,7 +175,7 @@ async function proxyImage(imageUrl: string) {
 function extractMetaData(html: string, baseUrl: string) {
   const metaData: any = {}
 
-  // 正規表現でメタタグを抽出
+  // 正規表現でメタ/リンクタグを抽出
   const metaRegex = /<meta[^>]+>/gi
   const linkRegex = /<link[^>]+>/gi
   const titleRegex = /<title[^>]*>([^<]*)<\/title>/i
@@ -176,83 +186,56 @@ function extractMetaData(html: string, baseUrl: string) {
     metaData.title = titleMatch[1].trim()
   }
 
-  // metaタグ
+  // 画像候補（出現順を維持）
+  type ImageCandidate = { url: string; width?: number; height?: number; alt?: string }
+  const imageCandidates: ImageCandidate[] = []
+  const pushOrUpdateLast = (partial: Partial<ImageCandidate> & { url?: string }) => {
+    if (partial.url) {
+      imageCandidates.push({ url: resolveUrl(partial.url, baseUrl) })
+      return
+    }
+    const last = imageCandidates[imageCandidates.length - 1]
+    if (last) {
+      if (typeof partial.width === 'number') last.width = partial.width
+      if (typeof partial.height === 'number') last.height = partial.height
+      if (typeof partial.alt === 'string') last.alt = partial.alt
+    }
+  }
+
+  // metaタグ（一般 + OG + Twitter）
   const metaMatches = html.match(metaRegex) || []
   metaMatches.forEach((meta) => {
     const nameMatch = meta.match(/name=["']([^"']+)["']/i)
     const propertyMatch = meta.match(/property=["']([^"']+)["']/i)
     const contentMatch = meta.match(/content=["']([^"']+)["']/i)
-    
-    if (contentMatch) {
-      const content = contentMatch[1]
-      
-      if (nameMatch) {
-        const name = nameMatch[1].toLowerCase()
-        switch (name) {
-          case 'description':
-            metaData.description = content
-            break
-          case 'keywords':
-            metaData.keywords = content
-            break
-          case 'author':
-            metaData.author = content
-            break
-          case 'robots':
-            metaData.robots = content
-            break
-          case 'viewport':
-            metaData.viewport = content
-            break
-          case 'charset':
-            metaData.charset = content
-            break
-          case 'theme-color':
-            metaData.themeColor = content
-            break
-        }
-      }
-      
-      if (propertyMatch) {
-        const property = propertyMatch[1].toLowerCase()
-        switch (property) {
-          case 'og:title':
-            metaData.title = metaData.title || content
-            break
-          case 'og:description':
-            metaData.description = metaData.description || content
-            break
-          case 'og:image':
-            metaData.image = resolveUrl(content, baseUrl)
-            break
-          case 'og:url':
-            metaData.url = resolveUrl(content, baseUrl)
-            break
-          case 'og:site_name':
-            metaData.siteName = content
-            break
-          case 'og:type':
-            metaData.type = content
-            break
-          case 'og:locale':
-            metaData.locale = content
-            break
-        }
-      }
-    }
-  })
+    if (!contentMatch) return
+    const content = contentMatch[1]
 
-  // Twitter Card
-  const twitterMatches = html.match(metaRegex) || []
-  twitterMatches.forEach((meta) => {
-    const nameMatch = meta.match(/name=["']([^"']+)["']/i)
-    const contentMatch = meta.match(/content=["']([^"']+)["']/i)
-    
-    if (nameMatch && contentMatch) {
+    if (nameMatch) {
       const name = nameMatch[1].toLowerCase()
-      const content = contentMatch[1]
-      
       switch (name) {
+        case 'description':
+          if (!metaData.description) metaData.description = content
+          break
+        case 'keywords':
+          metaData.keywords = content
+          break
+        case 'author':
+          metaData.author = content
+          break
+        case 'robots':
+          metaData.robots = content
+          break
+        case 'viewport':
+          metaData.viewport = content
+          break
+        case 'charset':
+          metaData.charset = content
+          break
+        case 'theme-color':
+          metaData.themeColor = content
+          break
+        // Twitter
         case 'twitter:card':
           metaData.twitterCard = content
           break
@@ -263,6 +246,7 @@ function extractMetaData(html: string, baseUrl: string) {
           metaData.twitterDescription = content
           break
         case 'twitter:image':
+        case 'twitter:image:src':
           metaData.twitterImage = resolveUrl(content, baseUrl)
           break
         case 'twitter:site':
@@ -273,6 +257,54 @@ function extractMetaData(html: string, baseUrl: string) {
           break
       }
     }
+
+    if (propertyMatch) {
+      const property = propertyMatch[1].toLowerCase()
+      switch (property) {
+        // Twitter as property as well
+        case 'twitter:image':
+        case 'twitter:image:src':
+          metaData.twitterImage = resolveUrl(content, baseUrl)
+          break
+        case 'og:title':
+          if (!metaData.title) metaData.title = content
+          break
+        case 'og:description':
+          if (!metaData.description) metaData.description = content
+          break
+        case 'og:url':
+          metaData.url = resolveUrl(content, baseUrl)
+          break
+        case 'og:site_name':
+          metaData.siteName = content
+          break
+        case 'og:type':
+          metaData.type = content
+          break
+        case 'og:locale':
+          metaData.locale = content
+          break
+        // 画像関連（順序に基づきwidth/height/altを直前の候補に付与）
+        case 'og:image':
+        case 'og:image:url':
+        case 'og:image:secure_url':
+          pushOrUpdateLast({ url: content })
+          break
+        case 'og:image:width': {
+          const n = parseInt(content, 10)
+          if (!Number.isNaN(n)) pushOrUpdateLast({ width: n })
+          break
+        }
+        case 'og:image:height': {
+          const n = parseInt(content, 10)
+          if (!Number.isNaN(n)) pushOrUpdateLast({ height: n })
+          break
+        }
+        case 'og:image:alt':
+          pushOrUpdateLast({ alt: content })
+          break
+      }
+    }
   })
 
   // linkタグ
@@ -280,28 +312,105 @@ function extractMetaData(html: string, baseUrl: string) {
   linkMatches.forEach((link) => {
     const relMatch = link.match(/rel=["']([^"']+)["']/i)
     const hrefMatch = link.match(/href=["']([^"']+)["']/i)
-    
-    if (relMatch && hrefMatch) {
-      const rel = relMatch[1].toLowerCase()
-      const href = resolveUrl(hrefMatch[1], baseUrl)
-      
-      switch (rel) {
-        case 'canonical':
-          metaData.canonical = href
-          break
-        case 'icon':
-        case 'shortcut icon':
-          metaData.favicon = href
-          break
-        case 'apple-touch-icon':
-          metaData.appleTouchIcon = href
-          break
-        case 'manifest':
-          metaData.manifest = href
-          break
+    if (!(relMatch && hrefMatch)) return
+    const rel = relMatch[1].toLowerCase()
+    const href = resolveUrl(hrefMatch[1], baseUrl)
+    switch (rel) {
+      case 'canonical':
+        metaData.canonical = href
+        break
+      case 'icon':
+      case 'shortcut icon':
+        metaData.favicon = href
+        break
+      case 'apple-touch-icon':
+        metaData.appleTouchIcon = href
+        break
+      case 'manifest':
+        metaData.manifest = href
+        break
+    }
+  })
+
+  // itemprop="image" や 非OGP系の画像指定
+  const itempropImageRegex = /<meta[^>]+itemprop=["']image["'][^>]*>/gi
+  const itempropMatches = html.match(itempropImageRegex) || []
+  itempropMatches.forEach((meta) => {
+    const contentMatch = meta.match(/content=["']([^"']+)["']/i)
+    if (contentMatch) {
+      const candidateUrl = resolveUrl(contentMatch[1], baseUrl)
+      if (candidateUrl) {
+        // 既に候補が無ければ最初の候補として追加
+        // もしくはOGP/Twitterが無い場合のフォールバックとして利用
+        // 幅高さ情報は無いので候補として最後に追加
+        // 型の再利用
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        imageCandidates.push({ url: candidateUrl })
       }
     }
   })
+
+  // JSON-LDのimageを解析
+  const jsonLdRegex = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+  let jsonLdMatch: RegExpExecArray | null
+  while ((jsonLdMatch = jsonLdRegex.exec(html)) !== null) {
+    const jsonText = jsonLdMatch[1].trim()
+    try {
+      const data = JSON.parse(jsonText)
+      const collectImages = (node: any) => {
+        if (!node) return
+        const pushImage = (u: string) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          imageCandidates.push({ url: resolveUrl(u, baseUrl) })
+        }
+        if (typeof node.image === 'string') {
+          pushImage(node.image)
+        } else if (Array.isArray(node.image)) {
+          node.image.forEach((u: any) => {
+            if (typeof u === 'string') pushImage(u)
+            else if (u && typeof u.url === 'string') pushImage(u.url)
+          })
+        } else if (node.image && typeof node.image.url === 'string') {
+          pushImage(node.image.url)
+        }
+        // ArticleやBlogPosting等の代表画像も拾う
+        if (node.thumbnailUrl && typeof node.thumbnailUrl === 'string') {
+          pushImage(node.thumbnailUrl)
+        }
+        if (Array.isArray(node['@graph'])) node['@graph'].forEach(collectImages)
+      }
+      collectImages(data)
+    } catch {
+      // ignore JSON parse errors
+    }
+  }
+
+  // 画像候補から最良を選択
+  const pickBestImage = (candidates: ImageCandidate[]): ImageCandidate | undefined => {
+    if (candidates.length === 0) return undefined
+    // 面積が最大のものを優先（幅高さ未設定は0扱い、最後の定義も考慮）
+    const scored = candidates.map((c, idx) => ({ c, idx, area: (c.width || 0) * (c.height || 0) }))
+    scored.sort((a, b) => b.area - a.area || a.idx - b.idx)
+    return scored[0].c
+  }
+
+  const chosen = pickBestImage(imageCandidates)
+  if (chosen) {
+    metaData.image = chosen.url
+    if (chosen.width) metaData.width = String(chosen.width)
+    if (chosen.height) metaData.height = String(chosen.height)
+    if (chosen.alt) metaData.alt = chosen.alt
+  }
+
+  // 最低限のURLが無ければbaseUrlを設定（多くのサイトでog:url不在なため）
+  if (!metaData.url) metaData.url = baseUrl
+
+  // 画像が取れない場合はTwitter画像をフォールバック
+  if (!metaData.image && metaData.twitterImage) {
+    metaData.image = metaData.twitterImage
+  }
 
   return metaData
 }

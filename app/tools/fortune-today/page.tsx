@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
+import { generateToolMetadata } from "@/lib/tool-metadata"
 import FortuneTodayClientPage from "./FortuneTodayClientPage"
 import { ViewCounter } from "@/components/view-counter"
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return generateToolMetadata("fortune-today", {
   title: "今日の運勢｜無料占い・星座占い・恋愛運・仕事運・金運 - YokaUnit",
   description: "今日の運勢を無料で占える星座占いツール。12星座別に総合運・恋愛運・仕事運・金運を診断し、ラッキー行動とアドバイスを提供。毎日更新される運勢で今日一日を素敵に過ごそう。登録不要・完全無料でスマホ・PCから今すぐ占える！",
   keywords: [
@@ -76,14 +78,6 @@ export const metadata: Metadata = {
     siteName: "YokaUnit",
     title: "今日の運勢｜無料占い・星座占い・恋愛運・仕事運・金運",
     description: "今日の運勢を無料で占える星座占いツール。12星座別に総合運・恋愛運・仕事運・金運を診断し、ラッキー行動とアドバイスを提供。毎日更新される運勢で今日一日を素敵に過ごそう。",
-    images: [
-      {
-        url: "/ogp/fortune-today.png",
-        width: 1200,
-        height: 630,
-        alt: "今日の運勢占い - 無料星座占いツール",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -91,11 +85,11 @@ export const metadata: Metadata = {
     creator: "@yokaunit",
     title: "今日の運勢🔮無料占い・星座占い・恋愛運・仕事運・金運",
     description: "今日の運勢を無料で占える星座占いツール✨ 12星座別に総合運・恋愛運・仕事運・金運を診断📊 ラッキー行動とアドバイス付き🍀",
-    images: ["/ogp/fortune-today.png"],
   },
   verification: {
     google: "your-google-verification-code",
   },
+  })
 }
 
 export default function FortuneTodayPage() {

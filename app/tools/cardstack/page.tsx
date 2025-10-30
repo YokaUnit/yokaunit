@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { generateToolMetadata } from "@/lib/tool-metadata"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -8,65 +9,58 @@ import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
 import CardStackClientPage from "./CardStackClientPage"
 
-export const metadata: Metadata = {
-  title: "トランプ山札めくるだけ｜ハイ&ロー・ジョーカーロシアンルーレット・マーク予想ゲーム【無料】 - YokaUnit",
-  description: "【完全無料】トランプの山札をめくるだけのシンプルゲーム！ハイ&ロー、ジョーカーロシアンルーレット、マーク予想ゲームが楽しめる。確率論とゲーム理論を学べる教育ツール。完全無料・登録不要で即プレイ可能。",
-  keywords: [
-    "トランプ山札めくるだけ",
-    "ハイ&ロー",
-    "ジョーカーロシアンルーレット",
-    "マーク予想ゲーム",
-    "トランプゲーム",
-    "カードゲーム",
-    "確率ゲーム",
-    "運試し",
-    "オンラインゲーム",
-    "無料ゲーム",
-    "スペード",
-    "ハート",
-    "ダイヤ",
-    "クラブ",
-    "ジョーカー",
-    "暇つぶし",
-    "確率論",
-    "ゲーム理論",
-    "統計学",
-    "数学",
-    "教育ツール",
-    "YokaUnit",
-    "ヨカユニット",
-    "ウェブゲーム",
-    "HTML5ゲーム",
-    "レスポンシブゲーム",
-    "モバイル対応",
-    "スマホゲーム",
-    "タブレット対応",
-    "ブラウザゲーム",
-    "即プレイ",
-    "登録不要"
-  ],
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  return generateToolMetadata("cardstack", {
     title: "トランプ山札めくるだけ｜ハイ&ロー・ジョーカーロシアンルーレット・マーク予想ゲーム【無料】 - YokaUnit",
-    description: "【完全無料】トランプの山札をめくるだけのシンプルゲーム！ハイ&ロー、ジョーカーロシアンルーレット、マーク予想ゲームが楽しめる。確率論とゲーム理論を学べる教育ツール。",
-    url: "https://yokaunit.com/tools/cardstack",
-    siteName: "YokaUnit",
-    images: [
-      {
-        url: "https://yokaunit.com/ogp/cardstack-game.png",
-        width: 1200,
-        height: 630,
-        alt: "トランプ山札めくるだけ - ハイ&ロー・ジョーカーロシアンルーレット・マーク予想ゲーム",
-      },
+    description: "【完全無料】トランプの山札をめくるだけのシンプルゲーム！ハイ&ロー、ジョーカーロシアンルーレット、マーク予想ゲームが楽しめる。確率論とゲーム理論を学べる教育ツール。完全無料・登録不要で即プレイ可能。",
+    keywords: [
+      "トランプ山札めくるだけ",
+      "ハイ&ロー",
+      "ジョーカーロシアンルーレット",
+      "マーク予想ゲーム",
+      "トランプゲーム",
+      "カードゲーム",
+      "確率ゲーム",
+      "運試し",
+      "オンラインゲーム",
+      "無料ゲーム",
+      "スペード",
+      "ハート",
+      "ダイヤ",
+      "クラブ",
+      "ジョーカー",
+      "暇つぶし",
+      "確率論",
+      "ゲーム理論",
+      "統計学",
+      "数学",
+      "教育ツール",
+      "YokaUnit",
+      "ヨカユニット",
+      "ウェブゲーム",
+      "HTML5ゲーム",
+      "レスポンシブゲーム",
+      "モバイル対応",
+      "スマホゲーム",
+      "タブレット対応",
+      "ブラウザゲーム",
+      "即プレイ",
+      "登録不要"
     ],
-    locale: "ja_JP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "トランプ山札めくるだけ｜ハイ&ロー・ジョーカーロシアンルーレット・マーク予想ゲーム【無料】 - YokaUnit",
-    description: "【完全無料】トランプの山札をめくるだけのシンプルゲーム！ハイ&ロー、ジョーカーロシアンルーレット、マーク予想ゲームが楽しめる。確率論とゲーム理論を学べる教育ツール。",
-    images: ["https://yokaunit.com/ogp/cardstack-game.png"],
-  },
+    openGraph: {
+      title: "トランプ山札めくるだけ｜ハイ&ロー・ジョーカーロシアンルーレット・マーク予想ゲーム【無料】 - YokaUnit",
+      description: "【完全無料】トランプの山札をめくるだけのシンプルゲーム！ハイ&ロー、ジョーカーロシアンルーレット、マーク予想ゲームが楽しめる。確率論とゲーム理論を学べる教育ツール。",
+      url: "https://yokaunit.com/tools/cardstack",
+      siteName: "YokaUnit",
+      locale: "ja_JP",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "トランプ山札めくるだけ｜ハイ&ロー・ジョーカーロシアンルーレット・マーク予想ゲーム【無料】 - YokaUnit",
+      description: "【完全無料】トランプの山札をめくるだけのシンプルゲーム！ハイ&ロー、ジョーカーロシアンルーレット、マーク予想ゲームが楽しめる。確率論とゲーム理論を学べる教育ツール。",
+    },
+  })
 }
 
 export default function CardStackPage() {

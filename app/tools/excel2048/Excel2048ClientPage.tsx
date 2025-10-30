@@ -113,24 +113,21 @@ export default function Excel2048ClientPage() {
                 transition={{ duration: 0.5 }}
                 className="mb-8"
               >
-                <ExcelInterface game={game} />
+                <ExcelInterface onGameOpen={game.openGame} />
               </motion.div>
 
               {/* フルスクリーンボタン */}
               <div className="text-center mb-8">
                 <Button
-                  onClick={() => game.setFullscreen(true)}
+                  onClick={() => {
+                    if (!game.isFullscreen) game.toggleFullscreen()
+                  }}
                   variant="outline"
                   className="border-2 border-green-500 text-green-600 hover:bg-green-50 font-bold py-3 px-6 rounded-xl"
                 >
                   <Maximize2 className="h-5 w-5 mr-2" />
                   フルスクリーンでプレイ
                 </Button>
-              </div>
-
-              {/* 関連ツール */}
-              <div className="mt-8">
-                <RelatedTools currentToolSlug="excel2048" />
               </div>
 
               {/* カテゴリツール */}
@@ -157,8 +154,16 @@ export default function Excel2048ClientPage() {
                   <details className="bg-white rounded-lg shadow-md p-6">
                     <summary className="font-bold cursor-pointer">フルスクリーンモード</summary>
                     <p className="mt-3 text-gray-600">
-                      フルスクリーンボタンをクリックすると、より没入感のあるゲーム体験ができます。ESCキーでフルスクリーンを終了できます。
+                      フルスクリーンボタン（または F キー）で切り替えできます。ESC キーではフルスクリーンは終了せず、ゲームウィンドウのみ最小化します。
                     </p>
+                  </details>
+                  <details className="bg-white rounded-lg shadow-md p-6">
+                    <summary className="font-bold cursor-pointer">ESC キーの使い方</summary>
+                    <ul className="mt-3 text-gray-600 list-disc pl-6 space-y-1">
+                      <li>ポップアップ表示のゲームウィンドウ: ESC で最小化/復元</li>
+                      <li>フルスクリーン表示: ESC でゲームウィンドウのみ最小化（フルスクリーンは維持）</li>
+                      <li>フルスクリーンの終了は画面右上ボタンか F キーで実行</li>
+                    </ul>
                   </details>
                   <details className="bg-white rounded-lg shadow-md p-6">
                     <summary className="font-bold cursor-pointer">目標と戦略</summary>
@@ -185,12 +190,34 @@ export default function Excel2048ClientPage() {
                     "偽装ゲーム", "ステルスゲーム", "オフィスゲーム", "休憩時間", "ブラウザゲーム",
                     "無料ゲーム", "パズルゲーム", "数字パズル", "論理ゲーム", "頭脳ゲーム",
                     "YokaUnit", "ヨカユニット", "ウェブゲーム", "HTML5ゲーム", "レスポンシブゲーム",
-                    "モバイル対応", "スマホゲーム", "タブレット対応", "キーボード操作", "フルスクリーン"
+                    "モバイル対応", "スマホゲーム", "タブレット対応", "キーボード操作", "フルスクリーン",
+                    "職場でバレないゲーム", "在宅勤務の息抜き", "サボり防止の小休憩", "こっそり遊べるゲーム",
+                    "生産性向上のマイクロブレイク", "ビジネスツール風ゲーム", "Excel偽装ゲーム"
                   ].map((keyword) => (
                     <span key={keyword} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
                       {keyword}
                     </span>
                   ))}
+                </div>
+              </section>
+
+              {/* 仕事中にバレずに遊べる工夫（SEOセクション） */}
+              <section className="bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-lg mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">🕶️ 仕事中にバレずに遊べる工夫</h2>
+                <div className="space-y-4 text-gray-700">
+                  <p>
+                    Excel風2048は、表計算ソフトの見た目を再現しつつ、短時間でリフレッシュできるマイクロブレイク用のゲームとして設計されています。
+                    タブ切り替えの必要がなく、画面上でも自然に見えるため、周囲の目を気にせず休憩できます。
+                  </p>
+                  <ul className="list-disc pl-6 space-y-1 text-sm">
+                    <li>UIがExcel風で、遠目には作業画面に見える</li>
+                    <li>ESCで即座にウィンドウを最小化（フルスクリーン中は無効）</li>
+                    <li>Fキーで素早くフルスクリーン切替（誤操作防止のためESCでは終了しません）</li>
+                    <li>矢印キー操作でマウス移動が少なく、作業の流れを崩しにくい</li>
+                  </ul>
+                  <p className="text-xs text-gray-500">
+                    注意: 実際の業務規則や就業規則に従い、休憩時間にお楽しみください。
+                  </p>
                 </div>
               </section>
 
@@ -412,6 +439,11 @@ export default function Excel2048ClientPage() {
                   </div>
                 </div>
               </section>
+
+              {/* 最新のツール（ページ最下部に移動） */}
+              <div className="mt-12">
+                <RelatedTools currentToolSlug="excel2048" />
+              </div>
             </div>
           </div>
         </main>
@@ -420,9 +452,42 @@ export default function Excel2048ClientPage() {
       <SiteFooter />
       <ScrollToTop />
       
+      {/* ウィンドウ表示のゲーム */}
+      <GameWindow
+        board={game.board}
+        score={game.score}
+        bestScore={game.bestScore}
+        isGameOver={game.isGameOver}
+        gameVisible={game.gameVisible}
+        gamePosition={game.gamePosition}
+        gameSize={game.gameSize}
+        isMinimized={game.isMinimized}
+        onMouseDown={game.handleMouseDown}
+        onMinimize={game.minimizeGame}
+        onClose={game.closeGame}
+        onResizeMouseDown={game.handleResizeMouseDown}
+        onInitializeGame={game.initializeGame}
+      />
+
       {/* フルスクリーンゲーム */}
-      {game.fullscreen && (
-        <FullscreenGame game={game} />
+      {game.isFullscreen && (
+        <FullscreenGame
+          board={game.board}
+          score={game.score}
+          bestScore={game.bestScore}
+          isGameOver={game.isGameOver}
+          gameVisible={game.gameVisible}
+          gamePosition={game.gamePosition}
+          gameSize={game.gameSize}
+          isMinimized={game.isMinimized}
+          onGameOpen={game.openGame}
+          onMouseDown={game.handleMouseDown}
+          onMinimize={game.minimizeGame}
+          onClose={game.closeGame}
+          onResizeMouseDown={game.handleResizeMouseDown}
+          onInitializeGame={game.initializeGame}
+          onToggleFullscreen={game.toggleFullscreen}
+        />
       )}
     </>
   )

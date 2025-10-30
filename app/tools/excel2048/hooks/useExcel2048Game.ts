@@ -64,14 +64,10 @@ export function useExcel2048Game() {
     (e: KeyboardEvent) => {
       if (!gameVisible) return
 
-      // ESCキーで最小化/復元をトグル
+      // ESCキー: フルスクリーン中でもポップアップを最小化/復元（フルスクリーンは維持）
       if (e.key === "Escape") {
         e.preventDefault()
-        if (isFullscreen) {
-          setIsFullscreen(false)
-        } else {
-          setIsMinimized(!isMinimized)
-        }
+        setIsMinimized(!isMinimized)
         return
       }
 

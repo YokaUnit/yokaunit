@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { createPortal } from "react-dom"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { motion } from "framer-motion"
 import { Maximize2, Minimize2 } from "lucide-react"
@@ -98,6 +99,18 @@ export function Sakura2048Client() {
   const [showColors, setShowColors] = useState(false)
   const [currentTab, setCurrentTab] = useState<"game" | "help">("game")
   const [isFullscreen, setIsFullscreen] = useState(false)
+
+  // フルスクリーン中は背景スクロールを無効化
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.classList.add("overflow-hidden")
+    } else {
+      document.body.classList.remove("overflow-hidden")
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden")
+    }
+  }, [isFullscreen])
 
   // 配列を左に移動・マージ
   function moveLeft(row: number[]): { newRow: number[]; points: number } {
@@ -671,9 +684,26 @@ export function Sakura2048Client() {
           <span className="text-sm">(無題1)(更新) - sakura 2.1.1.3</span>
         </div>
         <div className="flex gap-1">
-          <button className="w-6 h-5 bg-gray-300 hover:bg-gray-400 text-xs">_</button>
-          <button className="w-6 h-5 bg-gray-300 hover:bg-gray-400 text-xs">□</button>
-          <button className="w-6 h-5 bg-red-500 hover:bg-red-600 text-white text-xs">×</button>
+          <button
+            className="w-6 h-5 bg-gray-300 hover:bg-gray-400 text-xs"
+            title="最小化"
+          >
+            _
+          </button>
+          <button
+            onClick={() => setIsFullscreen((prev) => !prev)}
+            className="w-6 h-5 bg-gray-300 hover:bg-gray-400 text-xs"
+            title="最大化/元に戻す"
+          >
+            □
+          </button>
+          <button
+            onClick={() => setIsFullscreen(false)}
+            className="w-6 h-5 bg-red-500 hover:bg-red-600 text-white text-xs"
+            title="閉じる"
+          >
+            ×
+          </button>
         </div>
       </div>
 
@@ -818,8 +848,8 @@ export function Sakura2048Client() {
 
   // 全画面表示の場合
   if (isFullscreen) {
-    return (
-      <div className="fixed inset-0 z-50 bg-gray-100">
+    const overlay = (
+      <div className="fixed inset-0 z-[2147483647] bg-gray-100">
         {/* 全画面時の閉じるボタン */}
         <Button
           onClick={toggleFullscreen}
@@ -830,9 +860,25 @@ export function Sakura2048Client() {
           <Minimize2 className="w-4 h-4 mr-2" />
           全画面終了
         </Button>
+        {/* 予備の全画面終了ボタン（右下） */}
+        <Button
+          onClick={toggleFullscreen}
+          className="absolute bottom-4 right-4 z-10 bg-white/90 hover:bg-white text-gray-700"
+          size="sm"
+          title="全画面を終了 (Fキー)"
+        >
+          <Minimize2 className="w-4 h-4 mr-2" />
+          終了
+        </Button>
         <GameContent />
       </div>
     )
+
+    // Portalでbody直下に描画して、変換やスタッキングコンテキストの影響を受けないようにする
+    if (typeof document !== "undefined") {
+      return createPortal(overlay, document.body)
+    }
+    return overlay
   }
 
   return (

@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
-import { Sakura2048Client } from "./Sakura2048Client"
+import { Sakura2048Client } from "./Sakura2048Client.tsx"
 
 export const metadata: Metadata = {
   title: "サクラ2048｜サクラエディタ風2048ゲーム・仕事中でもバレない隠しゲーム【無料】 - YokaUnit",
@@ -91,7 +91,6 @@ export default function Sakura2048Page() {
           </div>
         </main>
         <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="sakura2048" limit={8} />
-        <RelatedTools currentToolSlug="sakura2048" />
 
         {/* SEO記事セクション */}
         <div className="max-w-4xl mx-auto mt-16">
@@ -314,6 +313,10 @@ export default function Sakura2048Page() {
           </div>
         </div>
 
+        {/* 最新のツールセクションをページ最下部に移動 */}
+        <div className="relative z-0">
+          <RelatedTools currentToolSlug="sakura2048" />
+        </div>
         <SiteFooter />
       </div>
     </>

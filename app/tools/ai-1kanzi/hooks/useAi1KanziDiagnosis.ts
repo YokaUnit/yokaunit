@@ -74,11 +74,12 @@ export function useAi1KanziDiagnosis() {
     setIsAnalyzing(true)
 
     try {
-      // 分析の演出
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // 最小限の演出時間（500ms）を確保しつつ、AI分析を並列で開始
+      const [analysisResult] = await Promise.all([
+        analyzeKanji(answers),
+        new Promise(resolve => setTimeout(resolve, 500)) // 最小限の演出時間
+      ])
       
-      // AI分析を実行
-      const analysisResult = await analyzeKanji(answers)
       setResult(analysisResult)
       setStep('result')
       

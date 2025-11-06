@@ -15,13 +15,13 @@ export function DiagnosisResult({ result, onShare, onReset }: DiagnosisResultPro
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-in slide-in-from-bottom-4 duration-700">
       {/* メイン結果カード */}
-      <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 text-center animate-in fade-in-50 duration-1000">
+      <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-6 sm:p-8 text-center animate-in fade-in-50 duration-1000">
         <div className="mb-6">
-          <div className="text-8xl mb-4 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+          <div className="text-6xl sm:text-8xl mb-4 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
             {result.kanji}
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">診断結果</h2>
-          <p className="text-gray-600">あなたの性格を表す漢字は...</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">診断結果</h2>
+          <p className="text-sm sm:text-base text-gray-600">あなたの性格を表す漢字は...</p>
         </div>
 
         <div className="mb-8">
@@ -32,10 +32,10 @@ export function DiagnosisResult({ result, onShare, onReset }: DiagnosisResultPro
           </div>
         </div>
 
-        <div className="flex gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             onClick={onShare}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-xl text-lg"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 px-6 sm:px-8 rounded-xl text-base sm:text-lg min-h-[44px] touch-manipulation w-full sm:w-auto"
           >
             <Share2 className="h-5 w-5 mr-2" />
             結果をシェア
@@ -43,7 +43,7 @@ export function DiagnosisResult({ result, onShare, onReset }: DiagnosisResultPro
           <Button
             onClick={onReset}
             variant="outline"
-            className="border-2 border-gray-300 text-gray-600 hover:bg-gray-50 font-bold py-4 px-8 rounded-xl text-lg"
+            className="border-2 border-gray-300 text-gray-600 hover:bg-gray-50 font-bold py-4 px-6 sm:px-8 rounded-xl text-base sm:text-lg min-h-[44px] touch-manipulation w-full sm:w-auto"
           >
             <RotateCcw className="h-5 w-5 mr-2" />
             もう一度診断
@@ -52,10 +52,10 @@ export function DiagnosisResult({ result, onShare, onReset }: DiagnosisResultPro
       </Card>
 
       {/* 特徴リスト */}
-      <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 animate-in slide-in-from-left-4 duration-700 delay-300">
-        <h3 className="text-2xl font-bold text-center mb-8">あなたの特徴</h3>
+      <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-6 sm:p-8 animate-in slide-in-from-left-4 duration-700 delay-300">
+        <h3 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8">あなたの特徴</h3>
         
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           {result.characteristics.map((characteristic, index) => (
             <div key={index} className="flex items-center bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg p-4 shadow-sm">
               <Star className="h-5 w-5 text-yellow-500 mr-3 flex-shrink-0" />
@@ -66,16 +66,16 @@ export function DiagnosisResult({ result, onShare, onReset }: DiagnosisResultPro
       </Card>
 
       {/* アドバイスカード */}
-      <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-0 shadow-xl p-8 animate-in slide-in-from-right-4 duration-700 delay-500">
+      <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-0 shadow-xl p-6 sm:p-8 animate-in slide-in-from-right-4 duration-700 delay-500">
         <div className="text-center mb-6">
-          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lightbulb className="h-8 w-8 text-white" />
+          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Lightbulb className="h-7 w-7 sm:h-8 sm:w-8 text-white" />
           </div>
-          <h3 className="text-2xl font-bold text-orange-800 mb-2">この性格を活かすには</h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-orange-800 mb-2">この性格を活かすには</h3>
         </div>
         
-        <div className="bg-white/70 rounded-xl p-6">
-          <p className="text-orange-700 leading-relaxed text-lg">
+        <div className="bg-white/70 rounded-xl p-4 sm:p-6">
+          <p className="text-orange-700 leading-relaxed text-base sm:text-lg">
             「{result.kanji}」という漢字が表すように、あなたは{result.reason}。
             この個性を活かして、自分らしい人生を歩んでいきましょう。周囲の人々も、あなたの「{result.kanji}」の魅力に気づいているはずです。
           </p>
@@ -83,10 +83,10 @@ export function DiagnosisResult({ result, onShare, onReset }: DiagnosisResultPro
       </Card>
 
       {/* シェア用カード風デザイン */}
-      <Card className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-xl p-8 text-center">
+      <Card className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-xl p-6 sm:p-8 text-center">
         <div className="mb-4">
-          <div className="text-7xl font-bold mb-3">{result.kanji}</div>
-          <h3 className="text-2xl font-bold mb-2">AIが診断！あなたの性格を漢字1文字で表すと？</h3>
+          <div className="text-5xl sm:text-7xl font-bold mb-3">{result.kanji}</div>
+          <h3 className="text-lg sm:text-2xl font-bold mb-2">AIが診断！あなたの性格を漢字1文字で表すと？</h3>
         </div>
         
         <div className="bg-white/20 rounded-xl p-6 mb-6">

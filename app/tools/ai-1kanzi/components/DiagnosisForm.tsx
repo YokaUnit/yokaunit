@@ -29,24 +29,56 @@ export function DiagnosisForm({
       <div className="max-w-2xl mx-auto">
         <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 text-center">
           <div className="mb-6">
-            <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Brain className="h-8 w-8 text-white animate-spin" />
+            <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+              <Brain className="h-10 w-10 text-white animate-spin" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2 animate-pulse">
               AI分析中...
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-4">
               あなたの性格を漢字1文字で診断しています
             </p>
           </div>
           
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-            <div className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full animate-pulse w-full" />
+          {/* アニメーション付きプログレスバー */}
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-4 overflow-hidden relative">
+            <div 
+              className="bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 h-3 rounded-full relative overflow-hidden"
+              style={{
+                animation: 'progress 1.5s ease-in-out infinite',
+                width: '100%'
+              }}
+            >
+              <div 
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                style={{
+                  animation: 'shimmer 1.5s ease-in-out infinite',
+                  transform: 'translateX(-100%)'
+                }}
+              />
+            </div>
           </div>
           
-          <p className="text-sm text-gray-500">
-            しばらくお待ちください...
-          </p>
+          <div className="space-y-2">
+            <p className="text-sm text-gray-600 font-semibold">
+              回答を分析中...
+            </p>
+            <p className="text-xs text-gray-500">
+              もうすぐ結果が表示されます
+            </p>
+          </div>
+          
+          <style dangerouslySetInnerHTML={{__html: `
+            @keyframes progress {
+              0% { width: 0%; }
+              50% { width: 70%; }
+              100% { width: 100%; }
+            }
+            @keyframes shimmer {
+              0% { transform: translateX(-100%); }
+              100% { transform: translateX(200%); }
+            }
+          `}} />
         </Card>
       </div>
     )
@@ -89,10 +121,10 @@ export function DiagnosisForm({
             <button
               key={option.id}
               onClick={() => onUpdateAnswer(question.id, option.id)}
-              className={`w-full p-3 sm:p-4 text-left rounded-xl border-2 transition-all duration-200 ${
+              className={`w-full p-4 sm:p-4 text-left rounded-xl border-2 transition-all duration-200 touch-manipulation min-h-[44px] ${
                 currentAnswer === option.id
                   ? 'border-purple-500 bg-purple-50 shadow-md'
-                  : 'border-gray-200 hover:border-purple-300 hover:bg-purple-25'
+                  : 'border-gray-200 hover:border-purple-300 hover:bg-purple-25 active:bg-purple-100'
               }`}
             >
               <div className="flex items-center">
@@ -120,7 +152,7 @@ export function DiagnosisForm({
             onClick={onPreviousQuestion}
             variant="outline"
             disabled={currentQuestion === 0}
-            className="border-2 border-gray-300 text-gray-600 hover:bg-gray-50 h-10 sm:h-10 h-9 px-3"
+            className="border-2 border-gray-300 text-gray-600 hover:bg-gray-50 h-11 sm:h-10 min-h-[44px] px-4 touch-manipulation"
           >
             <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
             <span className="hidden sm:inline">前の質問</span>
@@ -129,7 +161,7 @@ export function DiagnosisForm({
           <Button
             onClick={onNextQuestion}
             disabled={!currentAnswer}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold px-4 sm:px-6 h-10 sm:h-10 h-9"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold px-4 sm:px-6 h-11 sm:h-10 min-h-[44px] touch-manipulation"
           >
             {currentQuestion === questions.length - 1 ? (
               <>

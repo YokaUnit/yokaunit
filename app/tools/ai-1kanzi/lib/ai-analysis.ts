@@ -353,38 +353,35 @@ export async function analyzeKanji(answers: DiagnosisAnswers): Promise<Diagnosis
   try {
     // 回答テキストを構築（AI分析用）
     const responseTexts: string[] = []
+    let totalScore = 0
+    let questionCount = 0
+
+    // スコア計算とテキスト構築を同時に実行
     questions.forEach(question => {
       const answer = answers[question.id]
       if (answer) {
         const option = question.options.find(opt => opt.id === answer)
         if (option) {
           responseTexts.push(option.text)
+          totalScore += option.score
+          questionCount++
         }
       }
     })
     
     const combinedText = responseTexts.join(' ')
     
-    // AI感情分析を実行
-    const sentimentAnalysis = await analyzeTextSentiment(combinedText)
-    
-    // 各回答のスコアを計算
-    let totalScore = 0
-    let questionCount = 0
-
-    questions.forEach(question => {
-      const answer = answers[question.id]
-      if (answer) {
-        const option = question.options.find(opt => opt.id === answer)
-        if (option) {
-          totalScore += option.score
-          questionCount++
-        }
-      }
-    })
-
     // 平均スコアを計算（1-9の範囲）
     const averageScore = questionCount > 0 ? totalScore / questionCount : 5
+    
+    // AI感情分析を非同期で実行（タイムアウト付きで高速化）
+    const sentimentAnalysisPromise = analyzeTextSentiment(combinedText)
+    const timeoutPromise = new Promise<{ label: string; score: number }>(resolve => 
+      setTimeout(() => resolve({ label: 'NEUTRAL', score: 0.5 }), 800)
+    )
+    
+    // 800ms以内に完了しない場合はタイムアウト
+    const sentimentAnalysis = await Promise.race([sentimentAnalysisPromise, timeoutPromise])
     
     // スコアに基づいて漢字カテゴリを決定
     let category: keyof typeof kanjiMap

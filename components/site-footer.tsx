@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Instagram, MessageCircle, Building2, Crown, Wrench, HelpCircle, Mail, FileText } from "lucide-react"
+import { Instagram, MessageCircle, Youtube, Building2, Crown, Wrench, HelpCircle, Mail, FileText } from "lucide-react"
 import { motion } from "framer-motion"
 
 export function SiteFooter() {
@@ -44,6 +44,15 @@ export function SiteFooter() {
                 aria-label="Threads"
               >
                 <MessageCircle className="h-6 w-6" />
+              </a>
+              <a
+                href="https://youtube.com/@hisashi-web?si=xluoFYfrjor_4un4"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-red-500 transition-colors"
+                aria-label="YouTube"
+              >
+                <Youtube className="h-6 w-6" />
               </a>
             </div>
           </motion.div>

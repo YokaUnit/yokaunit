@@ -29,39 +29,36 @@ export function useConnect4Game() {
     })
   }, [])
 
-  const makeMove = useCallback(
-    (col: number) => {
-      if (gameState.status !== "playing") return false
-      if (isColumnFull(gameState.board, col)) return false
+  const makeMove = useCallback((col: number) => {
+    setGameState((prevState) => {
+      if (prevState.status !== "playing") return prevState
+      if (isColumnFull(prevState.board, col)) return prevState
 
-      const newBoard = gameState.board.map((row) => [...row])
+      const newBoard = prevState.board.map((row) => [...row])
       const row = getNextEmptyRow(newBoard, col)
 
-      if (row === -1) return false
+      if (row === -1) return prevState
 
-      newBoard[row][col] = gameState.currentPlayer
+      newBoard[row][col] = prevState.currentPlayer
 
-      const winner = checkWinner(newBoard, row, col, gameState.currentPlayer)
+      const winner = checkWinner(newBoard, row, col, prevState.currentPlayer)
       const boardFull = isBoardFull(newBoard)
 
       let newStatus: GameStatus = "playing"
       if (winner) {
-        newStatus = gameState.currentPlayer === "red" ? "red-wins" : "yellow-wins"
+        newStatus = prevState.currentPlayer === "red" ? "red-wins" : "yellow-wins"
       } else if (boardFull) {
         newStatus = "draw"
       }
 
-      setGameState({
+      return {
         board: newBoard,
-        currentPlayer: newStatus === "playing" ? (gameState.currentPlayer === "red" ? "yellow" : "red") : gameState.currentPlayer,
+        currentPlayer: newStatus === "playing" ? (prevState.currentPlayer === "red" ? "yellow" : "red") : prevState.currentPlayer,
         status: newStatus,
         lastMove: { row, col },
-      })
-
-      return true
-    },
-    [gameState]
-  )
+      }
+    })
+  }, [])
 
   return {
     gameState,

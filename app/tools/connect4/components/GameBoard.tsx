@@ -40,19 +40,19 @@ export function GameBoard({
   const CELL_GAP = isMobile ? CELL_GAP_MOBILE : CELL_GAP_DESKTOP
   const BOARD_PADDING = isMobile ? BOARD_PADDING_MOBILE : BOARD_PADDING_DESKTOP
 
-  const getColumnTopPosition = useCallback(
-    (col: number) => {
-      return BOARD_PADDING + col * (CELL_SIZE + CELL_GAP) + CELL_SIZE / 2
-    },
-    [CELL_SIZE, CELL_GAP, BOARD_PADDING]
-  )
-
   const getCellPosition = useCallback(
     (row: number, col: number) => {
       return {
         x: BOARD_PADDING + col * (CELL_SIZE + CELL_GAP) + CELL_SIZE / 2,
         y: BOARD_PADDING + row * (CELL_SIZE + CELL_GAP) + CELL_SIZE / 2,
       }
+    },
+    [CELL_SIZE, CELL_GAP, BOARD_PADDING]
+  )
+
+  const getColumnCenterX = useCallback(
+    (col: number) => {
+      return BOARD_PADDING + col * (CELL_SIZE + CELL_GAP) + CELL_SIZE / 2
     },
     [CELL_SIZE, CELL_GAP, BOARD_PADDING]
   )
@@ -69,16 +69,27 @@ export function GameBoard({
     [board]
   )
 
+  const boardWidth = COLS * CELL_SIZE + (COLS - 1) * CELL_GAP + BOARD_PADDING * 2
+  const boardHeight = ROWS * CELL_SIZE + (ROWS - 1) * CELL_GAP + BOARD_PADDING * 2
+  const buttonRowHeight = isMobile ? 50 : 70
+
   return (
-    <div className="relative bg-blue-600 rounded-lg p-3 md:p-5 shadow-2xl mt-8 md:mt-12">
-      {/* 列のボタン（上からコインを落とす） */}
-      <div className={`absolute ${isMobile ? "-top-10" : "-top-16"} left-0 right-0 flex justify-center gap-1 md:gap-2`} style={{ paddingLeft: isMobile ? '8px' : '0', paddingRight: isMobile ? '8px' : '0' }}>
+    <div className="relative mx-auto" style={{ width: boardWidth, paddingTop: buttonRowHeight }}>
+      {/* ボタン行（GameBoardの上に配置） */}
+      <div 
+        className="absolute left-0 right-0 flex justify-center items-center z-20"
+        style={{ 
+          top: 0,
+          width: boardWidth,
+          height: buttonRowHeight
+        }}
+      >
         {Array(COLS)
           .fill(null)
           .map((_, col) => {
             const isFull = board[0][col] !== null
             const isHovered = hoveredColumn === col
-            const nextRow = getNextEmptyRow(col)
+            const columnCenterX = getColumnCenterX(col)
 
             return (
               <button
@@ -87,7 +98,7 @@ export function GameBoard({
                 onMouseEnter={() => setHoveredColumn(col)}
                 onMouseLeave={() => setHoveredColumn(null)}
                 disabled={isFull || isAnimating}
-                className={`${isMobile ? "w-9 h-9 border-2" : "w-14 h-14 border-4"} rounded-full transition-all flex-shrink-0 ${
+                className={`${isMobile ? "w-9 h-9 border-2" : "w-14 h-14 border-4"} rounded-full transition-all flex-shrink-0 absolute ${
                   isFull
                     ? "bg-gray-400 border-gray-500 cursor-not-allowed"
                     : isHovered
@@ -95,6 +106,8 @@ export function GameBoard({
                       : "bg-white border-gray-300 hover:bg-gray-100 cursor-pointer"
                 }`}
                 style={{
+                  left: columnCenterX - (isMobile ? 18 : 28),
+                  top: isMobile ? 5 : 10,
                   backgroundColor: isFull
                     ? "#9ca3af"
                     : isHovered
@@ -119,12 +132,13 @@ export function GameBoard({
           })}
       </div>
 
-      {/* ゲームボード */}
+      {/* ゲームボード（青い枠） */}
       <div
-        className="relative"
+        className="relative bg-blue-600 rounded-lg p-3 md:p-5 shadow-2xl"
         style={{
-          width: COLS * CELL_SIZE + (COLS - 1) * CELL_GAP + BOARD_PADDING * 2,
-          height: ROWS * CELL_SIZE + (ROWS - 1) * CELL_GAP + BOARD_PADDING * 2,
+          width: boardWidth,
+          height: boardHeight,
+          marginTop: 0,
         }}
       >
         {/* ボードの背景（穴） */}
@@ -135,7 +149,7 @@ export function GameBoard({
               .fill(null)
               .map((_, col) => {
                 const pos = getCellPosition(row, col)
-                // コインが通過中のセルのみ色付け（目標位置は含めない）
+                // コインが通過中のセルのみ色付け（目標位置も含む）
                 const isFalling = activeCoin && activeCoin.column === col && fallingCells.includes(row)
                 const coinColor = activeCoin?.player === "red" ? "#ef4444" : "#eab308"
                 
@@ -146,11 +160,11 @@ export function GameBoard({
                     initial={{ backgroundColor: "#1e3a8a" }}
                     animate={{
                       backgroundColor: isFalling ? coinColor : "#1e3a8a",
-                      opacity: isFalling ? 0.4 : 1,
-                      scale: isFalling ? 1.05 : 1,
+                      opacity: isFalling ? 0.7 : 1,
+                      scale: isFalling ? 1.1 : 1,
                     }}
                     transition={{
-                      duration: 0.1,
+                      duration: 0.15,
                       ease: "easeInOut",
                     }}
                     style={{
@@ -165,11 +179,11 @@ export function GameBoard({
               })
           )}
 
-        {/* 配置済みのコイン（アニメーション中のコインの位置は除外） */}
+        {/* 配置済みのコイン */}
         {board.map((row, rowIndex) =>
           row.map((player, colIndex) => {
             if (!player) return null
-            // アニメーション中のコインの位置は表示しない（アニメーション中のコインが表示されるため）
+            // アニメーション中のコインの位置は表示しない（アニメーション完了後にmakeMoveでボードに追加される）
             if (activeCoin && activeCoin.row === rowIndex && activeCoin.column === colIndex) {
               return null
             }
@@ -204,52 +218,7 @@ export function GameBoard({
             )
           })
         )}
-
-        {/* 落下中のコイン（上から表示） */}
-        {activeCoin && (() => {
-          const borderWidth = isMobile ? 2 : 3
-          const highlightSize = isMobile ? 8 : 16
-          return (
-            <motion.div
-              className="absolute rounded-full shadow-lg"
-              initial={{
-                x: getCellPosition(0, activeCoin.column).x - CELL_SIZE / 2,
-                y: -CELL_SIZE - (isMobile ? 10 : 20),
-                opacity: 1,
-              }}
-              animate={{
-                x: getCellPosition(activeCoin.row, activeCoin.column).x - CELL_SIZE / 2,
-                y: getCellPosition(activeCoin.row, activeCoin.column).y - CELL_SIZE / 2,
-                opacity: 1,
-              }}
-              transition={{
-                duration: 0.4,
-                ease: "easeIn",
-              }}
-              style={{
-                width: CELL_SIZE,
-                height: CELL_SIZE,
-                backgroundColor: activeCoin.player === "red" ? "#ef4444" : "#eab308",
-                border: `${borderWidth}px solid ${activeCoin.player === "red" ? "#dc2626" : "#ca8a04"}`,
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.3)",
-                zIndex: 100,
-              }}
-              onAnimationComplete={onCoinLanded}
-            >
-              <div
-                className="absolute rounded-full bg-white/40 blur-sm"
-                style={{
-                  top: isMobile ? 4 : 8,
-                  left: isMobile ? 4 : 8,
-                  width: highlightSize,
-                  height: highlightSize,
-                }}
-              />
-            </motion.div>
-          )
-        })()}
       </div>
     </div>
   )
 }
-

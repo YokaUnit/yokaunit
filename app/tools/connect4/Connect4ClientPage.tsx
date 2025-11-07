@@ -43,13 +43,14 @@ export default function Connect4ClientPage() {
       row: targetRow,
     })
 
-      // 落下中のセルを順番に色付け（コインが通過するセル、目標位置は含めない）
-      setFallingCells([])
-      const fallDuration = 400 // 落下時間（ミリ秒）
-      const delayPerRow = fallDuration / (targetRow + 1)
+    // 落下中のセルを順番に色付け（コインが通過するセル、目標位置も含む）
+    setFallingCells([])
+    const fallDuration = 400 // 落下時間（ミリ秒）
+    const totalRows = targetRow + 1 // 目標位置も含む
+    const delayPerRow = fallDuration / totalRows
     
-    // コインが通過するセルを順番に色付け（上から下へ、目標位置は除く）
-    for (let row = 0; row < targetRow; row++) {
+    // コインが通過するセルを順番に色付け（上から下へ、目標位置も含む）
+    for (let row = 0; row <= targetRow; row++) {
       setTimeout(() => {
         setFallingCells((prev) => {
           // 前のセルを削除して、現在のセルのみを表示
@@ -58,17 +59,20 @@ export default function Connect4ClientPage() {
       }, row * delayPerRow)
     }
     
-    // 最終位置に到達したら、セルの色付けをクリア
+    // 最終位置に到達したら、セルの色付けをクリアしてコインを配置
+    // クロージャーでcolとcurrentPlayerを保持して確実にmakeMoveを呼び出す
     setTimeout(() => {
+      setFallingCells([])
+      makeMove(col)
+      setIsAnimating(false)
+      setActiveCoin(null)
       setFallingCells([])
     }, fallDuration)
   }
 
   const handleCoinLanded = () => {
-    // アニメーション完了後にmakeMoveを呼び出してボードに配置
-    if (activeCoin) {
-      makeMove(activeCoin.column)
-    }
+    // この関数はGameBoardから呼ばれる可能性があるため、残しておく
+    // ただし、メインの処理はhandleColumnClick内のsetTimeoutで行う
     setIsAnimating(false)
     setActiveCoin(null)
     setFallingCells([])
@@ -124,7 +128,7 @@ export default function Connect4ClientPage() {
 
             <div className="max-w-4xl mx-auto">
               <Card>
-                <CardHeader>
+                <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle className="text-2xl">ゲーム</CardTitle>
@@ -136,9 +140,9 @@ export default function Connect4ClientPage() {
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent style={{ paddingTop: '40px', paddingBottom: '20px', overflow: 'visible' }}>
                   {/* ステータス表示 */}
-                  <div className="mb-12 md:mb-16 text-center">
+                  <div className="mb-6 md:mb-8 text-center">
                     <div className={`text-xl md:text-2xl font-bold ${getStatusColor()}`}>{getStatusMessage()}</div>
                     {gameState.status !== "playing" && (
                       <div className="mt-2">
@@ -148,7 +152,7 @@ export default function Connect4ClientPage() {
                   </div>
 
                   {/* ゲームボード */}
-                  <div className="flex justify-center px-2 md:px-0 overflow-visible">
+                  <div className="flex justify-center" style={{ overflow: 'visible', position: 'relative' }}>
                     <GameBoard
                       board={gameState.board}
                       currentPlayer={gameState.currentPlayer}

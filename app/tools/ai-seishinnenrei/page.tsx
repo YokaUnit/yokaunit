@@ -5,9 +5,9 @@ import { ViewCounter } from "@/components/view-counter"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-seishinnenrei", {
-    title: "AI精神年齢診断｜あなたの心理年齢は何歳？無料でAIが即診断",
+    title: "AI精神年齢診断｜心理年齢を5つの質問で即チェック【無料・登録不要】",
     description:
-      "AIがあなたの精神年齢（心理年齢）を即診断。5つの質問に答えるだけで数値化し、実年齢との差や特徴もわかる。完全無料・登録不要・スマホ対応。",
+      "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
     keywords:
       "AI精神年齢診断,心理年齢,メンタル年齢,精神年齢,無料診断,心理テスト,年齢診断,AI診断,心理分析,メンタル診断,精神年齢テスト,心理年齢チェック,あなたの心理年齢は何歳,性格診断,自己分析",
     authors: [{ name: "YokaUnit", url: "https://yokaunit.com" }],
@@ -32,17 +32,17 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "ja_JP",
       url: "https://yokaunit.com/tools/ai-seishinnenrei",
       siteName: "YokaUnit",
-      title: "AI精神年齢診断｜あなたの心理年齢は何歳？無料でAIが即診断",
+      title: "AI精神年齢診断｜心理年齢を5つの質問で即チェック【無料・登録不要】",
       description:
-        "AIがあなたの精神年齢（心理年齢）を即診断。5つの質問に答えるだけで数値化し、実年齢との差や特徴もわかる。完全無料・登録不要・スマホ対応。",
+        "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
     },
     twitter: {
       card: "summary_large_image",
       site: "@yokaunit",
       creator: "@yokaunit",
-      title: "AI精神年齢診断｜あなたの心理年齢は何歳？無料でAIが即診断",
+      title: "AI精神年齢診断｜心理年齢を5つの質問で即チェック【無料・登録不要】",
       description:
-        "AIがあなたの精神年齢（心理年齢）を即診断。5つの質問に答えるだけで数値化し、実年齢との差や特徴もわかる。完全無料・登録不要・スマホ対応。",
+        "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
     },
     verification: {
       google: "your-google-verification-code",
@@ -61,7 +61,7 @@ export default function AiSeishinnenreiPage() {
             "@type": "WebApplication",
             name: "AI精神年齢診断",
             description:
-              "AIがあなたの精神年齢（心理年齢）を即診断。5つの質問に答えるだけで数値化し、実年齢との差や特徴もわかる。完全無料・登録不要・スマホ対応。",
+              "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
             url: "https://yokaunit.com/tools/ai-seishinnenrei",
             applicationCategory: "LifestyleApplication",
             operatingSystem: "Any",

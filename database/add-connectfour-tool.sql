@@ -107,3 +107,4 @@ INSERT INTO tools (
 -- 確認用クエリ
 SELECT * FROM tools WHERE slug = 'connectfour';
 
+

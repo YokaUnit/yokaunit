@@ -39,7 +39,7 @@ export default function AiSeishinnenreiClientPage() {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "AI精神年齢診断",
-      "description": "AI技術を使用してユーザーの精神年齢・心理年齢を分析・診断する無料ツール",
+      "description": "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
       "url": "https://yokaunit.com/tools/ai-seishinnenrei",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "Any",

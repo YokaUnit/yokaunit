@@ -148,7 +148,7 @@ export default function Connect4ClientPage() {
                   </div>
 
                   {/* ゲームボード */}
-                  <div className="flex justify-center">
+                  <div className="flex justify-center px-2 md:px-0 overflow-visible">
                     <GameBoard
                       board={gameState.board}
                       currentPlayer={gameState.currentPlayer}

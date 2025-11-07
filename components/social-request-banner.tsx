@@ -20,32 +20,32 @@ export function SocialRequestBanner() {
               SNSで気軽にリクエストしてください。あなたのアイデアが無料で次のツールになるかも！
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap justify-center gap-1.5 md:gap-3">
             <a
               href="https://www.instagram.com/hisashi_web?igsh=MWxlaDdlcGg1YXk5cA%3D%3D&utm_source=qr"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+              className="flex items-center gap-1 md:gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
             >
-              <Instagram className="h-4 w-4" />
+              <Instagram className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
               <span>Instagram</span>
             </a>
             <a
               href="https://www.threads.com/@hisashi_web?igshid=NTc4MTIwNjQ2YQ=="
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+              className="flex items-center gap-1 md:gap-1.5 bg-black text-white px-2 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
             >
-              <MessageCircle className="h-4 w-4" />
+              <MessageCircle className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
               <span>Threads</span>
             </a>
             <a
               href="https://youtube.com/@hisashi-web?si=xluoFYfrjor_4un4"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+              className="flex items-center gap-1 md:gap-1.5 bg-red-600 text-white px-2 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
             >
-              <Youtube className="h-4 w-4" />
+              <Youtube className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
               <span>YouTube</span>
             </a>
           </div>

@@ -72,7 +72,7 @@ export function GameBoard({
   return (
     <div className="relative bg-blue-600 rounded-lg p-3 md:p-5 shadow-2xl mt-8 md:mt-12">
       {/* 列のボタン（上からコインを落とす） */}
-      <div className={`absolute ${isMobile ? "-top-12" : "-top-16"} left-0 right-0 flex justify-center gap-1 md:gap-2`}>
+      <div className={`absolute ${isMobile ? "-top-10" : "-top-16"} left-0 right-0 flex justify-center gap-1 md:gap-2`} style={{ paddingLeft: isMobile ? '8px' : '0', paddingRight: isMobile ? '8px' : '0' }}>
         {Array(COLS)
           .fill(null)
           .map((_, col) => {
@@ -87,7 +87,7 @@ export function GameBoard({
                 onMouseEnter={() => setHoveredColumn(col)}
                 onMouseLeave={() => setHoveredColumn(null)}
                 disabled={isFull || isAnimating}
-                className={`${isMobile ? "w-10 h-10 border-2" : "w-14 h-14 border-4"} rounded-full transition-all ${
+                className={`${isMobile ? "w-9 h-9 border-2" : "w-14 h-14 border-4"} rounded-full transition-all flex-shrink-0 ${
                   isFull
                     ? "bg-gray-400 border-gray-500 cursor-not-allowed"
                     : isHovered

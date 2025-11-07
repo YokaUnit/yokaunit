@@ -79,21 +79,21 @@ export function UpdatedToolsShowcase() {
     fetchFavorites()
   }, [isLoggedIn])
 
-  // 更新順ツールを取得（updated_atの降順、デバウンス付き）
+  // 更新順ツールを取得（created_atの降順、デバウンス付き）
   useEffect(() => {
     const fetchUpdatedTools = async () => {
       setLoading(true)
       setError(null)
       try {
-        // getToolsを使用してupdated_atの降順でソート
+        // getToolsを使用してcreated_atの降順でソート
         const { tools: updatedToolsData } = await getTools({
           limit: displayCount + 5, // 多めに取得してからソート
           userRole: "basic", // プレミアムツールと非公開ツールを除外
         })
         
-        // updated_atで降順ソート（最新が先頭）
+        // created_atで降順ソート（最新が先頭）
         const sortedTools = updatedToolsData.sort((a, b) => 
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         )
         
         // 指定された数まで制限
@@ -156,7 +156,7 @@ export function UpdatedToolsShowcase() {
         })
         
         const sortedTools = updatedToolsData.sort((a, b) => 
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         )
         
         // 指定された数まで制限

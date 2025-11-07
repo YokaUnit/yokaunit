@@ -102,9 +102,9 @@ export function ToolsShowcase() {
           })
         ])
         
-        // 新着ツールは updated_at で降順ソート（最新が先頭）- いいね数順は使わない
+        // 新着ツールは created_at で降順ソート（最新が先頭）- いいね数順は使わない
         const sortedNewTools = newResult.tools.sort((a, b) => 
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         )
         
         setPopularTools(popularResult.tools)
@@ -172,9 +172,9 @@ export function ToolsShowcase() {
           })
         ])
         
-        // 新着ツールは updated_at で降順ソート（最新が先頭）- いいね数順は使わない
+        // 新着ツールは created_at で降順ソート（最新が先頭）- いいね数順は使わない
         const sortedNewTools = updatedNewResult.tools.sort((a, b) => 
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         )
         
         setPopularTools(updatedPopularResult.tools)

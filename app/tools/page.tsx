@@ -120,7 +120,7 @@ export default function ToolsPage() {
     if (activeTab === "popular") {
       filtered = filtered.filter((tool) => tool.is_popular)
     } else if (activeTab === "new") {
-      // 新着タブは is_new フラグに関係なく全ツールを updated_at 順で表示
+      // 新着タブは is_new フラグに関係なく全ツールを created_at 順で表示
       // フィルタリングはせず、後でソートのみ行う
     } else if (activeTab === "premium") {
       filtered = filtered.filter((tool) => tool.is_premium)
@@ -135,8 +135,8 @@ export default function ToolsPage() {
     if (sortOrder === "name") {
       filtered.sort((a, b) => a.title.localeCompare(b.title))
     } else if (sortOrder === "new" || activeTab === "new") {
-      // 新着タブまたは新着順ソートの場合は updated_at で降順ソート
-      filtered.sort((a, b) => new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime())
+      // 新着タブまたは新着順ソートの場合は created_at で降順ソート
+      filtered.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
     }
     // popularはデフォルトの順序を維持
 

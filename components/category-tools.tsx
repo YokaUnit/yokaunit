@@ -70,9 +70,9 @@ export function CategoryTools({
           userRole: "basic", // プレミアム・非公開を除外
         })
 
-        // RelatedTools/UpdatedToolsShowcase と同じく updated_at 降順で確定させる
+        // RelatedTools/UpdatedToolsShowcase と同じく created_at 降順で確定させる
         const sortedTools = toolsData.sort((a, b) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         )
 
         const filteredTools = currentToolSlug

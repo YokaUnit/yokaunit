@@ -119,7 +119,7 @@ export async function getLatestTools(limit: number = 15): Promise<Tool[]> {
     .eq("is_active", true)
     .eq("is_premium", false)
     .eq("is_private", false)
-    .order("updated_at", { ascending: false })
+    .order("created_at", { ascending: false })
     .limit(limit)
 
   if (error) {

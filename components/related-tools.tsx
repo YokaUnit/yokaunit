@@ -166,7 +166,20 @@ export function RelatedTools({
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {Array.from({ length: limit }).map((_, i) => (
-              <div key={i} className="bg-gray-200 animate-pulse rounded-lg aspect-video"></div>
+              <Card key={i} className="overflow-hidden border border-gray-100 shadow-sm bg-white">
+                <div className="relative aspect-video bg-gray-200 animate-pulse" />
+                <CardContent className="p-3 space-y-3">
+                  <div className="h-4 bg-gray-200/80 animate-pulse rounded w-3/4" />
+                  <div className="space-y-2">
+                    <div className="h-3 bg-gray-200/70 animate-pulse rounded w-full" />
+                    <div className="h-3 bg-gray-200/70 animate-pulse rounded w-5/6" />
+                  </div>
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="h-5 bg-gray-200/80 animate-pulse rounded w-16" />
+                    <div className="h-4 bg-gray-200/80 animate-pulse rounded w-10" />
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

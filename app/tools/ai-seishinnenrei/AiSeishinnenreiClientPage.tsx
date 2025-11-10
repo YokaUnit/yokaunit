@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { Brain, Sparkles, TrendingUp, RotateCcw, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -31,117 +31,6 @@ export default function AiSeishinnenreiClientPage() {
   } = useAiSeishinnenreiDiagnosis()
 
   const [copied, setCopied] = useState(false)
-
-  // SEO設定を強化
-  useEffect(() => {
-    // JSON-LD構造化データ（WebApplication）
-    const webAppStructuredData = {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "AI精神年齢診断",
-      "description": "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
-      "url": "https://yokaunit.com/tools/ai-seishinnenrei",
-      "applicationCategory": "LifestyleApplication",
-      "operatingSystem": "Any",
-      "browserRequirements": "HTML5, JavaScript",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "JPY"
-      },
-      "featureList": [
-        "簡単5つの選択式質問",
-        "AI分析による精神年齢診断",
-        "実年齢との詳細比較",
-        "個別化されたアドバイス",
-        "完全無料・登録不要",
-        "スマホ・PC対応",
-        "結果シェア機能"
-      ],
-      "screenshot": "https://yokaunit.com/ogp/ai-seishinnenrei-diagnosis.png",
-      "author": {
-        "@type": "Organization",
-        "name": "YokaUnit",
-        "url": "https://yokaunit.com"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "YokaUnit",
-        "url": "https://yokaunit.com"
-      },
-      "datePublished": "2024-01-01",
-      "dateModified": new Date().toISOString().split('T')[0]
-    }
-
-    // 構造化データ（FAQ）
-    const faqStructuredData = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "AI精神年齢診断は無料ですか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "はい、完全無料でご利用いただけます。登録も不要で、すぐに診断を開始できます。"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "精神年齢診断の精度はどの程度ですか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "AI分析と心理学的アプローチを組み合わせた独自のアルゴリズムにより、高精度な精神年齢診断を提供しています。"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "どのような質問に答えるのですか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "生活スタイル、趣味、コミュニケーション、ストレス対処、将来観の5つの選択式質問に答えるだけです。約2分で完了します。"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "精神年齢と実年齢の違いは何ですか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "実年齢は生まれてからの年数、精神年齢は心理的成熟度を表します。考え方や価値観、行動パターンから精神的な年齢を測定します。"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "診断結果は信頼できますか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "心理学的理論に基づいたAI分析システムを使用しており、参考値として信頼性の高い結果を提供しています。"
-          }
-        }
-      ]
-    }
-
-    // WebApplication構造化データを挿入
-    const webAppScript = document.createElement("script")
-    webAppScript.type = "application/ld+json"
-    webAppScript.textContent = JSON.stringify(webAppStructuredData)
-    document.head.appendChild(webAppScript)
-
-    // FAQ構造化データを挿入
-    const faqScript = document.createElement("script")
-    faqScript.type = "application/ld+json"
-    faqScript.textContent = JSON.stringify(faqStructuredData)
-    document.head.appendChild(faqScript)
-
-    return () => {
-      if (document.head.contains(webAppScript)) {
-        document.head.removeChild(webAppScript)
-      }
-      if (document.head.contains(faqScript)) {
-        document.head.removeChild(faqScript)
-      }
-    }
-  }, [])
 
   const handleShare = async () => {
     const url = window.location.href

@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import CardStackClientPage from "./CardStackClientPage"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -388,6 +389,7 @@ export default function CardStackPage() {
         </main>
       </div>
       
+      <ScrollToTop />
       <SiteFooter />
     </>
   )

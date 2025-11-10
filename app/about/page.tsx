@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Info, Heart, Lightbulb, Users, Mail, ExternalLink, Clock, Shield, Smartphone, Zap, Globe, Code, MessageCircle, HelpCircle, Calendar, Star, Award, Target, TrendingUp } from "lucide-react"
 import type { Metadata } from "next"
 import { BackgroundAnimation } from "@/components/background-animation"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export const metadata: Metadata = {
   title: "当サイトについて | YokaUnit - 日常に役立つ便利ツール集の詳細情報",
@@ -68,8 +69,23 @@ export const metadata: Metadata = {
 }
 
 export default function AboutPage() {
+  const sectionLinks = [
+    { href: "#about-overview", label: "YokaUnitとは？" },
+    { href: "#about-strengths", label: "特徴・強み" },
+    { href: "#about-history", label: "歴史と開発背景" },
+    { href: "#about-tools", label: "主要ツール" },
+    { href: "#about-tech", label: "技術・開発方針" },
+    { href: "#about-usecases", label: "活用例とご感想" },
+    { href: "#about-faq", label: "よくある質問" },
+    { href: "#about-roadmap", label: "開発予定とロードマップ" },
+    { href: "#about-community", label: "コミュニティとサポート" },
+    { href: "#about-operator", label: "運営者について" },
+    { href: "#about-privacy", label: "プライバシー" },
+    { href: "#about-share", label: "利用・シェアのお願い" },
+    { href: "#about-guide", label: "サイト内のご案内" },
+  ]
   return (
-    <div className="flex min-h-screen flex-col relative">
+    <div className="flex min-h-screen flex-col relative scroll-smooth">
       <BackgroundAnimation />
       <SiteHeader />
       <main className="flex-1 relative z-10">
@@ -101,9 +117,37 @@ export default function AboutPage() {
               </p>
             </div>
 
+            <nav aria-label="ページ内ナビゲーション" className="mb-10">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                    <Info className="h-4 w-4 text-blue-600" />
+                    目次
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0 pb-4 px-4">
+                  <ol className="grid gap-1.5 text-xs text-blue-700 sm:grid-cols-2 lg:grid-cols-3">
+                    {sectionLinks.map((section, index) => (
+                      <li key={section.href}>
+                        <a
+                          href={section.href}
+                          className="group flex items-start gap-2 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-blue-50 hover:text-blue-900"
+                        >
+                          <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[10px] font-semibold text-white group-hover:bg-blue-600">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span className="leading-tight">{section.label}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </CardContent>
+              </Card>
+            </nav>
+
             <div className="grid gap-6">
               {/* YokaUnitとは？ */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-overview">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Lightbulb className="h-5 w-5 text-blue-600" />
@@ -129,7 +173,7 @@ export default function AboutPage() {
               </Card>
 
               {/* 特徴・強み */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-strengths">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Heart className="h-5 w-5 text-red-600" />
@@ -167,7 +211,7 @@ export default function AboutPage() {
               </Card>
 
               {/* サイトの歴史・開発背景 */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-history">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Clock className="h-5 w-5 text-indigo-600" />
@@ -203,7 +247,7 @@ export default function AboutPage() {
               </Card>
 
               {/* 主要ツール紹介 */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-tools">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Zap className="h-5 w-5 text-yellow-600" />
@@ -271,7 +315,7 @@ export default function AboutPage() {
               </Card>
 
               {/* 技術・開発方針 */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-tech">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Code className="h-5 w-5 text-purple-600" />
@@ -309,7 +353,7 @@ export default function AboutPage() {
               </Card>
 
               {/* ユーザーの使用例・活用方法 */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-usecases">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Star className="h-5 w-5 text-amber-600" />
@@ -356,7 +400,7 @@ export default function AboutPage() {
               </Card>
 
               {/* よくある質問 */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-faq">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <HelpCircle className="h-5 w-5 text-blue-600" />
@@ -397,7 +441,7 @@ export default function AboutPage() {
               </Card>
 
               {/* 今後の予定・ロードマップ */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-roadmap">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Calendar className="h-5 w-5 text-orange-600" />
@@ -444,7 +488,7 @@ export default function AboutPage() {
               </Card>
 
               {/* コミュニティ・サポート */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-community">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <MessageCircle className="h-5 w-5 text-teal-600" />
@@ -487,7 +531,7 @@ export default function AboutPage() {
               </Card>
 
               {/* 運営者について */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-operator">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Users className="h-5 w-5 text-green-600" />
@@ -512,7 +556,7 @@ export default function AboutPage() {
               </Card>
 
               {/* プライバシーとセキュリティ */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg scroll-mt-24" id="about-privacy">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Shield className="h-5 w-5 text-emerald-600" />
@@ -553,7 +597,10 @@ export default function AboutPage() {
               </Card>
 
               {/* 利用・シェアのお願い */}
-              <Card className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm shadow-lg border-blue-200">
+              <Card
+                className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm shadow-lg border-blue-200 scroll-mt-24"
+                id="about-share"
+              >
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Heart className="h-5 w-5 text-pink-600" />
@@ -587,7 +634,10 @@ export default function AboutPage() {
               </Card>
 
               {/* 関連ページへのリンク集 */}
-              <Card className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm shadow-lg border-blue-200">
+              <Card
+                className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm shadow-lg border-blue-200 scroll-mt-24"
+                id="about-guide"
+              >
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-900 flex items-center gap-2">
                     <Globe className="h-5 w-5 text-blue-600" />
@@ -683,6 +733,7 @@ export default function AboutPage() {
           </div>
         </div>
       </main>
+      <ScrollToTop />
       <SiteFooter />
     </div>
   )

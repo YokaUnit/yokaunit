@@ -6,6 +6,7 @@ import { BackgroundAnimation } from "@/components/background-animation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import { OGPCheckerClient } from "./OGPCheckerClient"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -370,6 +371,7 @@ export default function OGPCheckerPage() {
             </div>
           </div>
         </div>
+        <ScrollToTop />
         <SiteFooter />
       </div>
     </>

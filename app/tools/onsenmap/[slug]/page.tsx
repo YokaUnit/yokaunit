@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getOnsenDataSorted } from "../lib/onsen-data"
 import OnsenDetailPageClient from "./OnsenDetailPageClient"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 interface OnsenDetailPageProps {
   params: {
@@ -52,5 +53,10 @@ export default async function OnsenDetailPage({ params }: OnsenDetailPageProps) 
     notFound()
   }
 
-  return <OnsenDetailPageClient onsen={onsen} />
+  return (
+    <>
+      <OnsenDetailPageClient onsen={onsen} />
+      <ScrollToTop />
+    </>
+  )
 }

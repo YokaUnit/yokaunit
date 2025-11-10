@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ArrowLeft, Calculator, Users, Smartphone, CheckCircle } from "lucide-react"
 import { BackgroundAnimation } from "@/components/background-animation"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import Link from "next/link"
 
 export default function WariKanAboutPage() {
@@ -180,6 +181,7 @@ export default function WariKanAboutPage() {
           <p>キーワード: 割り勘 計算 アプリ 無料 PayPay 飲み会 歓送迎会 精算 幹事 大人数 学生 社会人</p>
         </div>
       </div>
+      <ScrollToTop />
     </div>
   )
 }

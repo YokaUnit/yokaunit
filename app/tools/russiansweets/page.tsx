@@ -8,6 +8,7 @@ import { CategoryTools } from "@/components/category-tools"
 import { RelatedTools } from "@/components/related-tools"
 import RussianSweetsClient from "./RussianSweetsClient"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("russiansweets", {
@@ -414,6 +415,7 @@ export default function RussianSweetsPage() {
           </div>
         </div>
       </main>
+      <ScrollToTop />
       <SiteFooter />
     </div>
   )

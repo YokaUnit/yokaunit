@@ -9,6 +9,7 @@ import ThreeCardBattleClient from "./ThreeCardBattleClient"
 import { CategoryTools } from "@/components/category-tools"
 import { RelatedTools } from "@/components/related-tools"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("3cardbattle", {
@@ -412,6 +413,7 @@ export default function ThreeCardBattlePage() {
           </div>
         </div>
       </main>
+      <ScrollToTop />
       <SiteFooter />
     </div>
   )

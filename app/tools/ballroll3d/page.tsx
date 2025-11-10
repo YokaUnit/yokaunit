@@ -1,6 +1,7 @@
 import BallRoll3DClientPage from "./BallRoll3DClientPage"
 import type { Metadata } from "next"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 // メタデータ
 export const metadata: Metadata = {
@@ -47,6 +48,7 @@ export default function BallRoll3DPage() {
     <>
       <ViewCounter toolSlug="ballroll3d" />
       <BallRoll3DClientPage />
+      <ScrollToTop />
     </>
   )
 }

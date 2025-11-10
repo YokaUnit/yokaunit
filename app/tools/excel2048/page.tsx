@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import Excel2048ClientPage from "./Excel2048ClientPage"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("excel2048", {
@@ -108,6 +109,7 @@ export default function Excel2048Page() {
     <>
       <ViewCounter toolSlug="excel2048" />
       <Excel2048ClientPage />
+      <ScrollToTop />
     </>
   )
 }

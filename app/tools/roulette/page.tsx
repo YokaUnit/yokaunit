@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import RouletteClientPage from "./RouletteClientPage"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("roulette", {
@@ -198,6 +199,7 @@ export default function RoulettePage() {
 
       <ViewCounter toolSlug="roulette" />
       <RouletteClientPage />
+      <ScrollToTop />
     </>
   )
 }

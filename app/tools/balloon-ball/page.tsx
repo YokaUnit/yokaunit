@@ -5,6 +5,7 @@ import { BackgroundAnimation } from "@/components/background-animation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import "./styles.css"
 import ElasticBoxPhysics from "./components/elastic-box-physics"
 
@@ -211,6 +212,7 @@ export default function BalloonBallPage() {
           </div>
         </div>
       </div>
+      <ScrollToTop />
     </>
   )
 }

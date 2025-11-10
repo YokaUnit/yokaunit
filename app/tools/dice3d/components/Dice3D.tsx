@@ -35,6 +35,7 @@ export function Dice3D({
   const size = 0.8
   const initialPosition = position
 
+  // 物理プロパティの即時反映
   // リセット処理
   useEffect(() => {
     if (rigidBodyRef.current) {

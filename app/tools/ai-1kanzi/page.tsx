@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import Ai1KanziClientPage from "./Ai1KanziClientPage"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-1kanzi", {
@@ -122,6 +123,7 @@ export default function Ai1KanziPage() {
       />
       <ViewCounter toolSlug="ai-1kanzi" />
       <Ai1KanziClientPage />
+      <ScrollToTop />
     </>
   )
 }

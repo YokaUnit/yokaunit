@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import WarikanClient from "./WarikanClient"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -430,6 +431,7 @@ export default function WarikanPage() {
         </div>
       </div>
 
+      <ScrollToTop />
       <SiteFooter />
     </>
   )

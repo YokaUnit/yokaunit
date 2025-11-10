@@ -9,20 +9,20 @@ export interface DicePhysicsSettings {
   mass: number            // 質量
 }
 
-// デフォルトの物理設定（チンチロ3D準拠）
+// デフォルトの物理設定
 export const DEFAULT_PHYSICS: DicePhysicsSettings = {
-  impulseStrength: 3,      // 適度な投げる力
-  torqueStrength: 1.5,     // 適度な回転力
-  restitution: 0.1,        // 低い反発（チンチロ3D同様）
-  friction: 0.8,           // 高い摩擦で安定
-  mass: 10,                // チンチロ3D同様の重さ
+  impulseStrength: 5,      // より力強く投げる
+  torqueStrength: 2.5,     // 回転も強めに
+  restitution: 0.25,       // 弾みを少し向上
+  friction: 0.45,          // 滑りを良くする
+  mass: 9,                 // わずかに軽量化
 }
 
 // ランダムな力を生成（チンチロ3D準拠）
 export function getRandomImpulse(strength: number = 3): [number, number, number] {
   return [
     (Math.random() - 0.5) * strength, // X方向
-    Math.random() * strength + 2,     // Y方向（上向き）
+    Math.random() * strength + strength * 0.75, // Y方向（上向き）を強化
     (Math.random() - 0.5) * strength, // Z方向
   ]
 }
@@ -111,11 +111,11 @@ export function getRandomSpawnPosition(index: number, totalDice: number): [numbe
 // サイコロの色を生成
 export function getDiceColor(index: number): string {
   const colors = [
-    "#ffffff", // 白
-    "#f8f9fa", // 薄いグレー
-    "#e9ecef", // グレー
-    "#dee2e6", // 濃いグレー
-    "#ced4da", // より濃いグレー
+    "#ffffff",
+    "#f8f9fa",
+    "#e9ecef",
+    "#dee2e6",
+    "#ced4da",
   ]
   return colors[index % colors.length]
 }

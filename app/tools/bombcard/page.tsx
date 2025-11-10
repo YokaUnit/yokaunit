@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("bombcard", {
@@ -101,7 +102,6 @@ export default function BombCardGamePage() {
       </main>
       
       <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="bombcard" limit={8} />
-      <RelatedTools currentToolSlug="bombcard" />
 
       {/* SEO記事セクション */}
       <div className="max-w-4xl mx-auto mt-16">
@@ -441,7 +441,12 @@ export default function BombCardGamePage() {
           </div>
         </div>
       </div>
+
+      <div className="mt-16">
+        <RelatedTools currentToolSlug="bombcard" />
+      </div>
       
+      <ScrollToTop />
       <SiteFooter />
     </div>
   )

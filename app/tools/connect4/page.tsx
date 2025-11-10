@@ -1,7 +1,8 @@
-import Connect4ClientPage from "./Connect4ClientPage"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
+import Connect4ClientPage from "./Connect4ClientPage"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("connect4", {
@@ -131,6 +132,7 @@ export default function Connect4Page() {
 
       <ViewCounter toolSlug="connect4" />
       <Connect4ClientPage />
+      <ScrollToTop />
     </>
   )
 }

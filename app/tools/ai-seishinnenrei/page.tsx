@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import AiSeishinnenreiClientPage from "./AiSeishinnenreiClientPage"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-seishinnenrei", {
@@ -131,6 +132,7 @@ export default function AiSeishinnenreiPage() {
       />
       <ViewCounter toolSlug="ai-seishinnenrei" />
       <AiSeishinnenreiClientPage />
+      <ScrollToTop />
     </>
   )
 }

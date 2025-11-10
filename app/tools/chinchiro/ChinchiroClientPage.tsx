@@ -489,6 +489,10 @@ export default function ChinchiroClientPage() {
               </TabsContent>
             </Tabs>
 
+            <div className="mt-16">
+              <RelatedTools currentToolSlug="chinchiro" />
+            </div>
+
             {/* SEO記事セクション */}
             <div className="max-w-4xl mx-auto mt-16">
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
@@ -830,7 +834,6 @@ export default function ChinchiroClientPage() {
         </main>
 
         <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="chinchiro" limit={8} />
-        <RelatedTools currentToolSlug="chinchiro" />
         
         <SiteFooter />
       </div>

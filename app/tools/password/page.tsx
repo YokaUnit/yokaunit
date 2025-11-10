@@ -6,6 +6,7 @@ import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 
@@ -249,7 +250,6 @@ export default function PasswordGeneratorPage() {
       
       <div className="max-w-6xl mx-auto mt-16">
         <CategoryTools category="セキュリティ" title="関連ツール（セキュリティ）" currentToolSlug="password" limit={8} />
-        <RelatedTools currentToolSlug="password" />
       </div>
 
       {/* SEO記事セクション */}
@@ -601,7 +601,12 @@ export default function PasswordGeneratorPage() {
           </div>
         </div>
       </div>
+
+      <div className="mt-16">
+        <RelatedTools currentToolSlug="password" />
+      </div>
       
+      <ScrollToTop />
       <SiteFooter />
     </div>
   )

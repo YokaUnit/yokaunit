@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import StressCheckClientPage from "./StressCheckClientPage"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("stress-check", {
@@ -62,6 +63,7 @@ export default function StressCheckPage() {
     <>
       <ViewCounter toolSlug="stress-check" />
       <StressCheckClientPage />
+      <ScrollToTop />
     </>
   )
 }

@@ -2,6 +2,7 @@ import { Dice3DClientPage } from "./Dice3DClientPage"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("dice3d", {
@@ -201,6 +202,7 @@ export default function Dice3DPage() {
 
       <ViewCounter toolSlug="dice3d" />
       <Dice3DClientPage />
+      <ScrollToTop />
     </>
   )
 }

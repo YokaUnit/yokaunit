@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import AIStressCheckClientPage from "./AIStressCheckClientPage"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-stress-check", {
@@ -64,6 +65,7 @@ export default function AIStressCheckPage() {
     <>
       <ViewCounter toolSlug="ai-stress-check" />
       <AIStressCheckClientPage />
+      <ScrollToTop />
     </>
   )
 }

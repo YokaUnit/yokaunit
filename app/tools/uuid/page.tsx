@@ -6,6 +6,7 @@ import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 
@@ -435,6 +436,7 @@ export default function UuidGeneratorPage() {
           </div>
         </div>
       </main>
+      <ScrollToTop />
       <SiteFooter />
       <ViewCounter toolSlug="uuid" />
     </div>

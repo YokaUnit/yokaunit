@@ -2,6 +2,7 @@ import ChinchiroClientPage from "./ChinchiroClientPage"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { ViewCounter } from "@/components/view-counter"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("chinchiro", {
@@ -35,6 +36,7 @@ export default function ChinchiroPage() {
     <>
       <ViewCounter toolSlug="chinchiro" />
       <ChinchiroClientPage />
+      <ScrollToTop />
     </>
   )
 }

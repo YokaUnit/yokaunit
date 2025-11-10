@@ -4,6 +4,7 @@ import { Calculator, Users, ArrowLeft, Smartphone, Shield, Zap, ArrowRight } fro
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import Link from "next/link"
 import type { Metadata } from "next"
 
@@ -413,6 +414,7 @@ export default function HowToUsePage() {
           </div>
         </div>
       </div>
+      <ScrollToTop />
       <SiteFooter />
     </>
   )

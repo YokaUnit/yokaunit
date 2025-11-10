@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef } from "react"
 import { getRandomSpawnPosition, getDiceColor, DEFAULT_PHYSICS } from "../lib/dice-physics"
 import type { DicePhysicsSettings } from "../lib/dice-physics"
 
@@ -29,6 +29,7 @@ export function useDice3D() {
   const [physics, setPhysics] = useState<DicePhysicsSettings>(DEFAULT_PHYSICS)
   const [resetTrigger, setResetTrigger] = useState(0)
   const [rollTrigger, setRollTrigger] = useState(0)
+  const initializedRef = useRef(false)
 
   // サイコロを追加
   const addDice = useCallback((count: number = 1) => {
@@ -129,10 +130,27 @@ export function useDice3D() {
 
   // 初期サイコロを追加（1回だけ）
   const initializeDice = useCallback(() => {
-    if (diceInstances.length === 0) {
-      addDice(1)
-    }
-  }, [diceInstances.length, addDice])
+    if (initializedRef.current) return
+
+    setDiceInstances(prev => {
+      if (prev.length > 0) {
+        initializedRef.current = true
+        return prev
+      }
+
+      const position = getRandomSpawnPosition(0, 1)
+      const color = getDiceColor(0)
+
+      initializedRef.current = true
+      return [
+        {
+          id: 1,
+          position,
+          color,
+        },
+      ]
+    })
+  }, [])
 
   return {
     // State

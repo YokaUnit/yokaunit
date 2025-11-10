@@ -12,7 +12,7 @@ import { Sakura2048Client } from "./Sakura2048Client"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("sakura2048", {
-    title: "サクラ2048｜サクラエディタ風2048ゲーム・仕事中でもバレない隠しゲーム【無料】 - YokaUnit",
+    title: "サクラ2048｜テキストエディタ風2048ゲーム・仕事中でもバレない隠しゲーム【無料】 - YokaUnit",
     description: "【完全無料】サクラエディタそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲーム。コードを書いているフリをしながら2048パズルに挑戦。完全無料・登録不要で即プレイ可能。",
     keywords: [
       "サクラ2048",
@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "開発者ツール"
     ],
     openGraph: {
-      title: "サクラ2048｜サクラエディタ風2048ゲーム・仕事中でもバレない隠しゲーム",
+      title: "サクラ2048｜テキストエディタ風2048ゲーム・仕事中でもバレない隠しゲーム",
       description: "【完全無料】サクラエディタそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲーム。コードを書いているフリをしながら2048パズルに挑戦。",
       url: "https://yokaunit.com/tools/sakura2048",
       siteName: "YokaUnit",
@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "サクラ2048｜サクラエディタ風2048ゲーム・仕事中でもバレない隠しゲーム",
+      title: "サクラ2048｜テキストエディタ風2048ゲーム・仕事中でもバレない隠しゲーム",
       description: "【完全無料】サクラエディタそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲーム。",
     },
     alternates: {
@@ -79,7 +79,7 @@ export default function Sakura2048Page() {
             <Breadcrumbs
               items={[
                 { href: "/tools", label: "ツール一覧" },
-                { href: "/tools/sakura2048", label: "サクラエディタ風2048" },
+                { href: "/tools/sakura2048", label: "テキストエディタ風2048" },
               ]}
             />
             <Sakura2048Client />

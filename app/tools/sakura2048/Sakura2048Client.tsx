@@ -56,7 +56,7 @@ export function Sakura2048Client() {
       "@context": "https://schema.org",
       "@type": "Game",
       "name": "サクラ2048",
-      "description": "サクラエディタ風2048ゲーム・仕事中でもバレない隠しゲーム",
+      "description": "テキストエディタ風2048ゲーム・仕事中でもバレない隠しゲーム",
       "url": window.location.href,
       "genre": "Puzzle",
       "gameLocation": "Online",
@@ -73,7 +73,7 @@ export function Sakura2048Client() {
       "operatingSystem": "Any",
       "browserRequirements": "HTML5, JavaScript",
       "featureList": [
-        "サクラエディタ風インターフェース",
+        "テキストエディタ風インターフェース",
         "隠しゲーム機能",
         "2048パズルゲーム",
         "仕事中でもバレない",
@@ -891,7 +891,7 @@ export function Sakura2048Client() {
         transition={{ duration: 0.5 }}
       >
         <h1 className="text-2xl font-bold text-gray-900 mb-3">
-          サクラエディタ風2048ゲーム
+          テキストエディタ風2048ゲーム
         </h1>
         <p className="text-gray-600 mb-4">
           サクラエディタそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲームです。

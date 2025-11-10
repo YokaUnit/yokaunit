@@ -176,13 +176,19 @@ export default function AboutPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-gray-700 leading-relaxed">
-                    YokaUnitは2025年に「日常のちょっとした不便を解決したい」という想いから生まれました。開発者自身が実際に困った場面で使いたいと思うツールを中心に、一つひとつ丁寧に作り上げています。
+                    YokaUnitは2025年に「日常のちょっとした不便を解決したい」という想いから生まれました。開発者自身が実際に困った場面で「自分が本当に使いたい」と思えるツールを中心に、一つひとつ丁寧に作り上げています。
                   </p>
                   <p className="text-gray-700 leading-relaxed">
-                    最初に開発したのは<a href="/tools/password" className="text-blue-600 hover:underline">パスワード生成ツール</a>でした。既存のサービスは広告が多すぎたり、使いにくかったりと、本当に必要な時にストレスを感じることが多かったからです。「シンプルで使いやすく、広告に邪魔されない」というコンセプトはここから始まりました。
+                    最初に開発したのは<a href="/tools/password" className="text-blue-600 hover:underline">パスワード生成ツール</a>でした。既存のサービスは広告が多すぎたり、使いにくかったりと、本当に必要な時にストレスを感じることが多かったからです。「シンプルで使いやすく、広告に邪魔されない」というYokaUnitのコンセプトはここから始まりました。
                   </p>
                   <p className="text-gray-700 leading-relaxed">
-                    その後、飲み会での精算に困った経験から<a href="/tools/warikan" className="text-blue-600 hover:underline">割り勘計算ツール</a>を、旅行先で温泉を探す際の不便さから<a href="/tools/onsenmap" className="text-blue-600 hover:underline">温泉マップ</a>を開発。それぞれのツールは実際の体験に基づいており、「本当に使える」ものになるよう心がけています。
+                    次に制作したのは<a href="/tools/chinchiro" className="text-blue-600 hover:underline">チンチロツール</a>。飲み会の場で「スマホで簡単にサイコロが振れたら盛り上がるのに」という発想から生まれたもので、遊びながら気軽に使えるエンタメ系ツールとして人気を集めました。
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    その後、実際の飲み会での精算に手間取った経験から<a href="/tools/warikan" className="text-blue-600 hover:underline">割り勘計算ツール</a>を開発。誰でも直感的に操作できるシンプルな設計を心がけ、「早くて正確に割り勘できるツール」として多くの人に使われています。
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    YokaUnitのツールはすべて、日常のリアルな体験から生まれたもの。これからも「ちょっと便利で、ちょっと楽しい」ツールを届けていきます。
                   </p>
                   <div className="bg-indigo-50/80 p-4 rounded-lg border border-indigo-100">
                     <h4 className="font-semibold text-indigo-900 mb-2">開発哲学</h4>
@@ -204,22 +210,25 @@ export default function AboutPage() {
                     主要ツールのご紹介
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <CardContent className="space-y-6">
+                  <p className="text-gray-700 leading-relaxed">
+                    シーンに合わせて選べる多彩なツールをラインナップ。日々の暮らしから遊びのひとときまで、欲しい体験に合わせてお楽しみください。
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-3">
-                      <h4 className="font-semibold text-gray-900">💻 実用ツール</h4>
+                      <h4 className="font-semibold text-gray-900">💻 実用・ビジネス</h4>
                       <div className="space-y-2">
                         <div className="border-l-4 border-blue-400 pl-3">
                           <a href="/tools/password" className="text-blue-600 hover:underline font-medium">パスワード生成ツール</a>
-                          <p className="text-sm text-gray-600">セキュアなパスワードを瞬時に生成。文字種や長さを細かく設定可能</p>
+                          <p className="text-sm text-gray-600">強固なパスワードを即座に生成。用途に合わせて文字種・長さを細かく調整できます。</p>
                         </div>
                         <div className="border-l-4 border-green-400 pl-3">
                           <a href="/tools/warikan" className="text-blue-600 hover:underline font-medium">秒割り（割り勘計算）</a>
-                          <p className="text-sm text-gray-600">飲み会や旅行の精算を3秒で完了。誰が誰にいくら払うかも自動計算</p>
+                          <p className="text-sm text-gray-600">人数と金額を入力するだけで、誰がいくら支払うかまでスピーディーに算出。</p>
                         </div>
-                        <div className="border-l-4 border-purple-400 pl-3">
-                          <a href="/tools/excel" className="text-blue-600 hover:underline font-medium">Excel2048</a>
-                          <p className="text-sm text-gray-600">Excelの見た目をした2048ゲーム。表計算作業をしているように見えて実はゲーム</p>
+                        <div className="border-l-4 border-indigo-400 pl-3">
+                          <a href="/tools/uuid" className="text-blue-600 hover:underline font-medium">UUIDジェネレーター</a>
+                          <p className="text-sm text-gray-600">開発やドキュメント管理で使える固有IDをワンクリックで取得。</p>
                         </div>
                       </div>
                     </div>
@@ -228,24 +237,34 @@ export default function AboutPage() {
                       <div className="space-y-2">
                         <div className="border-l-4 border-red-400 pl-3">
                           <a href="/tools/chinchiro" className="text-blue-600 hover:underline font-medium">チンチロリン</a>
-                          <p className="text-sm text-gray-600">本格的なサイコロゲーム。アニメーション付きで臨場感抜群</p>
+                          <p className="text-sm text-gray-600">臨場感あるアニメーションで盛り上がる、飲み会の定番サイコロゲーム。</p>
                         </div>
-                        <div className="border-l-4 border-pink-400 pl-3">
-                          <a href="/tools/sakura2048" className="text-blue-600 hover:underline font-medium">サクラ2048</a>
-                          <p className="text-sm text-gray-600">サクラエディタの見た目をした2048ゲーム。仕事中でも上司にばれずに楽しめる</p>
+                        <div className="border-l-4 border-yellow-400 pl-3">
+                          <a href="/tools/connect4" className="text-blue-600 hover:underline font-medium">コネクトフォー</a>
+                          <p className="text-sm text-gray-600">2人で対戦できる定番ボードゲーム。戦略を練って4つ並べれば勝利。</p>
                         </div>
-                        <div className="border-l-4 border-orange-400 pl-3">
-                          <a href="/tools/bombcard" className="text-blue-600 hover:underline font-medium">ボムカードゲーム</a>
-                          <p className="text-sm text-gray-600">スリル満点のカードゲーム。友人や家族と楽しめる</p>
+                        <div className="border-l-4 border-purple-400 pl-3">
+                          <a href="/tools/excel" className="text-blue-600 hover:underline font-medium">Excel2048</a>
+                          <p className="text-sm text-gray-600">Excel風の見た目で遊べる2048パズル。仕事中のリフレッシュにぴったり。</p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="mt-6 p-4 bg-blue-50/80 rounded-lg border border-blue-100">
-                    <h4 className="font-semibold text-blue-900 mb-2">🗾 特別なツール</h4>
-                    <div className="border-l-4 border-blue-500 pl-3">
-                      <a href="/tools/onsenmap" className="text-blue-600 hover:underline font-medium">全国温泉マップ</a>
-                      <p className="text-sm text-blue-800">全国47都道府県の温泉情報を網羅。地図上で直感的に温泉を探せる本格的なマップツール。旅行計画にも最適で、温泉の詳細情報や口コミも確認できます。</p>
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-gray-900">🏠 生活・おでかけ</h4>
+                      <div className="space-y-2">
+                        <div className="border-l-4 border-teal-400 pl-3">
+                          <a href="/tools/onsenmap" className="text-blue-600 hover:underline font-medium">全国温泉マップ</a>
+                          <p className="text-sm text-gray-600">エリアや泉質から温泉を検索。旅行計画に役立つ口コミや設備情報もチェック可能。</p>
+                        </div>
+                        <div className="border-l-4 border-pink-400 pl-3">
+                          <a href="/tools/fortune-today" className="text-blue-600 hover:underline font-medium">今日の運勢診断</a>
+                          <p className="text-sm text-gray-600">質問に答えるだけで、毎日の気分を前向きにしてくれる開運アドバイスをお届け。</p>
+                        </div>
+                        <div className="border-l-4 border-orange-400 pl-3">
+                          <a href="/tools/consumption-tax" className="text-blue-600 hover:underline font-medium">消費税計算ツール</a>
+                          <p className="text-sm text-gray-600">税込・税抜計算をわかりやすく表示。複数税率にも対応し、日々の会計をサポート。</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

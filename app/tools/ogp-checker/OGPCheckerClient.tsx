@@ -91,6 +91,9 @@ export function OGPCheckerClient() {
   const [activeTab, setActiveTab] = useState("single")
   const [resultTab, setResultTab] = useState("overview")
   const { toast } = useToast()
+  const shouldRenderPreviewImages = useMemo(() => resultTab === "preview", [resultTab])
+  const shouldRenderSocialImages = useMemo(() => resultTab === "social", [resultTab])
+
 
   // ローカルストレージから履歴を読み込み
   useEffect(() => {
@@ -187,11 +190,6 @@ export function OGPCheckerClient() {
       setMetaData(data)
       setResults(prev => [result, ...prev.slice(0, 9)])
       setHistory(prev => [result, ...prev.slice(0, 19)])
-
-      toast({
-        title: "チェック完了",
-        description: "OGPメタデータを取得しました",
-      })
 
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
@@ -756,15 +754,41 @@ export function OGPCheckerClient() {
                                 <div className="bg-white rounded p-2">
                                   {(() => {
                                     const displayImg = metaData.image || metaData.twitterImage
-                                    return displayImg ? (
-                                      <img
-                                        src={getProxiedImageUrl(displayImg)}
-                                        alt="Mobile Preview"
-                                        className="w-full h-20 object-cover rounded mb-2"
-                                        onLoad={() => handleImageLoad(displayImg)}
-                                        onError={() => handleImageError(displayImg)}
-                                      />
-                                    ) : null
+                                    if (!shouldRenderPreviewImages) {
+                                      return (
+                                        <div className="w-full h-20 rounded mb-2 bg-gray-100 flex items-center justify-center text-[10px] text-gray-400">
+                                          プレビュ―タブを開くと画像を読み込みます
+                                        </div>
+                                      )
+                                    }
+
+                                    if (!displayImg) {
+                                      return (
+                                        <div className="w-full h-20 rounded mb-2 bg-gray-100 flex items-center justify-center text-[10px] text-gray-400">
+                                          画像が設定されていません
+                                        </div>
+                                      )
+                                    }
+
+                                    const isLoading = imageLoading[displayImg] ?? true
+
+                                    return (
+                                      <div className="relative w-full h-20 mb-2">
+                                        {isLoading && (
+                                          <div className="absolute inset-0 flex items-center justify-center rounded bg-gray-100">
+                                            <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                                          </div>
+                                        )}
+                                        <img
+                                          src={getProxiedImageUrl(displayImg)}
+                                          alt="Mobile Preview"
+                                          className={`w-full h-20 object-cover rounded transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}
+                                          loading="lazy"
+                                          onLoad={() => handleImageLoad(displayImg)}
+                                          onError={() => handleImageError(displayImg)}
+                                        />
+                                      </div>
+                                    )
                                   })()}
                                   <h6 className="font-semibold text-xs text-gray-900">
                                     {metaData.title || "タイトルなし"}
@@ -786,15 +810,41 @@ export function OGPCheckerClient() {
                                   <div className="flex gap-3">
                                     {(() => {
                                       const displayImg = metaData.image || metaData.twitterImage
-                                      return displayImg ? (
-                                        <img
-                                          src={getProxiedImageUrl(displayImg)}
-                                          alt="Desktop Preview"
-                                          className="w-20 h-20 object-cover rounded"
-                                          onLoad={() => handleImageLoad(displayImg)}
-                                          onError={() => handleImageError(displayImg)}
-                                        />
-                                      ) : null
+                                      if (!shouldRenderPreviewImages) {
+                                        return (
+                                          <div className="w-20 h-20 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400 text-center px-2">
+                                            タブを開くと画像を読み込みます
+                                          </div>
+                                        )
+                                      }
+
+                                      if (!displayImg) {
+                                        return (
+                                          <div className="w-20 h-20 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400 text-center px-2">
+                                            画像なし
+                                          </div>
+                                        )
+                                      }
+
+                                      const isLoading = imageLoading[displayImg] ?? true
+
+                                      return (
+                                        <div className="relative w-20 h-20">
+                                          {isLoading && (
+                                            <div className="absolute inset-0 flex items-center justify-center rounded bg-gray-100">
+                                              <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                                            </div>
+                                          )}
+                                          <img
+                                            src={getProxiedImageUrl(displayImg)}
+                                            alt="Desktop Preview"
+                                            className={`w-20 h-20 object-cover rounded transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}
+                                            loading="lazy"
+                                            onLoad={() => handleImageLoad(displayImg)}
+                                            onError={() => handleImageError(displayImg)}
+                                          />
+                                        </div>
+                                      )
                                     })()}
                                     <div className="flex-1">
                                       <h6 className="font-semibold text-sm text-gray-900">
@@ -998,15 +1048,45 @@ export function OGPCheckerClient() {
                               </h4>
                               <div className="border rounded-lg p-4 bg-blue-50">
                                 <div className="flex gap-3">
-                                  {metaData.twitterImage && (
-                                    <img
-                                      src={getProxiedImageUrl(metaData.twitterImage)}
-                                      alt="Twitter Card Image"
-                                      className="w-16 h-16 object-cover rounded"
-                                      onLoad={() => handleImageLoad(metaData.twitterImage!)}
-                                      onError={() => handleImageError(metaData.twitterImage!)}
-                                    />
-                                  )}
+                                  {(() => {
+                                    const displayImg = metaData.twitterImage
+
+                                    if (!shouldRenderSocialImages) {
+                                      return (
+                                        <div className="w-16 h-16 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400 text-center px-1">
+                                          タブを開くと画像を読み込みます
+                                        </div>
+                                      )
+                                    }
+
+                                    if (!displayImg) {
+                                      return (
+                                        <div className="w-16 h-16 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400 text-center px-1">
+                                          画像なし
+                                        </div>
+                                      )
+                                    }
+
+                                    const isLoading = imageLoading[displayImg] ?? true
+
+                                    return (
+                                      <div className="relative w-16 h-16">
+                                        {isLoading && (
+                                          <div className="absolute inset-0 flex items-center justify-center rounded bg-gray-100">
+                                            <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                                          </div>
+                                        )}
+                                        <img
+                                          src={getProxiedImageUrl(displayImg)}
+                                          alt="Twitter Card Image"
+                                          className={`w-16 h-16 object-cover rounded transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}
+                                          loading="lazy"
+                                          onLoad={() => handleImageLoad(displayImg)}
+                                          onError={() => handleImageError(displayImg)}
+                                        />
+                                      </div>
+                                    )
+                                  })()}
                                   <div className="flex-1">
                                     <h5 className="font-semibold text-gray-900 text-sm">
                                       {metaData.twitterTitle || metaData.title || "タイトルなし"}
@@ -1043,15 +1123,45 @@ export function OGPCheckerClient() {
                               </h4>
                               <div className="border rounded-lg p-4 bg-blue-50">
                                 <div className="flex gap-3">
-                                  {metaData.image && (
-                                    <img
-                                      src={getProxiedImageUrl(metaData.image)}
-                                      alt="Facebook Card Image"
-                                      className="w-16 h-16 object-cover rounded"
-                                      onLoad={() => handleImageLoad(metaData.image!)}
-                                      onError={() => handleImageError(metaData.image!)}
-                                    />
-                                  )}
+                                  {(() => {
+                                    const displayImg = metaData.image
+
+                                    if (!shouldRenderSocialImages) {
+                                      return (
+                                        <div className="w-16 h-16 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400 text-center px-1">
+                                          タブを開くと画像を読み込みます
+                                        </div>
+                                      )
+                                    }
+
+                                    if (!displayImg) {
+                                      return (
+                                        <div className="w-16 h-16 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400 text-center px-1">
+                                          画像なし
+                                        </div>
+                                      )
+                                    }
+
+                                    const isLoading = imageLoading[displayImg] ?? true
+
+                                    return (
+                                      <div className="relative w-16 h-16">
+                                        {isLoading && (
+                                          <div className="absolute inset-0 flex items-center justify-center rounded bg-gray-100">
+                                            <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                                          </div>
+                                        )}
+                                        <img
+                                          src={getProxiedImageUrl(displayImg)}
+                                          alt="Facebook Card Image"
+                                          className={`w-16 h-16 object-cover rounded transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}
+                                          loading="lazy"
+                                          onLoad={() => handleImageLoad(displayImg)}
+                                          onError={() => handleImageError(displayImg)}
+                                        />
+                                      </div>
+                                    )
+                                  })()}
                                   <div className="flex-1">
                                     <h5 className="font-semibold text-gray-900 text-sm">
                                       {metaData.title || "タイトルなし"}

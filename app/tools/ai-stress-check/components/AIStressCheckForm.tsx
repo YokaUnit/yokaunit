@@ -28,25 +28,25 @@ export function AIStressCheckForm({
   if (currentQuestion >= questions.length) {
     return (
       <div className="max-w-2xl mx-auto">
-        <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 text-center">
-          <div className="mb-6">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Brain className="h-8 w-8 text-white animate-spin" />
+        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-lg p-6 text-center">
+          <div className="mb-4">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Brain className="h-7 w-7 text-white animate-spin" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              AI分析中...
+            <h2 className="text-xl font-bold text-gray-900 mb-1">
+              AIが診断結果をまとめています
             </h2>
-            <p className="text-gray-600">
-              AIがあなたのストレス耐性を分析しています
+            <p className="text-sm text-gray-600">
+              あと数秒でストレス耐性レポートが完成します
             </p>
           </div>
-          
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+
+          <div className="w-full bg-gray-200 rounded-full h-2 mb-3 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full animate-pulse w-full" />
           </div>
-          
-          <p className="text-sm text-gray-500">
-            高度なAI分析を実行中です...
+
+          <p className="text-xs text-gray-500">
+            このままお待ちください...
           </p>
         </Card>
       </div>

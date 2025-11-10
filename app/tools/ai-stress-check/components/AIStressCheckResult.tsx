@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Share2, Shield, AlertTriangle, CheckCircle, Target, Lightbulb, Brain, Sparkles } from "lucide-react"
+import { Share2, Sparkles, CheckCircle, AlertTriangle, Lightbulb, Brain } from "lucide-react"
 import type { AIStressCheckResult } from "../lib/types"
 
 interface AIStressCheckResultProps {
@@ -20,11 +20,11 @@ export function AIStressCheckResult({ result, onShare }: AIStressCheckResultProp
   }
 
   const getStressLevelTitle = (level: number) => {
-    if (level >= 85) return 'メンタル最強'
-    if (level >= 70) return 'ストレス強者'
-    if (level >= 50) return 'バランス安定'
-    if (level >= 30) return '成長必要'
-    return 'ケア重要'
+    if (level >= 85) return 'メンタル最強タイプ'
+    if (level >= 70) return 'ストレス強者タイプ'
+    if (level >= 50) return 'バランス安定タイプ'
+    if (level >= 30) return '成長期待タイプ'
+    return 'ケア最優先タイプ'
   }
 
   const getStressLevelEmoji = (level: number) => {
@@ -46,211 +46,144 @@ export function AIStressCheckResult({ result, onShare }: AIStressCheckResultProp
 
   const getRiskText = (riskLevel: string) => {
     switch (riskLevel) {
-      case 'low': return '健康的'
+      case 'low': return 'リスク低'
       case 'medium': return '注意'
       case 'high': return 'ケア必要'
       default: return '不明'
     }
   }
 
+  const primaryStrength = result.strengths[0] ?? '強みの分析結果はありません'
+  const primaryImprovement = result.improvements[0] ?? '改善ポイントの分析結果はありません'
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* メイン結果カード */}
-      <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl overflow-hidden">
-        {/* ヘッダー部分 */}
-        <div className={`bg-gradient-to-r ${getStressLevelColor(result.stressLevel)} p-6 text-white text-center relative`}>
-          <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative z-10">
-            <div className="text-6xl mb-3">{getStressLevelEmoji(result.stressLevel)}</div>
-            <h2 className="text-3xl font-bold mb-2">{getStressLevelTitle(result.stressLevel)}タイプ</h2>
-            <div className="flex items-center justify-center gap-4 mb-2">
-              <div className="text-5xl font-bold">{result.stressLevel}</div>
-              <div className="text-xl opacity-90">/ 100点</div>
-            </div>
-            <div className={`inline-flex items-center px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-sm font-medium`}>
-              {getRiskText(result.riskLevel)}レベル
-            </div>
+    <div className="max-w-4xl mx-auto space-y-5">
+      <Card className="bg-white/95 backdrop-blur-sm border border-blue-100 shadow-md rounded-2xl p-6 md:p-8 text-center">
+        <div className="mb-5">
+          <div className="text-5xl md:text-6xl mb-3">{getStressLevelEmoji(result.stressLevel)}</div>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{getStressLevelTitle(result.stressLevel)}</h2>
+          <p className="text-sm text-gray-600 mt-1">AIが算出したストレス耐性スコアは <strong className="text-blue-700">{result.stressLevel} / 100</strong> でした。</p>
+        </div>
+
+        <div className="space-y-3 mb-5">
+          <div className={`bg-gradient-to-r ${getStressLevelColor(result.stressLevel)} w-32 h-32 md:w-36 md:h-36 rounded-full flex items-center justify-center mx-auto shadow-2xl transition-transform duration-300 hover:scale-105`}>
+            <span className="text-white text-3xl md:text-4xl font-bold">{result.stressLevel}</span>
+          </div>
+          <p className="text-sm font-semibold text-blue-800">{result.stressType}</p>
+          <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full border text-xs font-semibold ${getRiskColor(result.riskLevel)}`}>
+            {getRiskText(result.riskLevel)}レベル
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+          <div className="rounded-lg border border-gray-200 bg-white p-3">
+            <p className="text-[11px] text-gray-500 uppercase tracking-wide">主要な強み</p>
+            <p className="text-sm font-semibold text-gray-900 line-clamp-2">{primaryStrength}</p>
+          </div>
+          <div className="rounded-lg border border-gray-200 bg-white p-3">
+            <p className="text-[11px] text-gray-500 uppercase tracking-wide">優先改善ポイント</p>
+            <p className="text-sm font-semibold text-gray-900 line-clamp-2">{primaryImprovement}</p>
+          </div>
+          <div className="rounded-lg border border-gray-200 bg-white p-3">
+            <p className="text-[11px] text-gray-500 uppercase tracking-wide">総合コメント</p>
+            <p className="text-sm font-semibold text-gray-900 line-clamp-2">{getStressLevelTitle(result.stressLevel)}</p>
           </div>
         </div>
 
-        {/* コンテンツ部分 */}
-        <div className="p-6">
-          {/* タイプ説明 */}
-          <div className="bg-gray-50 rounded-xl p-4 mb-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">
-              {result.stressType}
-            </h3>
-            <p className="text-gray-700 leading-relaxed text-center">
-              {result.stressDescription}
-            </p>
-          </div>
-
-          {/* AI詳細分析（コンパクト版） */}
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4 mb-6">
-            <div className="flex items-center justify-center mb-3">
-              <Sparkles className="h-5 w-5 text-purple-600 mr-2" />
-              <h4 className="font-bold text-purple-800">AI分析レポート</h4>
-            </div>
-            <p className="text-sm text-gray-700 leading-relaxed">
-              {result.detailedAnalysis}
-            </p>
-          </div>
-
-          {/* シェアボタン */}
-          <div className="text-center">
-            <Button
-              onClick={onShare}
-              className={`bg-gradient-to-r ${getStressLevelColor(result.stressLevel)} hover:opacity-90 text-white font-bold py-3 px-8 rounded-xl shadow-lg`}
-            >
-              <Share2 className="h-5 w-5 mr-2" />
-              結果をシェア
-            </Button>
-          </div>
+        <div className="rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 p-4 mt-5 text-left">
+          <p className="text-sm text-blue-800 leading-relaxed">{result.stressDescription}</p>
         </div>
+
+        <Button
+          onClick={onShare}
+          className="mt-6 w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-bold py-3 md:py-4 rounded-xl text-base"
+        >
+          <Share2 className="h-5 w-5 mr-2" />
+          結果をシェア
+        </Button>
       </Card>
 
-      {/* 詳細分析セクション */}
-      <div className="grid md:grid-cols-3 gap-6">
-        {/* あなたの特徴 */}
-        <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-0 shadow-lg p-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-purple-200/30 rounded-full -mr-10 -mt-10"></div>
-          <div className="relative z-10">
-            <div className="flex items-center mb-4">
-              <div className="bg-gradient-to-r from-purple-500 to-indigo-500 w-10 h-10 rounded-full flex items-center justify-center mr-3 shadow-lg">
-                <Target className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-800 text-lg">あなたの特徴</h3>
-                <p className="text-xs text-purple-600">AI分析による性格特性</p>
-              </div>
+      <Card className="bg-white/95 border border-gray-100 shadow-sm rounded-2xl p-5 md:p-6">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="bg-blue-500/10 text-blue-600 p-2 rounded-lg">
+            <Brain className="h-5 w-5" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900">AI分析サマリー</h3>
+        </div>
+        <p className="text-sm text-gray-700 leading-relaxed">{result.detailedAnalysis}</p>
+      </Card>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <Card className="bg-white/95 border border-gray-100 shadow-sm rounded-2xl p-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <div className="bg-purple-500/10 text-purple-600 p-2 rounded-lg">
+              <CheckCircle className="h-5 w-5" />
             </div>
-            
-            <div className="space-y-3">
-              {result.characteristics.map((characteristic, index) => (
-                <div key={index} className="bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-purple-100">
-                  <div className="flex items-start">
-                    <div className="bg-gradient-to-r from-purple-500 to-indigo-500 w-6 h-6 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 shadow-sm">
-                      <span className="text-white text-xs font-bold">{index + 1}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-800 font-medium text-sm leading-relaxed">{characteristic}</span>
-                      {index === 0 && <div className="text-xs text-purple-600 mt-1">💡 メイン特徴</div>}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-4 p-3 bg-purple-100/50 rounded-lg">
-              <div className="text-xs text-purple-700">
-                <strong>分析ポイント:</strong> あなたの行動パターンや思考傾向から導き出された特徴です
+            <h3 className="text-lg font-bold text-gray-900">あなたの特徴</h3>
+          </div>
+          <div className="space-y-2">
+            {result.characteristics.map((characteristic, index) => (
+              <div key={index} className="rounded-lg border border-purple-100 bg-white p-3 text-sm text-gray-700 leading-relaxed">
+                {characteristic}
               </div>
-            </div>
+            ))}
           </div>
         </Card>
 
-        {/* あなたの強み */}
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-green-200/30 rounded-full -mr-10 -mt-10"></div>
-          <div className="relative z-10">
-            <div className="flex items-center mb-4">
-              <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-10 h-10 rounded-full flex items-center justify-center mr-3 shadow-lg">
-                <CheckCircle className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-800 text-lg">あなたの強み</h3>
-                <p className="text-xs text-green-600">活かすべき能力・スキル</p>
-              </div>
+        <Card className="bg-white/95 border border-gray-100 shadow-sm rounded-2xl p-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <div className="bg-green-500/10 text-green-600 p-2 rounded-lg">
+              <Sparkles className="h-5 w-5" />
             </div>
-            
-            <div className="space-y-3">
-              {result.strengths.map((strength, index) => (
-                <div key={index} className="bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-green-100">
-                  <div className="flex items-start">
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-6 h-6 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 shadow-sm">
-                      <CheckCircle className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <span className="text-gray-800 font-medium text-sm leading-relaxed">{strength}</span>
-                      {index === 0 && <div className="text-xs text-green-600 mt-1">⭐ 最大の強み</div>}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-4 p-3 bg-green-100/50 rounded-lg">
-              <div className="text-xs text-green-700">
-                <strong>活用法:</strong> これらの強みを意識的に活用することで、さらなる成長が期待できます
-              </div>
-            </div>
+            <h3 className="text-lg font-bold text-gray-900">あなたの強み</h3>
           </div>
-        </Card>
-
-        {/* 改善ポイント */}
-        <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-0 shadow-lg p-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-orange-200/30 rounded-full -mr-10 -mt-10"></div>
-          <div className="relative z-10">
-            <div className="flex items-center mb-4">
-              <div className="bg-gradient-to-r from-orange-500 to-red-500 w-10 h-10 rounded-full flex items-center justify-center mr-3 shadow-lg">
-                <Target className="h-5 w-5 text-white" />
+          <div className="space-y-2">
+            {result.strengths.map((strength, index) => (
+              <div key={index} className="rounded-lg border border-green-100 bg-white p-3 text-sm text-gray-700 leading-relaxed">
+                {strength}
               </div>
-              <div>
-                <h3 className="font-bold text-gray-800 text-lg">改善ポイント</h3>
-                <p className="text-xs text-orange-600">成長のための具体的な方向性</p>
-              </div>
-            </div>
-            
-            <div className="space-y-3">
-              {result.improvements.map((improvement, index) => (
-                <div key={index} className="bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-orange-100">
-                  <div className="flex items-start">
-                    <div className="bg-gradient-to-r from-orange-500 to-red-500 w-6 h-6 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 shadow-sm">
-                      <Target className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <span className="text-gray-800 font-medium text-sm leading-relaxed">{improvement}</span>
-                      {index === 0 && <div className="text-xs text-orange-600 mt-1">🎯 優先改善点</div>}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-4 p-3 bg-orange-100/50 rounded-lg">
-              <div className="text-xs text-orange-700">
-                <strong>改善効果:</strong> 段階的に取り組むことで、ストレス耐性の大幅な向上が見込めます
-              </div>
-            </div>
+            ))}
           </div>
         </Card>
       </div>
 
-      {/* AIアドバイス */}
-      <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-0 shadow-lg p-6">
-        <div className="flex items-center mb-4">
-          <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-10 h-10 rounded-full flex items-center justify-center mr-3">
-            <Brain className="h-5 w-5 text-white" />
+      <Card className="bg-white/95 border border-gray-100 shadow-sm rounded-2xl p-5 space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="bg-orange-500/10 text-orange-600 p-2 rounded-lg">
+            <AlertTriangle className="h-5 w-5" />
           </div>
-          <h3 className="text-xl font-bold text-gray-800">AI専門アドバイス</h3>
+          <h3 className="text-lg font-bold text-gray-900">改善ポイント</h3>
         </div>
-        <p className="text-gray-700 leading-relaxed">
-          {result.advice}
-        </p>
+        <div className="space-y-2">
+          {result.improvements.map((improvement, index) => (
+            <div key={index} className="rounded-lg border border-orange-100 bg-white p-3 text-sm text-gray-700 leading-relaxed">
+              {improvement}
+            </div>
+          ))}
+        </div>
       </Card>
 
-      {/* コンパクトレベル解説 */}
-      <Card className="bg-gradient-to-r from-gray-50 to-blue-50 border-0 shadow-lg p-4">
-        <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">レベル早見表</h3>
+      <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-0 shadow-sm rounded-2xl p-5">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="bg-blue-500/10 text-blue-600 p-2 rounded-lg">
+            <Lightbulb className="h-5 w-5" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900">AIからのアドバイス</h3>
+        </div>
+        <p className="text-sm text-gray-700 leading-relaxed">{result.advice}</p>
+      </Card>
+
+      <Card className="bg-gradient-to-r from-gray-50 to-blue-50 border-0 shadow-sm rounded-2xl p-5">
+        <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">ストレス耐性レベルの目安</h3>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-center text-xs">
           <div className="bg-white rounded-lg p-3 border border-red-200">
             <div className="text-lg mb-1">🚨</div>
-            <div className="font-bold text-red-700">ケア重要</div>
+            <div className="font-bold text-red-700">ケア必要</div>
             <div className="text-red-600">0-29点</div>
           </div>
           <div className="bg-white rounded-lg p-3 border border-orange-200">
             <div className="text-lg mb-1">⚠️</div>
-            <div className="font-bold text-orange-700">成長必要</div>
+            <div className="font-bold text-orange-700">成長期待</div>
             <div className="text-orange-600">30-49点</div>
           </div>
           <div className="bg-white rounded-lg p-3 border border-yellow-200">

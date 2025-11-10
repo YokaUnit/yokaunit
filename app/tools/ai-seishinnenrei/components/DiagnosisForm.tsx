@@ -27,6 +27,16 @@ export function DiagnosisForm({
 }: DiagnosisFormProps) {
   const [ageInput, setAgeInput] = useState(answers.age && answers.age > 0 ? answers.age.toString() : "")
 
+  const normalizeDigits = (value: string) =>
+    value
+      .replace(/[０-９]/g, (char) => String.fromCharCode(char.charCodeAt(0) - 0xFEE0))
+      .replace(/[^0-9]/g, "")
+
+  const handleAgeChange = (value: string) => {
+    const normalized = normalizeDigits(value)
+    setAgeInput(normalized)
+  }
+
   // 年齢入力画面
   if (currentQuestion === -1 || !answers.age || answers.age === 0) {
     return (
@@ -51,9 +61,10 @@ export function DiagnosisForm({
               </label>
               <div className="relative max-w-xs mx-auto">
                 <Input
-                  type="number"
+                  type="tel"
+                  inputMode="numeric"
                   value={ageInput}
-                  onChange={(e) => setAgeInput(e.target.value)}
+                  onChange={(e) => handleAgeChange(e.target.value)}
                   placeholder="20"
                   min="1"
                   max="100"
@@ -68,16 +79,13 @@ export function DiagnosisForm({
             <div className="text-center">
               <Button
                 onClick={() => {
-                  const age = parseInt(ageInput)
+                  const age = parseInt(ageInput, 10)
                   if (age >= 1 && age <= 100) {
                     onUpdateAnswer('age', age)
-                    // 年齢入力後は最初の質問（currentQuestion = 0）に進む
-                    setTimeout(() => {
-                      onNextQuestion()
-                    }, 100)
+                    onNextQuestion()
                   }
                 }}
-                disabled={!ageInput || parseInt(ageInput) < 1 || parseInt(ageInput) > 100}
+                disabled={!ageInput || parseInt(ageInput, 10) < 1 || parseInt(ageInput, 10) > 100}
                 className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-bold py-3 px-8 rounded-xl h-10 sm:h-10 h-9"
               >
                 <span className="hidden sm:inline">診断を開始</span>
@@ -120,25 +128,25 @@ export function DiagnosisForm({
   if (currentQuestion >= questions.length) {
     return (
       <div className="max-w-2xl mx-auto">
-        <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-8 text-center">
-          <div className="mb-6">
-            <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Brain className="h-8 w-8 text-white animate-spin" />
+        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-lg p-6 text-center">
+          <div className="mb-4">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Brain className="h-7 w-7 text-white animate-spin" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              AI分析中...
+            <h2 className="text-xl font-bold text-gray-900 mb-1">
+              AIが診断結果をまとめています
             </h2>
-            <p className="text-gray-600">
-              あなたの精神年齢を計算しています
+            <p className="text-sm text-gray-600">
+              あと数秒で結果が表示されます
             </p>
           </div>
           
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+          <div className="w-full bg-gray-200 rounded-full h-2 mb-3 overflow-hidden">
             <div className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full animate-pulse w-full" />
           </div>
           
-          <p className="text-sm text-gray-500">
-            しばらくお待ちください...
+          <p className="text-xs text-gray-500">
+            画面は自動で切り替わります
           </p>
         </Card>
       </div>

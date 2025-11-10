@@ -85,11 +85,10 @@ export function useAiSeishinnenreiDiagnosis() {
     setIsAnalyzing(true)
 
     try {
-      // 分析の演出
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // AI分析を実行
-      const analysisResult = await analyzeMentalAge(answers)
+      const analysisPromise = analyzeMentalAge(answers)
+      const delayPromise = new Promise((resolve) => setTimeout(resolve, 600))
+      await Promise.all([analysisPromise, delayPromise])
+      const analysisResult = await analysisPromise
       setResult(analysisResult)
       setStep('result')
       

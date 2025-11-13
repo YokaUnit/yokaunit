@@ -82,7 +82,7 @@ export default function AiSeishinnenreiClientPage() {
                 <Brain className="h-8 w-8 md:h-10 md:w-10 text-white" />
               </div>
             </div>
-            <h1 className="text-xl md:text-4xl font-bold text-gray-900 mb-2">AI精神年齢診断（無料）</h1>
+            <h1 className="text-xl md:text-4xl font-bold text-gray-900 mb-2">AI精神年齢診断｜心理年齢を5つの質問で即チェック【無料・登録不要】</h1>
             <h2 className="text-base md:text-xl text-gray-600 mb-3 md:mb-4">AIがあなたの心理年齢・メンタル年齢を数値化</h2>
             <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4">
               簡単な5つの選択式質問に答えるだけで、AIがあなたの精神年齢を分析し、実年齢との差を詳しく解説します

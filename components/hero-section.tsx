@@ -36,13 +36,13 @@ export function HeroSection() {
             カタチにするサイト
           </motion.h1>
           <motion.p
-            className="text-base md:text-lg text-gray-800 mb-6"
+            className="text-sm md:text-lg text-gray-800 mb-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             無料で便利なWebツールを多数公開中。
-            <br className="hidden sm:block" />
+            <br />
             あなたの「あったらいいな」も実現します。
           </motion.p>
           <motion.div

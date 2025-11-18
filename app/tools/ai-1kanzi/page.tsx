@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import Ai1KanziClientPage from "./Ai1KanziClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -51,7 +52,9 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function Ai1KanziPage() {
+export default async function Ai1KanziPage() {
+  const imageUrl = await getToolImageUrl("ai-1kanzi")
+  
   return (
     <>
       <script
@@ -67,9 +70,7 @@ export default function Ai1KanziPage() {
             applicationCategory: "LifestyleApplication",
             operatingSystem: "Any",
             offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
-            image: [
-              "https://yokaunit.com/ogp/yokaunit-common.png"
-            ],
+            image: [imageUrl],
             publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" }
           }),
         }}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import AiMoteClientPage from "./AiMoteClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -48,9 +49,29 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function AiMotePage() {
+export default async function AiMotePage() {
+  const imageUrl = await getToolImageUrl("ai-mote")
+  
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "AIモテ度診断",
+            description: "AIがあなたのモテ度を0-100%で数値化！ポジティブ度・社交性・共感力を最新AI技術で分析。",
+            url: "https://yokaunit.com/tools/ai-mote",
+            applicationCategory: "LifestyleApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <ViewCounter toolSlug="ai-mote" />
       <AiMoteClientPage />
       <ScrollToTop />

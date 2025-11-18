@@ -9,6 +9,7 @@ import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("uuid", {
@@ -124,9 +125,29 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function UuidGeneratorPage() {
+export default async function UuidGeneratorPage() {
+  const imageUrl = await getToolImageUrl("uuid")
+  
   return (
     <div className="flex min-h-screen flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "UUID生成ツール",
+            description: "PostgreSQL対応・履歴管理・お気に入り・CSVエクスポート・バリデーション機能完備のUUID生成ツール。v1～v5、Nil UUID対応。",
+            url: "https://yokaunit.com/tools/uuid",
+            applicationCategory: "DeveloperApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <SiteHeader />
       <BackgroundAnimation />
       <main className="flex-1">

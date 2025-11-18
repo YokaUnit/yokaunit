@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import Script from "next/script"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
@@ -88,7 +89,9 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function TaxiFareToolPage() {
+export default async function TaxiFareToolPage() {
+  const imageUrl = await getToolImageUrl("taxi")
+  
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -114,6 +117,7 @@ export default function TaxiFareToolPage() {
       price: "0",
       priceCurrency: "JPY",
     },
+    image: [imageUrl],
   }
 
   return (

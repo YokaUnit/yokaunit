@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -72,9 +73,29 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function WarikanPage() {
+export default async function WarikanPage() {
+  const imageUrl = await getToolImageUrl("warikan")
+  
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "割り勘計算機",
+            description: "人数・金額・端数処理を自動計算！端数処理（切り上げ・切り捨て・四捨五入）・個別金額設定・履歴保存機能付き。",
+            url: "https://yokaunit.com/tools/warikan",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <ViewCounter toolSlug="warikan" />
       <SiteHeader />
       <div className="min-h-screen relative">

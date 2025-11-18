@@ -16,6 +16,7 @@ import {
   FAQ_STRUCTURED_DATA, 
   BREADCRUMB_STRUCTURED_DATA 
 } from './lib/seo-data';
+import { getToolImageUrl } from '@/lib/tool-structured-data';
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata('consumption-tax', {
@@ -40,7 +41,13 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function ConsumptionTaxPage() {
+export default async function ConsumptionTaxPage() {
+  const imageUrl = await getToolImageUrl("consumption-tax")
+  const structuredDataWithImage = {
+    ...STRUCTURED_DATA,
+    image: [imageUrl],
+  }
+  
   return (
     <div className="flex min-h-screen flex-col">
       <ViewCounter toolSlug="consumption-tax" />
@@ -48,7 +55,7 @@ export default function ConsumptionTaxPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(STRUCTURED_DATA),
+          __html: JSON.stringify(structuredDataWithImage),
         }}
       />
       <script

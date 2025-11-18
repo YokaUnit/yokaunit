@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -106,9 +107,29 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function OGPCheckerPage() {
+export default async function OGPCheckerPage() {
+  const imageUrl = await getToolImageUrl("ogp-checker")
+  
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "OGPチェッカー",
+            description: "メタデータ・OGP画像・Twitter Card・Facebook Cardを瞬時にチェック！SEOスコア分析・改善提案・バッチチェック対応。",
+            url: "https://yokaunit.com/tools/ogp-checker",
+            applicationCategory: "DeveloperApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <ViewCounter toolSlug="ogp-checker" />
       <SiteHeader />
       <div className="min-h-screen flex flex-col relative">

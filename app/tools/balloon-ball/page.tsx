@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { SiteHeader } from "@/components/site-header"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
@@ -69,7 +70,9 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function BalloonBallPage() {
+export default async function BalloonBallPage() {
+  const imageUrl = await getToolImageUrl("balloon-ball")
+  
   // バッジの設定をカスタマイズできます
   const badgeConfig = {
     // 個人情報
@@ -112,7 +115,7 @@ export default function BalloonBallPage() {
             applicationCategory: "DesignApplication",
             operatingSystem: "Any",
             offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
-            image: ["https://yokaunit.com/ogp/yokaunit-common.png"],
+            image: [imageUrl],
             publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
           }),
         }}

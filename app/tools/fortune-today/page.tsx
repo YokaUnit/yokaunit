@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import FortuneTodayClientPage from "./FortuneTodayClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -93,7 +94,9 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function FortuneTodayPage() {
+export default async function FortuneTodayPage() {
+  const imageUrl = await getToolImageUrl("fortune-today")
+  
   return (
     <>
       {/* 構造化データ - WebApplication */}
@@ -123,7 +126,8 @@ export default function FortuneTodayPage() {
               "スマホ・PC対応",
               "SNSシェア機能"
             ],
-            "screenshot": "https://yokaunit.com/ogp/fortune-today.png",
+            "screenshot": imageUrl,
+            "image": [imageUrl],
             "author": {
               "@type": "Organization",
               "name": "YokaUnit",

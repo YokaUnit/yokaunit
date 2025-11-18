@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import Connect4ClientPage from "./Connect4ClientPage"
@@ -53,7 +54,9 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function Connect4Page() {
+export default async function Connect4Page() {
+  const imageUrl = await getToolImageUrl("connect4")
+  
   return (
     <>
       {/* 構造化データ - WebApplication */}
@@ -83,7 +86,8 @@ export default function Connect4Page() {
               "スマホ・PC対応",
               "レスポンシブデザイン"
             ],
-            "screenshot": "https://yokaunit.com/ogp/yokaunit-common.png",
+            "screenshot": imageUrl,
+            "image": [imageUrl],
             "author": {
               "@type": "Organization",
               "name": "YokaUnit",

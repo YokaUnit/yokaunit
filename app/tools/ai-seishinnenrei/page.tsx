@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import AiSeishinnenreiClientPage from "./AiSeishinnenreiClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -51,8 +52,9 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function AiSeishinnenreiPage() {
+export default async function AiSeishinnenreiPage() {
   const today = new Date().toISOString().split("T")[0]
+  const imageUrl = await getToolImageUrl("ai-seishinnenrei")
 
   const webApplicationLd = {
     "@context": "https://schema.org",
@@ -75,8 +77,8 @@ export default function AiSeishinnenreiPage() {
       "スマホ・PC対応",
       "結果シェア機能"
     ],
-    screenshot: "https://yokaunit.com/ogp/ai-seishinnenrei-diagnosis.png",
-    image: ["https://yokaunit.com/ogp/yokaunit-common.png"],
+    screenshot: imageUrl,
+    image: [imageUrl],
     author: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
     publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
     datePublished: "2024-01-01",

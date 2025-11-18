@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -84,9 +85,29 @@ const breadcrumbItems = [
   { label: "爆弾カードゲーム", href: "/tools/bombcard" },
 ]
 
-export default function BombCardGamePage() {
+export default async function BombCardGamePage() {
+  const imageUrl = await getToolImageUrl("bombcard")
+  
   return (
     <div className="min-h-screen flex flex-col relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "爆弾カードゲーム",
+            description: "みんなで楽しめる爆弾カードゲーム！カードを選んで爆弾を避けよう！最後まで生き残った人の勝利です。",
+            url: "https://yokaunit.com/tools/bombcard",
+            applicationCategory: "GameApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <ViewCounter toolSlug="bombcard" />
       <BackgroundAnimation />
       <SiteHeader />

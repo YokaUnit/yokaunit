@@ -1,6 +1,24 @@
 import type { Metadata } from "next"
 import { getToolBySlug } from "@/lib/actions/tools"
 
+// 相対パスを完全なURLに変換する関数
+function getAbsoluteImageUrl(imageUrl: string | null | undefined): string {
+  if (!imageUrl) {
+    return "https://yokaunit.com/ogp/yokaunit-common.png"
+  }
+  
+  // 既に完全なURLの場合はそのまま返す
+  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+    return imageUrl
+  }
+  
+  // 相対パスの場合は完全なURLに変換
+  const baseUrl = "https://yokaunit.com"
+  return imageUrl.startsWith("/") 
+    ? `${baseUrl}${imageUrl}` 
+    : `${baseUrl}/${imageUrl}`
+}
+
 export async function generateToolMetadata(slug: string, defaults: Partial<Metadata> = {}): Promise<Metadata> {
   let tool: Awaited<ReturnType<typeof getToolBySlug>> = null
   try {
@@ -10,7 +28,7 @@ export async function generateToolMetadata(slug: string, defaults: Partial<Metad
     tool = null
   }
 
-  const imageUrl = tool?.image_url || "/ogp/yokaunit-common.png"
+  const imageUrl = getAbsoluteImageUrl(tool?.image_url || "/ogp/yokaunit-common.png")
 
   const merged: Metadata = {
     ...defaults,

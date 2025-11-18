@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -67,9 +68,29 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function Sakura2048Page() {
+export default async function Sakura2048Page() {
+  const imageUrl = await getToolImageUrl("sakura2048")
+  
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "サクラ2048",
+            description: "サクラエディタそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲーム。コードを書いているフリをしながら2048パズルに挑戦。",
+            url: "https://yokaunit.com/tools/sakura2048",
+            applicationCategory: "GameApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <ViewCounter toolSlug="sakura2048" />
       <SiteHeader />
       <div className="min-h-screen bg-gray-50 flex flex-col relative">

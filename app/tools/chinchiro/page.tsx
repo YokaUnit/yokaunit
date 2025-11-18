@@ -1,6 +1,7 @@
 import ChinchiroClientPage from "./ChinchiroClientPage"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 
@@ -31,9 +32,29 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function ChinchiroPage() {
+export default async function ChinchiroPage() {
+  const imageUrl = await getToolImageUrl("chinchiro")
+  
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "3Dチンチロサイコロ",
+            description: "物理エンジンでリアルに転がる3Dチンチロサイコロ。ゾロ目、シゴロ、ヒフミ、そしてしょんべん（枠外）も忠実に再現。",
+            url: "https://yokaunit.com/tools/chinchiro",
+            applicationCategory: "GameApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, WebGL, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <ViewCounter toolSlug="chinchiro" />
       <ChinchiroClientPage />
       <ScrollToTop />

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import RouletteClientPage from "./RouletteClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -72,7 +73,9 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function RoulettePage() {
+export default async function RoulettePage() {
+  const imageUrl = await getToolImageUrl("roulette")
+  
   return (
     <>
       {/* 構造化データ - WebApplication */}
@@ -104,7 +107,8 @@ export default function RoulettePage() {
               "完全無料・登録不要",
               "レスポンシブデザイン"
             ],
-            "screenshot": "https://yokaunit.com/ogp/roulette.png",
+            "screenshot": imageUrl,
+            "image": [imageUrl],
             "author": {
               "@type": "Organization",
               "name": "YokaUnit",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import AIStressCheckClientPage from "./AIStressCheckClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -60,9 +61,29 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function AIStressCheckPage() {
+export default async function AIStressCheckPage() {
+  const imageUrl = await getToolImageUrl("ai-stress-check")
+  
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "AIストレス耐性診断",
+            description: "最新AIがあなたのストレス耐性を無料で診断！6つの質問でメンタルの強さ・回復力・プレッシャー耐性をAI分析。",
+            url: "https://yokaunit.com/tools/ai-stress-check",
+            applicationCategory: "LifestyleApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <ViewCounter toolSlug="ai-stress-check" />
       <AIStressCheckClientPage />
       <ScrollToTop />

@@ -1,6 +1,7 @@
 import { Dice3DClientPage } from "./Dice3DClientPage"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 
@@ -76,7 +77,9 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function Dice3DPage() {
+export default async function Dice3DPage() {
+  const imageUrl = await getToolImageUrl("dice3d")
+  
   return (
     <>
       {/* 構造化データ - WebApplication */}
@@ -107,7 +110,8 @@ export default function Dice3DPage() {
               "物理パラメーター調整",
               "結果履歴表示"
             ],
-            "screenshot": "https://yokaunit.com/ogp/yokaunit-common.png",
+            "screenshot": imageUrl,
+            "image": [imageUrl],
             "author": {
               "@type": "Organization",
               "name": "YokaUnit",

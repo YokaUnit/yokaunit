@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -50,7 +51,8 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function RussianSweetsPage() {
+export default async function RussianSweetsPage() {
+  const imageUrl = await getToolImageUrl("russiansweets")
   const breadcrumbItems = [
     { label: "ホーム", href: "/" },
     { label: "ツール一覧", href: "/tools" },
@@ -59,6 +61,24 @@ export default function RussianSweetsPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "ロシアンスイーツ",
+            description: "お菓子の外れを引いたら負け！2人で交互にスイーツを選び、相手が決めた外れを引いたら即アウト！",
+            url: "https://yokaunit.com/tools/russiansweets",
+            applicationCategory: "GameApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <ViewCounter toolSlug="russiansweets" />
       <BackgroundAnimation />
       <SiteHeader />

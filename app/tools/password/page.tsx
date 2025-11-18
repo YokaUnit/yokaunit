@@ -9,6 +9,7 @@ import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
+import { getToolImageUrl } from "@/lib/tool-structured-data"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("password", {
@@ -99,9 +100,29 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function PasswordGeneratorPage() {
+export default async function PasswordGeneratorPage() {
+  const imageUrl = await getToolImageUrl("password")
+  
   return (
     <div className="flex min-h-screen flex-col relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "パスワード生成ツール",
+            description: "AI強度分析・履歴管理・お気に入り・CSVエクスポート・プリセット機能完備のパスワード生成ツール。ハッキング対策に最適な高強度パスワードを瞬時に作成。",
+            url: "https://yokaunit.com/tools/password",
+            applicationCategory: "SecurityApplication",
+            operatingSystem: "Any",
+            browserRequirements: "HTML5, JavaScript",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            image: [imageUrl],
+            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+          }),
+        }}
+      />
       <ViewCounter toolSlug="password" />
       <BackgroundAnimation />
       <SiteHeader />

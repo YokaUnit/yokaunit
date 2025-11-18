@@ -100,6 +100,7 @@ export const STRUCTURED_DATA = {
   inLanguage: 'ja-JP',
   isAccessibleForFree: true,
   license: 'https://creativecommons.org/licenses/by/4.0/',
+  image: [] as string[], // 動的に設定される
 } as const;
 
 export const FAQ_STRUCTURED_DATA = {

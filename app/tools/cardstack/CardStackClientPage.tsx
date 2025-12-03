@@ -8,42 +8,59 @@ interface PlayingCard {
   suit: "♠" | "♥" | "♦" | "♣" | "🃏"
   value: string
   color: "red" | "black" | "joker"
-  numericValue: number
+  isDrawn: boolean
 }
 
-const suits = ["♠", "♥", "♦", "♣"] as const
-const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"] as const
-
+// 54枚のトランプカードのデータ（ジョーカー2枚含む）
 const createDeck = (): PlayingCard[] => {
+  const suits: Array<{ symbol: "♠" | "♥" | "♦" | "♣"; color: "red" | "black" }> = [
+    { symbol: "♠", color: "black" },
+    { symbol: "♥", color: "red" },
+    { symbol: "♦", color: "red" },
+    { symbol: "♣", color: "black" },
+  ]
+  const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+
   const deck: PlayingCard[] = []
-  
-  // 通常のカード
-  suits.forEach((suit, suitIndex) => {
-    values.forEach((value, valueIndex) => {
+  let id = 1
+
+  // 通常の52枚
+  suits.forEach((suit) => {
+    values.forEach((value) => {
       deck.push({
-        id: suitIndex * 13 + valueIndex,
-        suit,
+        id: id++,
+        suit: suit.symbol,
         value,
-        color: suit === "♥" || suit === "♦" ? "red" : "black",
-        numericValue: valueIndex + 1
+        color: suit.color,
+        isDrawn: false,
       })
     })
   })
-  
-  // ジョーカー
+
+  // ジョーカー2枚追加
   deck.push({
-    id: 52,
+    id: id++,
     suit: "🃏",
     value: "JOKER",
     color: "joker",
-    numericValue: 0
+    isDrawn: false,
   })
   
+  deck.push({
+    id: id++,
+    suit: "🃏", 
+    value: "JOKER",
+    color: "joker",
+    isDrawn: false,
+  })
+
   return deck
 }
 
-const shuffleDeck = (deck: PlayingCard[]): PlayingCard[] => {
-  const shuffled = [...deck]
+// デッキをシャッフル（引けるカードのみ）
+const getShuffledAvailableCards = (allCards: PlayingCard[]): PlayingCard[] => {
+  const availableCards = allCards.filter(card => !card.isDrawn)
+  const shuffled = [...availableCards]
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
@@ -54,331 +71,331 @@ const shuffleDeck = (deck: PlayingCard[]): PlayingCard[] => {
 export default function CardStackClientPage() {
   const [allCards, setAllCards] = useState<PlayingCard[]>([])
   const [availableCards, setAvailableCards] = useState<PlayingCard[]>([])
-  const [currentCard, setCurrentCard] = useState<PlayingCard | null>(null)
-  const [gameMode, setGameMode] = useState<"high-low" | "joker-russian" | "mark-prediction">("high-low")
-  const [score, setScore] = useState(0)
-  const [streak, setStreak] = useState(0)
-  const [gameOver, setGameOver] = useState(false)
-  const [showResult, setShowResult] = useState(false)
-  const [prediction, setPrediction] = useState<"high" | "low" | "joker" | "spade" | "heart" | "diamond" | "club">("high")
-  const [isAnimating, setIsAnimating] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
+  // クライアントサイドでのみ初期化
   useEffect(() => {
-    const deck = createDeck()
-    const shuffledDeck = shuffleDeck(deck)
-    setAllCards(shuffledDeck)
-    setAvailableCards(shuffledDeck)
+    setIsClient(true)
+    const initialDeck = createDeck()
+    setAllCards(initialDeck)
+    setAvailableCards(getShuffledAvailableCards(initialDeck))
   }, [])
 
-  const drawCard = () => {
-    if (availableCards.length === 0 || isAnimating) return
-    
-    setIsAnimating(true)
-    const randomIndex = Math.floor(Math.random() * availableCards.length)
-    const drawnCard = availableCards[randomIndex]
-    
-    setCurrentCard(drawnCard)
-    setAvailableCards(prev => prev.filter((_, index) => index !== randomIndex))
-    
-    setTimeout(() => {
-      setIsAnimating(false)
-      setShowResult(true)
-    }, 1000)
+  const removeCard = (id: number) => {
+    // 引いたカードをマークする
+    setAllCards(prevAllCards => 
+      prevAllCards.map(card => 
+        card.id === id ? { ...card, isDrawn: true } : card
+      )
+    )
+
+    // 利用可能なカードから削除
+    setAvailableCards(prevCards => {
+      const newCards = prevCards.filter((card) => card.id !== id)
+
+      // カードがなくなったら新しくシャッフル
+      if (newCards.length === 0) {
+        // 全カードをリセット
+        const resetCards = createDeck()
+        setAllCards(resetCards)
+        return getShuffledAvailableCards(resetCards)
+      }
+
+      return newCards
+    })
   }
 
-  const makePrediction = (pred: "high" | "low" | "joker" | "spade" | "heart" | "diamond" | "club") => {
-    if (!currentCard || isAnimating) return
-    
-    setPrediction(pred)
-    drawCard()
+  const resetDeck = () => {
+    const newDeck = createDeck()
+    setAllCards(newDeck)
+    setAvailableCards(getShuffledAvailableCards(newDeck))
   }
 
-  const checkResult = () => {
-    if (!currentCard) return
-    
-    let isCorrect = false
-    
-    switch (gameMode) {
-      case "high-low":
-        if (prediction === "high" && currentCard.numericValue > 7) isCorrect = true
-        if (prediction === "low" && currentCard.numericValue < 7) isCorrect = true
-        if (currentCard.value === "7") isCorrect = false
-        break
-      case "joker-russian":
-        if (prediction === "joker" && currentCard.suit === "🃏") isCorrect = true
-        if (prediction !== "joker" && currentCard.suit !== "🃏") isCorrect = true
-        break
-      case "mark-prediction":
-        if (prediction === "spade" && currentCard.suit === "♠") isCorrect = true
-        if (prediction === "heart" && currentCard.suit === "♥") isCorrect = true
-        if (prediction === "diamond" && currentCard.suit === "♦") isCorrect = true
-        if (prediction === "club" && currentCard.suit === "♣") isCorrect = true
-        break
-    }
-    
-    if (isCorrect) {
-      setScore(prev => prev + 1)
-      setStreak(prev => prev + 1)
-    } else {
-      setStreak(0)
-    }
-    
-    setShowResult(false)
-  }
+  const drawnCount = allCards.filter(card => card.isDrawn).length
 
-  const resetGame = () => {
-    const deck = createDeck()
-    const shuffledDeck = shuffleDeck(deck)
-    setAllCards(shuffledDeck)
-    setAvailableCards(shuffledDeck)
-    setCurrentCard(null)
-    setScore(0)
-    setStreak(0)
-    setGameOver(false)
-    setShowResult(false)
-    setIsAnimating(false)
-  }
-
-  const getCardColor = (card: PlayingCard) => {
-    switch (card.color) {
-      case "red": return "text-red-600"
-      case "black": return "text-black"
-      case "joker": return "text-purple-600"
-      default: return "text-gray-600"
-    }
-  }
-
-  const getCardBackground = (card: PlayingCard) => {
-    switch (card.color) {
-      case "red": return "bg-red-50 border-red-200"
-      case "black": return "bg-gray-50 border-gray-200"
-      case "joker": return "bg-purple-50 border-purple-200"
-      default: return "bg-gray-50 border-gray-200"
-    }
+  // クライアントサイドレンダリングが完了するまで何も表示しない
+  if (!isClient) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-white p-4">
+        <p className="mb-6 text-gray-600">読み込み中...</p>
+        <div className="relative h-[400px] w-[280px] mb-8 bg-gray-100 rounded-xl animate-pulse"></div>
+        <div className="text-center text-gray-600 mb-6">
+          <p>準備中...</p>
+        </div>
+      </main>
+    )
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* ゲームモード選択 */}
-      <div className="mb-6">
-        <div className="flex flex-wrap gap-2 justify-center">
-          <button
-            onClick={() => setGameMode("high-low")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              gameMode === "high-low"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-          >
-            ハイ&ロー
-          </button>
-          <button
-            onClick={() => setGameMode("joker-russian")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              gameMode === "joker-russian"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-          >
-            ジョーカーロシアンルーレット
-          </button>
-          <button
-            onClick={() => setGameMode("mark-prediction")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              gameMode === "mark-prediction"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-          >
-            マーク予想ゲーム
-          </button>
-        </div>
+    <main className="flex min-h-screen flex-col items-center justify-start bg-white p-2 sm:p-4 pt-0">
+      <p className="mb-3 sm:mb-4 text-xs sm:text-base text-gray-600 text-center px-2">カードをドラッグして山札から引いてください</p>
+
+      <div className="relative h-[280px] w-[180px] sm:h-[400px] sm:w-[280px] mb-4 sm:mb-6 mx-auto">
+        <AnimatePresence mode="popLayout">
+          {availableCards.slice(0, 5).map((card, index) => (
+            <PlayingCardComponent
+              key={card.id}
+              card={card}
+              index={index}
+              removeCard={removeCard}
+              totalCards={Math.min(availableCards.length, 5)}
+            />
+          ))}
+        </AnimatePresence>
       </div>
 
-      {/* スコア表示 */}
-      <div className="text-center mb-6">
-        <div className="text-2xl font-bold text-gray-900 mb-2">
-          スコア: {score} | 連続: {streak}
-        </div>
-        <div className="text-sm text-gray-600">
-          残りカード: {availableCards.length}枚
-        </div>
+      <div className="text-center text-gray-600 mb-3 sm:mb-4">
+        <p className="text-xs sm:text-sm">残りカード: {availableCards.length}枚</p>
+        <p className="text-xs sm:text-sm">引いたカード: {drawnCount}枚</p>
       </div>
 
-      {/* カード表示エリア */}
-      <div className="flex justify-center mb-8">
-        <div className="relative">
-          {currentCard ? (
-            <motion.div
-              key={currentCard.id}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className={`w-32 h-48 rounded-lg border-2 shadow-lg flex flex-col justify-between p-4 ${getCardBackground(currentCard)}`}
-            >
-              <div className="text-left">
-                <div className={`text-2xl font-bold ${getCardColor(currentCard)}`}>
-                  {currentCard.value}
-                </div>
-                <div className={`text-3xl ${getCardColor(currentCard)}`}>
-                  {currentCard.suit}
-                </div>
+      <button
+        onClick={resetDeck}
+        className="mb-4 sm:mb-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1.5 sm:py-2 px-4 sm:px-6 rounded-lg transition-colors text-sm sm:text-base"
+      >
+        🔄 デッキをリセット
+      </button>
+
+      {/* 54枚全てのカード表示 */}
+      <div className="w-full max-w-5xl mb-0 px-2 sm:px-0">
+        <h2 className="text-base sm:text-xl font-bold text-gray-800 mb-2 sm:mb-3 text-center">全カード状況</h2>
+        
+        {/* デスクトップ: 横並びテーブル */}
+        <div className="hidden sm:block bg-white rounded-lg shadow-sm border border-gray-200 p-4 overflow-x-auto">
+          <table className="w-full">
+            <tbody>
+              <tr>
+                <td className="text-xs font-bold text-black px-1 py-1">♠</td>
+                {["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"].map(value => {
+                  const card = allCards.find(c => c.suit === "♠" && c.value === value)
+                  return <td key={value} className="text-center px-1 py-1"><SmallCard card={card!} /></td>
+                })}
+              </tr>
+              <tr>
+                <td className="text-xs font-bold text-red-500 px-1 py-1">♥</td>
+                {["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"].map(value => {
+                  const card = allCards.find(c => c.suit === "♥" && c.value === value)
+                  return <td key={value} className="text-center px-1 py-1"><SmallCard card={card!} /></td>
+                })}
+              </tr>
+              <tr>
+                <td className="text-xs font-bold text-red-500 px-1 py-1">♦</td>
+                {["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"].map(value => {
+                  const card = allCards.find(c => c.suit === "♦" && c.value === value)
+                  return <td key={value} className="text-center px-1 py-1"><SmallCard card={card!} /></td>
+                })}
+              </tr>
+              <tr>
+                <td className="text-xs font-bold text-black px-1 py-1">♣</td>
+                {["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"].map(value => {
+                  const card = allCards.find(c => c.suit === "♣" && c.value === value)
+                  return <td key={value} className="text-center px-1 py-1"><SmallCard card={card!} /></td>
+                })}
+              </tr>
+              <tr>
+                <td className="text-xs font-bold text-purple-600 px-1 py-1">🃏</td>
+                {allCards.filter(card => card.suit === "🃏").map((card, index) => (
+                  <td key={card.id} className="text-center px-1 py-1"><SmallCard card={card} /></td>
+                ))}
+                {/* 残りのセルを空にする */}
+                {Array.from({ length: 11 }, (_, i) => (
+                  <td key={`empty-${i}`} className="px-1 py-1"></td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* モバイル: 縦並びテーブル */}
+        <div className="sm:hidden space-y-2">
+          {[
+            { suit: "♠", color: "text-black", cards: allCards.filter(c => c.suit === "♠") },
+            { suit: "♥", color: "text-red-500", cards: allCards.filter(c => c.suit === "♥") },
+            { suit: "♦", color: "text-red-500", cards: allCards.filter(c => c.suit === "♦") },
+            { suit: "♣", color: "text-black", cards: allCards.filter(c => c.suit === "♣") },
+            { suit: "🃏", color: "text-purple-600", cards: allCards.filter(c => c.suit === "🃏") }
+          ].map(({ suit, color, cards }) => (
+            <div key={suit} className="bg-white rounded-lg shadow-sm border border-gray-200 p-2">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className={`text-sm font-bold ${color}`}>{suit}</span>
+                <div className="flex-1 h-px bg-gray-200"></div>
               </div>
-              <div className="text-right">
-                <div className={`text-3xl ${getCardColor(currentCard)}`}>
-                  {currentCard.suit}
-                </div>
-                <div className={`text-2xl font-bold ${getCardColor(currentCard)}`}>
-                  {currentCard.value}
-                </div>
-              </div>
-            </motion.div>
-          ) : (
-            <div className="w-32 h-48 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-              <div className="text-gray-400 text-center">
-                <div className="text-4xl mb-2">🃏</div>
-                <div className="text-sm">カードを引く</div>
+              <div className="grid grid-cols-7 gap-0.5">
+                {suit === "🃏" ? 
+                  cards.map((card) => (
+                    <SmallCard key={card.id} card={card} />
+                  )) :
+                  ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"].map(value => {
+                    const card = cards.find(c => c.value === value)
+                    return <SmallCard key={value} card={card!} />
+                  })
+                }
               </div>
             </div>
-          )}
+          ))}
         </div>
       </div>
+    </main>
+  )
+}
 
-      {/* 予想ボタン */}
-      {!currentCard && !isAnimating && (
-        <div className="text-center">
-          {gameMode === "high-low" && (
-            <div className="space-y-4">
-              <div className="text-lg font-semibold text-gray-700 mb-4">
-                次のカードは7より高い？低い？
-              </div>
-              <div className="flex gap-4 justify-center">
-                <button
-                  onClick={() => makePrediction("low")}
-                  className="px-8 py-4 bg-red-500 text-white rounded-lg text-lg font-semibold hover:bg-red-600 transition-colors"
-                >
-                  低い (1-6)
-                </button>
-                <button
-                  onClick={() => makePrediction("high")}
-                  className="px-8 py-4 bg-blue-500 text-white rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors"
-                >
-                  高い (8-13)
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {gameMode === "joker-russian" && (
-            <div className="space-y-4">
-              <div className="text-lg font-semibold text-gray-700 mb-4">
-                次のカードはジョーカー？
-              </div>
-              <div className="flex gap-4 justify-center">
-                <button
-                  onClick={() => makePrediction("joker")}
-                  className="px-8 py-4 bg-purple-500 text-white rounded-lg text-lg font-semibold hover:bg-purple-600 transition-colors"
-                >
-                  ジョーカー
-                </button>
-                <button
-                  onClick={() => makePrediction("high")}
-                  className="px-8 py-4 bg-green-500 text-white rounded-lg text-lg font-semibold hover:bg-green-600 transition-colors"
-                >
-                  通常カード
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {gameMode === "mark-prediction" && (
-            <div className="space-y-4">
-              <div className="text-lg font-semibold text-gray-700 mb-4">
-                次のカードのマークは？
-              </div>
-              <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                <button
-                  onClick={() => makePrediction("spade")}
-                  className="px-6 py-4 bg-gray-800 text-white rounded-lg text-lg font-semibold hover:bg-gray-900 transition-colors"
-                >
-                  ♠ スペード
-                </button>
-                <button
-                  onClick={() => makePrediction("heart")}
-                  className="px-6 py-4 bg-red-500 text-white rounded-lg text-lg font-semibold hover:bg-red-600 transition-colors"
-                >
-                  ♥ ハート
-                </button>
-                <button
-                  onClick={() => makePrediction("diamond")}
-                  className="px-6 py-4 bg-red-500 text-white rounded-lg text-lg font-semibold hover:bg-red-600 transition-colors"
-                >
-                  ♦ ダイヤ
-                </button>
-                <button
-                  onClick={() => makePrediction("club")}
-                  className="px-6 py-4 bg-gray-800 text-white rounded-lg text-lg font-semibold hover:bg-gray-900 transition-colors"
-                >
-                  ♣ クラブ
-                </button>
-              </div>
-            </div>
-          )}
+// 小さなカードコンポーネント
+interface SmallCardProps {
+  card: PlayingCard
+}
+
+function SmallCard({ card }: SmallCardProps) {
+  const isRed = card.color === "red"
+  const isJoker = card.color === "joker"
+  const cardColor = isJoker ? "text-purple-600" : isRed ? "text-red-500" : "text-black"
+  
+  return (
+    <div 
+      className={`
+        w-6 h-8 sm:w-7 sm:h-9 rounded border border-gray-300 shadow-sm flex items-center justify-center
+        ${card.isDrawn 
+          ? "bg-gray-200 opacity-40 grayscale" 
+          : "bg-white"
+        }
+      `}
+    >
+      {isJoker ? (
+        <div className={`text-xs sm:text-sm ${card.isDrawn ? "text-gray-400" : cardColor}`}>
+          🃏
+        </div>
+      ) : (
+        <div className={`${card.isDrawn ? "text-gray-400" : cardColor} font-bold text-xs`}>
+          {card.value}
         </div>
       )}
-
-      {/* 結果表示 */}
-      {showResult && currentCard && (
-        <div className="text-center mb-6">
-          <div className="text-xl font-semibold text-gray-700 mb-4">
-            結果: {currentCard.value} {currentCard.suit}
-          </div>
-          <button
-            onClick={checkResult}
-            className="px-6 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors"
-          >
-            次のカードへ
-          </button>
-        </div>
-      )}
-
-      {/* リセットボタン */}
-      <div className="text-center">
-        <button
-          onClick={resetGame}
-          className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transition-colors"
-        >
-          ゲームリセット
-        </button>
-      </div>
-
-      {/* ゲーム説明 */}
-      <div className="mt-8 p-6 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">ゲームルール</h3>
-        <div className="space-y-3 text-sm text-gray-600">
-          {gameMode === "high-low" && (
-            <>
-              <p>• 次のカードが7より高いか低いかを予想します</p>
-              <p>• 7が出た場合は負けです</p>
-              <p>• 正解するとスコアが1ポイント増加します</p>
-            </>
-          )}
-          {gameMode === "joker-russian" && (
-            <>
-              <p>• 次のカードがジョーカーか通常カードかを予想します</p>
-              <p>• ジョーカーは1枚しかありません</p>
-              <p>• 正解するとスコアが1ポイント増加します</p>
-            </>
-          )}
-          {gameMode === "mark-prediction" && (
-            <>
-              <p>• 次のカードのマーク（スート）を予想します</p>
-              <p>• スペード、ハート、ダイヤ、クラブから選択</p>
-              <p>• 正解するとスコアが1ポイント増加します</p>
-            </>
-          )}
-        </div>
-      </div>
     </div>
+  )
+}
+
+interface CardProps {
+  card: PlayingCard
+  index: number
+  removeCard: (id: number) => void
+  totalCards: number
+}
+
+function PlayingCardComponent({ card, index, removeCard, totalCards }: CardProps) {
+  const zIndex = totalCards - index
+  
+  // モバイルとデスクトップで異なるオフセット値を使用
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
+  const yOffset = index * (isMobile ? 6 : 8)
+  const xOffset = index * (isMobile ? 1.5 : 2)
+  const rotation = index * (isMobile ? -1.5 : -2)
+
+  const isRed = card.color === "red"
+  const isJoker = card.color === "joker"
+  const cardColor = isJoker ? "text-purple-600" : isRed ? "text-red-500" : "text-black"
+  const shadowColor = "rgba(0, 0, 0, 0.3)" // 全て黒系統の影に統一
+
+  // スーツマークの配置パターンを取得
+  const getSuitPattern = () => {
+    if (isJoker) {
+      return (
+        <div className="flex flex-1 items-center justify-center">
+          <div className="text-5xl sm:text-8xl text-purple-600">🃏</div>
+        </div>
+      )
+    }
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <div className={`text-5xl sm:text-8xl ${cardColor}`}>{card.suit}</div>
+      </div>
+    )
+  }
+
+  return (
+    <motion.div
+      layout
+      initial={{ 
+        opacity: 0, 
+        y: yOffset, // 最終位置と同じ場所から開始
+        x: xOffset,
+        scale: 0, // 完全に小さく（見えない）
+        rotateZ: rotation,
+      }}
+      animate={{
+        opacity: 1,
+        y: yOffset,
+        x: xOffset,
+        scale: 1 - index * 0.02,
+        rotateZ: rotation,
+      }}
+      exit={{
+        opacity: 0,
+        x: Math.random() > 0.5 ? 300 : -300,
+        y: -200,
+        rotateZ: Math.random() * 30 - 15,
+        transition: { duration: 0.5 },
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 250,
+        damping: 45,
+        mass: 1,
+        delay: index * 0.3, // さらに長い遅延で段階的に表示
+      }}
+      style={{
+        zIndex,
+        boxShadow: `0 ${5 + index * 3}px ${15 + index * 5}px ${shadowColor}`,
+      }}
+      className="absolute left-0 top-0 h-full w-full cursor-grab overflow-hidden rounded-lg sm:rounded-xl bg-white border-2 border-gray-400 active:cursor-grabbing"
+      drag={index === 0}
+      dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+      dragElastic={0.6}
+      onDragEnd={(_, info) => {
+        if (index === 0) {
+          const distance = Math.sqrt(Math.pow(info.offset.x, 2) + Math.pow(info.offset.y, 2))
+          if (distance > 100) {
+            removeCard(card.id)
+          }
+        }
+      }}
+      whileDrag={{
+        scale: 1.05,
+        boxShadow: `0 ${10 + index * 3}px ${25 + index * 5}px ${shadowColor}`,
+      }}
+    >
+      <div className="relative flex h-full w-full flex-col p-2 sm:p-3">
+        {!isJoker && (
+          <>
+            {/* 左上のスーツと数字 */}
+            <div className={`flex flex-col items-start ${cardColor}`}>
+              <div className="text-sm sm:text-lg font-bold leading-none">{card.value}</div>
+              <div className="text-sm sm:text-lg leading-none">{card.suit}</div>
+            </div>
+          </>
+        )}
+
+        {/* 中央のスーツパターン */}
+        {getSuitPattern()}
+
+        {!isJoker && (
+          <>
+            {/* 右下のスーツと数字（逆さま） */}
+            <div className={`flex flex-col items-end ${cardColor} rotate-180 self-end`}>
+              <div className="text-sm sm:text-lg font-bold leading-none">{card.value}</div>
+              <div className="text-sm sm:text-lg leading-none">{card.suit}</div>
+            </div>
+          </>
+        )}
+
+        {/* ドラッグインジケーター（一番上のカードのみ） */}
+        {index === 0 && (
+          <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 flex-col items-center">
+            <motion.div
+              className="h-1 w-8 rounded-full bg-gray-400"
+              animate={{ y: [0, 3, 0] }}
+              transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
+            />
+          </div>
+        )}
+      </div>
+    </motion.div>
   )
 }

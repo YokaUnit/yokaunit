@@ -2,6 +2,7 @@ import { ToolsShowcase } from "@/components/tools-showcase"
 import { HeroSection } from "@/components/hero-section"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { CurrentlyBuilding } from "@/components/currently-building"
+import { AITAFeaturedLink } from "@/components/aita-featured-link"
 import { SocialRequestBanner } from "@/components/social-request-banner"
 import { AdminMessage } from "@/components/admin-message"
 import { CorporateSection } from "@/components/corporate-section"
@@ -80,6 +81,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
               <CurrentlyBuilding />
+              <AITAFeaturedLink />
               <ToolsShowcase />
               <UpdatedToolsShowcase />
             </div>

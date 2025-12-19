@@ -1,0 +1,172 @@
+/* AITA スタイル */
+
+.aita-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.aita-post {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.aita-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -10;
+}
+
+.aita-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.aita-content {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .aita-content {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .aita-content {
+    padding: 2rem;
+  }
+}
+
+/* 投票ボタン */
+.aita-vote-button {
+  position: relative;
+  flex: 1;
+  max-width: 180px;
+  color: white;
+  font-weight: bold;
+  padding: 1.5rem 1rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.aita-vote-button:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.4);
+}
+
+.aita-vote-button:active {
+  transform: scale(0.95);
+}
+
+.aita-vote-button-out {
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+}
+
+.aita-vote-button-safe {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+}
+
+.aita-vote-button-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.aita-vote-button:hover .aita-vote-button-glow {
+  opacity: 1;
+}
+
+.aita-vote-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  backdrop-filter: blur(4px);
+}
+
+@media (min-width: 640px) {
+  .aita-vote-button {
+    max-width: 220px;
+    padding: 1.75rem 1.5rem;
+  }
+  
+  .aita-vote-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.875rem;
+  }
+}
+
+/* ローディング */
+.aita-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: white;
+  font-size: 1.25rem;
+}
+
+.aita-loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* スクロールバーを非表示 */
+.aita-container::-webkit-scrollbar {
+  display: none;
+}
+
+.aita-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

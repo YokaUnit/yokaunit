@@ -2,10 +2,16 @@ import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
 // Service Role Keyを使用してRLSをバイパス
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+  : null
 
 export async function POST() {
   try {
+    if (!supabase) {
+      return NextResponse.json({ error: "Database not configured" }, { status: 500 })
+    }
+
     console.log("🔍 Checking subscription expiry...")
 
     // 期限切れのサブスクリプションを検索

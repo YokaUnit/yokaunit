@@ -2,9 +2,11 @@ import { type NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
-})
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2024-06-20",
+    })
+  : null
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,9 +21,14 @@ export async function POST(request: NextRequest) {
     }
 
     // 環境変数の確認
-    if (!process.env.STRIPE_SECRET_KEY) {
+    if (!stripe) {
       console.error("❌ STRIPE_SECRET_KEY is not set")
       return NextResponse.json({ error: "Stripe configuration error" }, { status: 500 })
+    }
+
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error("❌ Supabase configuration is not set")
+      return NextResponse.json({ error: "Database configuration error" }, { status: 500 })
     }
 
     console.log("🔑 Stripe key exists:", process.env.STRIPE_SECRET_KEY?.substring(0, 20) + "...")
@@ -39,7 +46,7 @@ export async function POST(request: NextRequest) {
     console.log("🎫 Token extracted:", token.substring(0, 20) + "...")
 
     // Supabaseクライアントを作成（サービスロール用）
-    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
     // トークンを使ってユーザーを取得
     const {

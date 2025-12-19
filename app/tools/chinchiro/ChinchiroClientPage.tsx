@@ -546,7 +546,7 @@ export default function ChinchiroClientPage() {
                         <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
                           <h4 className="font-semibold text-gray-900 mb-2">勝敗の判定</h4>
                           <ul className="text-sm text-gray-600 space-y-1">
-                            <li>• ゾロ目 > シゴロ > ヒフミ > その他</li>
+                            <li>• ゾロ目 &gt; シゴロ &gt; ヒフミ &gt; その他</li>
                             <li>• 同じ組み合わせは合計で比較</li>
                             <li>• しょんべんは即座に負け</li>
                             <li>• 引き分けの場合は再戦</li>

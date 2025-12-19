@@ -3,15 +3,23 @@ import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
 import type { Database } from "@/types/database"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
-})
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2024-06-20",
+    })
+  : null
 
 // Service Role Keyを使用してRLSをバイパス
-const supabase = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+  : null
 
 export async function POST(request: NextRequest) {
   try {
+    if (!stripe || !supabase) {
+      return NextResponse.json({ error: "Service not configured" }, { status: 500 })
+    }
+
     console.log("🔄 Cancel subscription request received")
 
     // Authorization headerからトークンを取得

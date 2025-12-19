@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 export async function POST(request: NextRequest) {
   try {
@@ -80,6 +80,13 @@ export async function POST(request: NextRequest) {
     }
 
     // 企業向けお問い合わせ内容をメールで送信
+    if (!resend) {
+      return NextResponse.json(
+        { error: "メール送信機能が設定されていません" },
+        { status: 500 }
+      )
+    }
+
     const { data, error } = await resend.emails.send({
       from: "企業お問い合わせ <onboarding@resend.dev>",
       to: ["yokaunit.info@gmail.com"], // 企業向けも同じメールアドレスに送信

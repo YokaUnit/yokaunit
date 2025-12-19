@@ -2,14 +2,18 @@ import { type NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
-})
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2024-06-20",
+    })
+  : null
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
 // Service Role Keyを使用してRLSをバイパス
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+  : null
 
 // プラン名からロールを決定する関数
 function getPlanRole(planName: string): "basic" | "premium" | "admin" {
@@ -45,8 +49,16 @@ export async function POST(request: NextRequest) {
   console.log("🎣 Webhook received")
 
   try {
+    if (!stripe || !webhookSecret || !supabase) {
+      return NextResponse.json({ error: "Service not configured" }, { status: 500 })
+    }
+
     const body = await request.text()
     const signature = request.headers.get("stripe-signature")!
+
+    if (!signature) {
+      return NextResponse.json({ error: "Missing signature" }, { status: 400 })
+    }
 
     let event: Stripe.Event
 

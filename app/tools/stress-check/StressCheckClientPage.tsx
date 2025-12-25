@@ -13,8 +13,14 @@ import { StressCheckResult as StressCheckResultComponent } from "./components/St
 import { useStressCheck } from "./hooks/useStressCheck"
 import { toast } from "@/hooks/use-toast"
 import { RelatedTools } from "@/components/related-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 
-export default function StressCheckClientPage() {
+interface StressCheckClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function StressCheckClientPage({ toolImageUrl = null, toolTitle = "ストレス耐性診断" }: StressCheckClientPageProps) {
   const {
     step,
     answers,
@@ -177,6 +183,11 @@ export default function StressCheckClientPage() {
           />
 
           <div className="max-w-4xl mx-auto mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+            )}
+          
           {/* ヘッダー */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">

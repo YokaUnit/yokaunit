@@ -14,9 +14,15 @@ import { useRoulette } from "./hooks/useRoulette"
 import { toast } from "@/hooks/use-toast"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { Sparkles, RotateCcw, History } from "lucide-react"
 
-export default function RouletteClientPage() {
+interface RouletteClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function RouletteClientPage({ toolImageUrl = null, toolTitle = "ルーレットメーカー" }: RouletteClientPageProps) {
   const {
     step,
     items,
@@ -93,7 +99,12 @@ export default function RouletteClientPage() {
             ]}
           />
 
-          <div className="max-w-6xl mx-auto mt-4 md:mt-6">
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+            )}
+            
             {/* ヘッダー */}
             <div className="text-center mb-6 md:mb-8">
               <div className="flex items-center justify-center mb-3 md:mb-4">

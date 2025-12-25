@@ -1,109 +1,13 @@
 "use client"
 
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Share2, TrendingUp, TrendingDown, Minus, Trophy, Lightbulb, Star, ArrowRight } from "lucide-react"
+import { Share2, TrendingUp, TrendingDown, Minus, Trophy, Lightbulb, Star, Twitter, MessageCircle } from "lucide-react"
 import type { DiagnosisResult as DiagnosisResultType } from "../lib/types"
 
 interface DiagnosisResultProps {
   result: DiagnosisResultType
   onShare: () => void
-}
-
-type RecommendationCategory = "mature" | "balanced" | "youthful"
-
-interface ToolRecommendation {
-  id: string
-  title: string
-  description: string
-  href: string
-  badge: string
-  categories: RecommendationCategory[]
-}
-
-const RECOMMENDATION_CATALOG: ToolRecommendation[] = [
-  {
-    id: "ai-stress-check",
-    title: "AIストレス診断",
-    description: "AIがあなたのストレス耐性と回復力を分析し、具体的なケア方法を提案します。",
-    href: "/tools/ai-stress-check",
-    badge: "メンタルケア",
-    categories: ["mature", "balanced"],
-  },
-  {
-    id: "stress-check",
-    title: "ストレスチェック（10問）",
-    description: "厚労省推奨の設問をベースに、今の疲れ具合とリスクをサクッと確認できます。",
-    href: "/tools/stress-check",
-    badge: "セルフチェック",
-    categories: ["mature"],
-  },
-  {
-    id: "ai-1kanzi",
-    title: "AIが選ぶ性格を表す漢字1文字",
-    description: "５つの質問から、あなたの性格をズバリ漢字1文字で表現。自己理解が深まります。",
-    href: "/tools/ai-1kanzi",
-    badge: "自己洞察",
-    categories: ["youthful", "balanced"],
-  },
-  {
-    id: "ai-mote",
-    title: "AIモテ診断",
-    description: "あなたの魅力度やコミュ力をAIが分析。恋愛や人間関係のヒントが見つかります。",
-    href: "/tools/ai-mote",
-    badge: "魅力度診断",
-    categories: ["youthful", "balanced"],
-  },
-  {
-    id: "fortune-today",
-    title: "AI今日の運勢診断",
-    description: "その日の運勢と開運アクションをAIが生成。気分転換やルーティン作りに最適です。",
-    href: "/tools/fortune-today",
-    badge: "デイリー運勢",
-    categories: ["balanced", "youthful"],
-  },
-]
-
-const getRecommendationCategory = (difference: number): RecommendationCategory => {
-  if (difference >= 5) return "mature"
-  if (difference <= -5) return "youthful"
-  return "balanced"
-}
-
-const getRecommendationMessage = (category: RecommendationCategory) => {
-  switch (category) {
-    case "mature":
-      return "落ち着いた視点と経験値を活かせるセルフケア系の診断をピックアップしました。"
-    case "youthful":
-      return "柔軟で軽やかな感性に合わせて、楽しみながら自己理解が深まる診断をご紹介します。"
-    default:
-      return "バランスの取れたあなたに、日常をアップデートできる人気診断をセレクトしました。"
-  }
-}
-
-const getRecommendations = (category: RecommendationCategory): ToolRecommendation[] => {
-  const priorityOrder: RecommendationCategory[] =
-    category === "mature"
-      ? ["mature", "balanced", "youthful"]
-      : category === "youthful"
-        ? ["youthful", "balanced", "mature"]
-        : ["balanced", "mature", "youthful"]
-
-  const selected: ToolRecommendation[] = []
-
-  for (const priority of priorityOrder) {
-    RECOMMENDATION_CATALOG.forEach((item) => {
-      if (selected.length >= 3) return
-      if (item.categories.includes(priority) && !selected.some((s) => s.id === item.id)) {
-        selected.push(item)
-      }
-    })
-    if (selected.length >= 3) break
-  }
-
-  return selected
 }
 
 export function DiagnosisResult({ result, onShare }: DiagnosisResultProps) {
@@ -136,12 +40,9 @@ export function DiagnosisResult({ result, onShare }: DiagnosisResultProps) {
     return "👶"
   }
 
-  const recommendationCategory = getRecommendationCategory(result.ageDifference)
-  const recommendations = getRecommendations(recommendationCategory)
-
   return (
-    <div className="max-w-3xl mx-auto space-y-4 px-4 sm:px-6 animate-in slide-in-from-bottom-4 duration-700">
-      <Card className="bg-white/95 backdrop-blur-sm border border-purple-100 shadow-md rounded-2xl p-6 md:p-8 text-center">
+    <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6 animate-in slide-in-from-bottom-4 duration-700">
+      <Card className="bg-white/95 backdrop-blur-sm border border-purple-100 shadow-md rounded-2xl p-5 sm:p-6 md:p-8 text-center">
         <div className="mb-6">
           <div className="text-5xl md:text-6xl mb-4">{getAgeEmoji(result.mentalAge)}</div>
           <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide">診断結果</p>
@@ -150,62 +51,83 @@ export function DiagnosisResult({ result, onShare }: DiagnosisResultProps) {
         </div>
 
         <div className="mb-6 md:mb-7">
-          <div className="space-y-2">
-            <div className={`bg-gradient-to-r ${getAgeColor(result.ageDifference)} w-32 h-32 md:w-36 md:h-36 rounded-full flex items-center justify-center mx-auto shadow-2xl transition-transform duration-300 hover:scale-105`}>
-              <span className="text-white text-3xl md:text-4xl font-bold">{result.mentalAge}歳</span>
+          <div className="space-y-2 sm:space-y-3">
+            <div className={`bg-gradient-to-r ${getAgeColor(result.ageDifference)} w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full flex items-center justify-center mx-auto shadow-2xl transition-transform duration-300 hover:scale-105`}>
+              <span className="text-white text-2xl sm:text-3xl md:text-4xl font-bold">{result.mentalAge}歳</span>
             </div>
-            <p className="text-sm font-semibold text-purple-700">{result.type}</p>
+            <p className="text-sm sm:text-base font-semibold text-purple-700 px-2">{result.type}</p>
           </div>
-          <div className="grid grid-cols-3 gap-2 md:gap-4 mt-4">
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[11px] text-gray-500">実年齢</p>
-              <p className="text-lg font-bold text-gray-900">{result.realAge}歳</p>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 mt-4 sm:mt-5">
+            <div className="rounded-lg border border-gray-200 bg-white p-2.5 sm:p-3">
+              <p className="text-[10px] sm:text-[11px] text-gray-500 mb-1">実年齢</p>
+              <p className="text-base sm:text-lg font-bold text-gray-900">{result.realAge}歳</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
+            <div className="rounded-lg border border-gray-200 bg-white p-2.5 sm:p-3">
               <div className="flex items-center justify-center mb-1">{getAgeIcon(result.ageDifference)}</div>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-xs sm:text-sm font-semibold text-gray-900">
                 {result.ageDifference > 0 ? `+${result.ageDifference}歳` : result.ageDifference < 0 ? `${result.ageDifference}歳` : "±0歳"}
               </p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[11px] text-gray-500">ポイント</p>
-              <p className="text-sm font-semibold text-gray-900">{getAgeMessage(result.ageDifference)}</p>
+            <div className="rounded-lg border border-gray-200 bg-white p-2.5 sm:p-3">
+              <p className="text-[10px] sm:text-[11px] text-gray-500 mb-1">ポイント</p>
+              <p className="text-xs sm:text-sm font-semibold text-gray-900 leading-tight">{getAgeMessage(result.ageDifference)}</p>
             </div>
           </div>
-          <div className="rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 p-4 mt-4">
-            <p className="text-sm text-purple-700 leading-relaxed">{result.description}</p>
+          <div className="rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 p-3 sm:p-4 mt-4">
+            <p className="text-xs sm:text-sm text-purple-700 leading-relaxed">{result.description}</p>
           </div>
         </div>
 
-        <Button
-          onClick={onShare}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 md:py-4 rounded-xl text-base md:text-lg"
-        >
-          <Share2 className="h-5 w-5 mr-2" />
-          結果をシェア
-        </Button>
-      </Card>
-
-      <Card className="bg-gradient-to-r from-purple-50 via-white to-blue-50 border border-purple-100 shadow-sm rounded-2xl p-5 md:p-6">
-        <div className="text-center mb-4">
-          <h3 className="text-lg md:text-xl font-bold text-gray-900">今のあなたにおすすめの診断ツール</h3>
-          <p className="text-sm text-gray-600 mt-1">{getRecommendationMessage(recommendationCategory)}</p>
-        </div>
-        <div className="grid gap-3 md:gap-4 md:grid-cols-3">
-          {recommendations.map((item) => (
-            <Link key={item.id} href={item.href} className="group block">
-              <div className="h-full rounded-xl border border-purple-100 bg-white/85 p-4 shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-md">
-                <div className="mb-3 flex items-center justify-between">
-                  <Badge variant="outline" className="border-purple-200 text-xs font-semibold text-purple-700">
-                    {item.badge}
-                  </Badge>
-                  <ArrowRight className="h-4 w-4 text-purple-300 transition-transform duration-300 group-hover:translate-x-1" />
-                </div>
-                <h4 className="mb-1.5 text-sm font-bold text-gray-900 leading-snug">{item.title}</h4>
-                <p className="text-xs text-gray-600 leading-relaxed">{item.description}</p>
-              </div>
-            </Link>
-          ))}
+        <div className="space-y-3">
+          <Button
+            onClick={onShare}
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 md:py-5 rounded-xl text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-300 touch-manipulation min-h-[56px]"
+          >
+            <Share2 className="h-5 w-5 mr-2" />
+            結果をシェア
+          </Button>
+          
+          {/* SNSシェアボタン */}
+          <div className="grid grid-cols-3 gap-2">
+            <Button
+              onClick={() => {
+                const text = `【AI精神年齢診断結果】私の精神年齢は${result.mentalAge}歳でした！実年齢${result.realAge}歳との差は${result.ageDifference > 0 ? '+' : ''}${result.ageDifference}歳です。${result.type}タイプでした✨`
+                const url = encodeURIComponent(window.location.href)
+                const tweetText = encodeURIComponent(text)
+                window.open(`https://twitter.com/intent/tweet?text=${tweetText}&url=${url}`, '_blank')
+              }}
+              variant="outline"
+              className="border-2 border-blue-400 text-blue-600 hover:bg-blue-50 font-bold py-3 rounded-xl touch-manipulation min-h-[48px]"
+            >
+              <Twitter className="h-4 w-4 mr-1" />
+              <span className="text-xs sm:text-sm">Twitter</span>
+            </Button>
+            <Button
+              onClick={() => {
+                const text = `【AI精神年齢診断結果】私の精神年齢は${result.mentalAge}歳でした！実年齢${result.realAge}歳との差は${result.ageDifference > 0 ? '+' : ''}${result.ageDifference}歳です。${result.type}タイプでした✨`
+                const url = encodeURIComponent(window.location.href)
+                window.open(`https://social-plugins.line.me/lineit/share?url=${url}&text=${encodeURIComponent(text)}`, '_blank')
+              }}
+              variant="outline"
+              className="border-2 border-green-400 text-green-600 hover:bg-green-50 font-bold py-3 rounded-xl touch-manipulation min-h-[48px]"
+            >
+              <MessageCircle className="h-4 w-4 mr-1" />
+              <span className="text-xs sm:text-sm">LINE</span>
+            </Button>
+            <Button
+              onClick={() => {
+                const url = encodeURIComponent(window.location.href)
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank')
+              }}
+              variant="outline"
+              className="border-2 border-blue-600 text-blue-700 hover:bg-blue-50 font-bold py-3 rounded-xl touch-manipulation min-h-[48px]"
+            >
+              <span className="text-xs sm:text-sm font-bold">FB</span>
+            </Button>
+          </div>
+          <p className="text-xs text-center text-gray-500 mt-2">
+            友達にも診断してもらって、結果を比較しよう！
+          </p>
         </div>
       </Card>
 

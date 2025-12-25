@@ -14,8 +14,14 @@ import { AnalysisLoading } from "./components/AnalysisLoading"
 import { useAiMoteDiagnosis } from "./hooks/useAiMoteDiagnosis"
 import { toast } from "@/hooks/use-toast"
 import { RelatedTools } from "@/components/related-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 
-export default function AiMoteClientPage() {
+interface AiMoteClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function AiMoteClientPage({ toolImageUrl = null, toolTitle = "AIモテ度診断" }: AiMoteClientPageProps) {
   const {
     step,
     answers,
@@ -160,7 +166,7 @@ export default function AiMoteClientPage() {
   const handleShare = async () => {
     const url = window.location.href
     const text = result 
-      ? `私のAIモテ度は${result.score}%でした！${result.type}タイプです。`
+      ? `【AIモテ度診断結果】私のモテ度は${result.score}%でした！${result.type}タイプです✨ ポジティブ度${result.positiveScore}%、社交性${result.socialScore}%、共感力${result.empathyScore}%でした。`
       : "AIモテ度診断をやってみました！"
     
     try {
@@ -200,6 +206,11 @@ export default function AiMoteClientPage() {
           />
 
           <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+          {/* ツール画像 */}
+          {toolImageUrl && (
+            <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+          )}
+          
           {/* ヘッダー */}
           <div className="text-center mb-6 md:mb-8">
             <div className="flex items-center justify-center mb-3 md:mb-4">
@@ -207,11 +218,22 @@ export default function AiMoteClientPage() {
                 <Heart className="h-8 w-8 md:h-10 md:w-10 text-white" />
               </div>
             </div>
-            <h1 className="text-xl md:text-4xl font-bold text-gray-900 mb-2">AIモテ度診断（無料）</h1>
-            <h2 className="text-base md:text-xl text-gray-600 mb-3 md:mb-4">AIがあなたの恋愛モテ度を数値化</h2>
-            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 px-2 leading-tight">【30秒診断】AIモテ度診断｜0-100%で数値化！恋愛モテ度をAI分析</h1>
+            <h2 className="text-base sm:text-lg md:text-xl text-gray-600 mb-3 md:mb-4 px-4">AIがあなたの恋愛モテ度を数値化</h2>
+            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4 leading-relaxed">
               最新のAI技術があなたの文章を分析し、ポジティブ度・社交性・共感力から総合的なモテ度を診断します
             </p>
+            <div className="flex flex-wrap justify-center gap-2 mt-4 px-4">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-pink-100 text-pink-800">
+                ⚡ 30秒で診断完了
+              </span>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-purple-100 text-purple-800">
+                💯 完全無料
+              </span>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-blue-100 text-blue-800">
+                📱 スマホ最適化
+              </span>
+            </div>
           </div>
 
           {step === "intro" && (
@@ -246,11 +268,14 @@ export default function AiMoteClientPage() {
                 <div className="text-center">
                   <Button
                     onClick={startDiagnosis}
-                    className="w-full md:w-auto bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl text-base md:text-lg touch-manipulation"
+                    className="w-full md:w-auto bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 md:py-5 px-8 md:px-10 rounded-xl text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-300 touch-manipulation min-h-[56px] md:min-h-[64px]"
                   >
-                    <Heart className="h-4 w-4 md:h-5 md:w-5 mr-2" />
-                    診断を始める
+                    <Heart className="h-5 w-5 md:h-6 md:w-6 mr-2" />
+                    <span className="font-extrabold">診断を始める</span>
                   </Button>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-3">
+                    📱 スマホからもワンタップで簡単診断
+                  </p>
                 </div>
               </Card>
 

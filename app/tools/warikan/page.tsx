@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -75,6 +77,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function WarikanPage() {
   const imageUrl = await getToolImageUrl("warikan")
+  const tool = await getToolBySlug("warikan")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -108,19 +112,24 @@ export default async function WarikanPage() {
               { label: "割り勘計算ツール", href: "/tools/warikan" },
             ]}
           />
-          <WarikanClient />
-        </div>
-      </div>
-      <CategoryTools category="計算" title="関連ツール（計算）" currentToolSlug="warikan" limit={8} />
-      <RelatedTools currentToolSlug="warikan" />
-
-      {/* SEO記事セクション */}
-      <div className="max-w-4xl mx-auto mt-16">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">💰 割り勘計算完全ガイド：会計のプロが教える効率的な支払い方法</h2>
           
-          <div className="prose max-w-none text-gray-700 space-y-6">
-            <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+          {/* ツール画像 */}
+          {toolImageUrl && (
+            <div className="mb-6">
+              <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "割り勘計算機"} />
+            </div>
+          )}
+          
+          <WarikanClient />
+
+          {/* SEO記事セクション */}
+          <div className="mt-16">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">💰 割り勘計算完全ガイド：会計のプロが教える効率的な支払い方法</h2>
+              
+              <div className="prose max-w-none text-gray-700 space-y-6">
+                <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
               <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="text-2xl">💡</span>
                 割り勘の基本と現代社会での重要性
@@ -448,10 +457,14 @@ export default async function WarikanPage() {
                 <span>#YokaUnit</span>
               </div>
             </div>
+              </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
+      <CategoryTools category="計算" title="関連ツール（計算）" currentToolSlug="warikan" limit={8} />
+      <RelatedTools currentToolSlug="warikan" />
       <ScrollToTop />
       <SiteFooter />
     </>

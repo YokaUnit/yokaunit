@@ -7,9 +7,11 @@ import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("uuid", {
@@ -127,6 +129,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function UuidGeneratorPage() {
   const imageUrl = await getToolImageUrl("uuid")
+  const tool = await getToolBySlug("uuid")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <div className="flex min-h-screen flex-col">
@@ -161,6 +165,13 @@ export default async function UuidGeneratorPage() {
           />
 
           <div className="max-w-4xl mx-auto mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <div className="mb-8">
+                <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "UUID生成ツール"} />
+              </div>
+            )}
+            
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">🔑 UUID生成ツール</h1>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">

@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -70,6 +72,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Sakura2048Page() {
   const imageUrl = await getToolImageUrl("sakura2048")
+  const tool = await getToolBySlug("sakura2048")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -103,13 +107,18 @@ export default async function Sakura2048Page() {
                 { href: "/tools/sakura2048", label: "テキストエディタ風2048" },
               ]}
             />
+            
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <div className="mb-6">
+                <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "サクラ2048"} />
+              </div>
+            )}
+            
             <Sakura2048Client />
-          </div>
-        </main>
-        <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="sakura2048" limit={8} />
 
-        {/* SEO記事セクション */}
-        <div className="max-w-4xl mx-auto mt-16">
+            {/* SEO記事セクション */}
+            <div className="mt-16">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">📝 テキストエディタ風2048完全ガイド：UIデザイン・ゲーム戦略・職場文化の科学</h2>
             
@@ -326,13 +335,16 @@ export default async function Sakura2048Page() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+              </div>
+            </div>
 
-        {/* 最新のツールセクションをページ最下部に移動 */}
-        <div className="relative z-0">
-          <RelatedTools currentToolSlug="sakura2048" />
-        </div>
+            {/* 最新のツールセクションをページ最下部に移動 */}
+            <div className="mt-12">
+              <RelatedTools currentToolSlug="sakura2048" />
+            </div>
+          </div>
+        </main>
+        <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="sakura2048" limit={8} />
         <ScrollToTop />
         <SiteFooter />
       </div>

@@ -16,8 +16,15 @@ import { Ground, Walls, Lighting } from "./components/Environment3D"
 import { ControlPanel } from "./components/ControlPanel"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 
-export function Dice3DClientPage() {
+interface Dice3DClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export function Dice3DClientPage({ toolImageUrl = null, toolTitle = "サイコロ" }: Dice3DClientPageProps) {
   const {
     diceInstances,
     diceResults,
@@ -76,6 +83,19 @@ export function Dice3DClientPage() {
       
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">
+          <Breadcrumbs
+            items={[
+              { label: "ホーム", href: "/" },
+              { label: "ツール一覧", href: "/tools" },
+              { label: "サイコロ", href: "/tools/dice3d" },
+            ]}
+          />
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+          {/* ツール画像 */}
+          {toolImageUrl && (
+            <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+          )}
+          
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               🎲 サイコロ｜無料オンラインサイコロ
@@ -489,12 +509,10 @@ export function Dice3DClientPage() {
             </div>
           </div>
         </div>
-      </main>
 
-      <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="dice3d" limit={8} />
-      
-      {/* SEO記事 */}
-      <section className="bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-lg mx-4 mb-8">
+            {/* SEO記事セクション */}
+            <div className="mt-16">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">🎲 サイコロ完全ガイド：物理演算・確率論・ゲーム文化の科学</h2>
         
         <div className="space-y-6">
@@ -674,10 +692,18 @@ export function Dice3DClientPage() {
             </div>
           </div>
 
-        </div>
-      </section>
-      
-      <RelatedTools currentToolSlug="dice3d" />
+              </div>
+            </div>
+
+            {/* ページ最下部に最新のツール */}
+            <div className="mt-12">
+              <RelatedTools currentToolSlug="dice3d" />
+            </div>
+          </div>
+          </div>
+        </main>
+
+      <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="dice3d" limit={8} />
 
       <SiteFooter />
     </div>

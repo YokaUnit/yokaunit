@@ -17,6 +17,8 @@ import {
   BREADCRUMB_STRUCTURED_DATA 
 } from './lib/seo-data';
 import { getToolImageUrl } from '@/lib/tool-structured-data';
+import { getToolBySlug } from '@/lib/actions/tools';
+import { ToolHeroImage } from '@/components/tool-hero-image';
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata('consumption-tax', {
@@ -43,6 +45,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ConsumptionTaxPage() {
   const imageUrl = await getToolImageUrl("consumption-tax")
+  const tool = await getToolBySlug("consumption-tax")
+  const toolImageUrl = tool?.image_url || null
   const structuredDataWithImage = {
     ...STRUCTURED_DATA,
     image: [imageUrl],
@@ -83,6 +87,14 @@ export default async function ConsumptionTaxPage() {
               { label: "消費税計算機", href: "/tools/consumption-tax" },
             ]}
           />
+          
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+          {/* ツール画像 */}
+          {toolImageUrl && (
+            <div className="mb-8">
+              <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "消費税計算機"} />
+            </div>
+          )}
           
           <ConsumptionTaxProvider>
             {/* メインタイトル */}
@@ -516,10 +528,14 @@ export default async function ConsumptionTaxPage() {
               </div>
             </div>
           </section>
+
+        {/* ページ最下部に最新のツール */}
+        <div className="mt-12">
+          <RelatedTools currentToolSlug="consumption-tax" />
+        </div>
+        </div>
         </div>
       </main>
-      
-      <RelatedTools currentToolSlug="consumption-tax" />
       
       <SiteFooter />
     </div>

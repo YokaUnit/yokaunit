@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import AIStressCheckClientPage from "./AIStressCheckClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -63,6 +64,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AIStressCheckPage() {
   const imageUrl = await getToolImageUrl("ai-stress-check")
+  const tool = await getToolBySlug("ai-stress-check")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -85,7 +88,7 @@ export default async function AIStressCheckPage() {
         }}
       />
       <ViewCounter toolSlug="ai-stress-check" />
-      <AIStressCheckClientPage />
+      <AIStressCheckClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "AIストレス耐性診断"} />
       <ScrollToTop />
     </>
   )

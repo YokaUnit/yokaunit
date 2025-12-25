@@ -14,8 +14,14 @@ import { useAiSeishinnenreiDiagnosis } from "./hooks/useAiSeishinnenreiDiagnosis
 import { toast } from "@/hooks/use-toast"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 
-export default function AiSeishinnenreiClientPage() {
+interface AiSeishinnenreiClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTitle = "AI精神年齢診断" }: AiSeishinnenreiClientPageProps) {
   const {
     step,
     answers,
@@ -35,7 +41,7 @@ export default function AiSeishinnenreiClientPage() {
   const handleShare = async () => {
     const url = window.location.href
     const text = result 
-      ? `私の精神年齢は${result.mentalAge}歳でした！実年齢${result.realAge}歳との差は${result.ageDifference > 0 ? '+' : ''}${result.ageDifference}歳です。`
+      ? `【AI精神年齢診断結果】私の精神年齢は${result.mentalAge}歳でした！実年齢${result.realAge}歳との差は${result.ageDifference > 0 ? '+' : ''}${result.ageDifference}歳です。${result.type}タイプでした✨`
       : "AI精神年齢診断をやってみました！"
     
     try {
@@ -59,6 +65,7 @@ export default function AiSeishinnenreiClientPage() {
     }
   }
 
+
   return (
     <>
       <SiteHeader />
@@ -75,6 +82,11 @@ export default function AiSeishinnenreiClientPage() {
           />
 
           <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+          {/* ツール画像 */}
+          {toolImageUrl && (
+            <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+          )}
+          
           {/* ヘッダー */}
           <div className="text-center mb-6 md:mb-8">
             <div className="flex items-center justify-center mb-3 md:mb-4">
@@ -82,11 +94,22 @@ export default function AiSeishinnenreiClientPage() {
                 <Brain className="h-8 w-8 md:h-10 md:w-10 text-white" />
               </div>
             </div>
-            <h1 className="text-xl md:text-4xl font-bold text-gray-900 mb-2">AI精神年齢診断｜心理年齢を5つの質問で即チェック【無料・登録不要】</h1>
-            <h2 className="text-base md:text-xl text-gray-600 mb-3 md:mb-4">AIがあなたの心理年齢・メンタル年齢を数値化</h2>
-            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 px-2 leading-tight">【30秒診断】AI精神年齢診断｜5つの質問で心理年齢を即診断</h1>
+            <h2 className="text-base sm:text-lg md:text-xl text-gray-600 mb-3 md:mb-4 px-4">AIがあなたの心理年齢・メンタル年齢を数値化</h2>
+            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4 leading-relaxed">
               簡単な5つの選択式質問に答えるだけで、AIがあなたの精神年齢を分析し、実年齢との差を詳しく解説します
             </p>
+            <div className="flex flex-wrap justify-center gap-2 mt-4 px-4">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-green-100 text-green-800">
+                ⚡ 30秒で診断完了
+              </span>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-blue-100 text-blue-800">
+                💯 完全無料
+              </span>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-purple-100 text-purple-800">
+                📱 スマホ最適化
+              </span>
+            </div>
           </div>
 
           {step === "intro" && (
@@ -121,11 +144,14 @@ export default function AiSeishinnenreiClientPage() {
                 <div className="text-center">
                   <Button
                     onClick={startDiagnosis}
-                    className="w-full md:w-auto bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl text-base md:text-lg touch-manipulation"
+                    className="w-full md:w-auto bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-bold py-4 md:py-5 px-8 md:px-10 rounded-xl text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-300 touch-manipulation min-h-[56px] md:min-h-[64px]"
                   >
-                    <Brain className="h-4 w-4 md:h-5 md:w-5 mr-2" />
-                    診断を始める
+                    <Brain className="h-5 w-5 md:h-6 md:w-6 mr-2" />
+                    <span className="font-extrabold">診断を始める</span>
                   </Button>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-3">
+                    📱 スマホからもワンタップで簡単診断
+                  </p>
                 </div>
               </Card>
 

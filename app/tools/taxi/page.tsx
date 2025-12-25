@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import Script from "next/script"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
@@ -91,6 +93,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function TaxiFareToolPage() {
   const imageUrl = await getToolImageUrl("taxi")
+  const tool = await getToolBySlug("taxi")
+  const toolImageUrl = tool?.image_url || null
   
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -141,7 +145,15 @@ export default async function TaxiFareToolPage() {
             ]}
           />
 
-          <section className="mx-auto w-full max-w-5xl rounded-3xl bg-white/85 p-6 shadow-xl ring-1 ring-blue-100/70 backdrop-blur sm:p-10">
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+          {/* ツール画像 */}
+          {toolImageUrl && (
+            <div className="mb-6">
+              <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "タクシー運賃計算ツール"} />
+            </div>
+          )}
+
+          <section className="mx-auto w-full rounded-3xl bg-white/85 p-6 shadow-xl ring-1 ring-blue-100/70 backdrop-blur sm:p-10">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div className="space-y-4">
                 <p className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-1 text-xs font-semibold text-blue-700 ring-1 ring-blue-100">
@@ -187,6 +199,7 @@ export default async function TaxiFareToolPage() {
 
           <div data-id="taxi-calculator-root" id="taxi-calculator">
             <TaxiClient />
+          </div>
           </div>
         </div>
       </div>

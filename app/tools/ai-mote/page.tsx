@@ -1,15 +1,16 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import AiMoteClientPage from "./AiMoteClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-mote", {
-    title: "AIモテ度診断｜無料でできる恋愛相性・モテ診断ツール",
+    title: "【30秒診断】AIモテ度診断｜0-100%で数値化！恋愛モテ度をAI分析【無料・登録不要】",
     description:
-      "【完全無料】AIがあなたのモテ度を0-100%で数値化！ポジティブ度・社交性・共感力を最新AI技術で分析し、無限のモテタイプを判定。登録不要で今すぐ診断開始。恋愛相性診断・性格診断も。",
+      "AIが30秒で診断！3つの質問に答えるだけ。あなたのモテ度を0-100%で数値化。ポジティブ度・社交性・共感力を分析し、無限のモテタイプを判定。登録不要・完全無料・10万人以上が利用中。結果をSNSでシェアしよう！",
     keywords: "AIモテ度診断,恋愛診断,モテ度,AI診断,ポジティブ度,社交性,共感力,無料診断,恋愛相性,性格診断,恋愛タイプ,モテ度チェック,恋愛診断無料,AI恋愛診断,モテ度測定,恋愛心理テスト",
     authors: [{ name: "YokaUnit", url: "https://yokaunit.com" }],
     creator: "YokaUnit",
@@ -33,15 +34,15 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "ja_JP",
       url: "https://yokaunit.com/tools/ai-mote",
       siteName: "YokaUnit",
-      title: "AIモテ度診断｜無料でできる恋愛相性・モテ診断ツール",
-      description: "【完全無料】AIがあなたのモテ度を0-100%で数値化！ポジティブ度・社交性・共感力を最新AI技術で分析。登録不要で今すぐ診断開始。",
+      title: "【30秒診断】AIモテ度診断｜0-100%で数値化！恋愛モテ度をAI分析【無料・登録不要】",
+      description: "AIが30秒で診断！3つの質問に答えるだけ。あなたのモテ度を0-100%で数値化。ポジティブ度・社交性・共感力を分析し、無限のモテタイプを判定。登録不要・完全無料・10万人以上が利用中。",
     },
     twitter: {
       card: "summary_large_image",
       site: "@yokaunit",
       creator: "@yokaunit",
-      title: "AIモテ度診断｜無料でできる恋愛相性・モテ診断ツール",
-      description: "【完全無料】AIがあなたのモテ度を0-100%で数値化！ポジティブ度・社交性・共感力を最新AI技術で分析。",
+      title: "【30秒診断】AIモテ度診断｜0-100%で数値化！恋愛モテ度をAI分析【無料・登録不要】",
+      description: "AIが30秒で診断！3つの質問に答えるだけ。あなたのモテ度を0-100%で数値化。ポジティブ度・社交性・共感力を分析。登録不要・完全無料。",
     },
     verification: {
       google: "your-google-verification-code",
@@ -51,6 +52,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AiMotePage() {
   const imageUrl = await getToolImageUrl("ai-mote")
+  const tool = await getToolBySlug("ai-mote")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -73,7 +76,7 @@ export default async function AiMotePage() {
         }}
       />
       <ViewCounter toolSlug="ai-mote" />
-      <AiMoteClientPage />
+      <AiMoteClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "AIモテ度診断"} />
       <ScrollToTop />
     </>
   )

@@ -61,6 +61,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function StressCheckPage() {
   const imageUrl = await getToolImageUrl("stress-check")
+  const tool = await getToolBySlug("stress-check")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -83,7 +85,7 @@ export default async function StressCheckPage() {
         }}
       />
       <ViewCounter toolSlug="stress-check" />
-      <StressCheckClientPage />
+      <StressCheckClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "ストレス耐性診断"} />
       <ScrollToTop />
     </>
   )

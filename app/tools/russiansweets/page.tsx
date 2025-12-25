@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -53,6 +55,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RussianSweetsPage() {
   const imageUrl = await getToolImageUrl("russiansweets")
+  const tool = await getToolBySlug("russiansweets")
+  const toolImageUrl = tool?.image_url || null
   const breadcrumbItems = [
     { label: "ホーム", href: "/" },
     { label: "ツール一覧", href: "/tools" },
@@ -85,17 +89,19 @@ export default async function RussianSweetsPage() {
       <main className="flex-1 relative z-10">
         <div className="container mx-auto px-4 py-6">
           <Breadcrumbs items={breadcrumbItems} />
+          
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+          {/* ツール画像 */}
+          {toolImageUrl && (
+            <div className="mb-6">
+              <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "ロシアンスイーツ"} />
+            </div>
+          )}
+          
           <RussianSweetsClient />
 
-          <div className="mt-10">
-            <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="russian-sweets" limit={8} />
-          </div>
-          <div className="mt-6">
-            <RelatedTools currentToolSlug="russian-sweets" />
-          </div>
-
           {/* SEO記事セクション */}
-          <div className="max-w-4xl mx-auto mt-16">
+          <div className="mt-16">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">🍰 ロシアンスイーツ完全ガイド：心理戦・確率論・SNSトレンドゲームの世界</h2>
               
@@ -433,6 +439,7 @@ export default async function RussianSweetsPage() {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </main>
       <ScrollToTop />

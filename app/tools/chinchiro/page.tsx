@@ -2,6 +2,7 @@ import ChinchiroClientPage from "./ChinchiroClientPage"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 
@@ -34,6 +35,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ChinchiroPage() {
   const imageUrl = await getToolImageUrl("chinchiro")
+  const tool = await getToolBySlug("chinchiro")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -56,7 +59,7 @@ export default async function ChinchiroPage() {
         }}
       />
       <ViewCounter toolSlug="chinchiro" />
-      <ChinchiroClientPage />
+      <ChinchiroClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "3Dチンチロサイコロ"} />
       <ScrollToTop />
     </>
   )

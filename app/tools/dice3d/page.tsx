@@ -2,6 +2,7 @@ import { Dice3DClientPage } from "./Dice3DClientPage"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 
@@ -79,6 +80,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Dice3DPage() {
   const imageUrl = await getToolImageUrl("dice3d")
+  const tool = await getToolBySlug("dice3d")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -205,7 +208,7 @@ export default async function Dice3DPage() {
       />
 
       <ViewCounter toolSlug="dice3d" />
-      <Dice3DClientPage />
+      <Dice3DClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "サイコロ"} />
       <ScrollToTop />
     </>
   )

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Share2, Sparkles, Users, Heart, Trophy, Star } from "lucide-react"
+import { Share2, Sparkles, Users, Heart, Trophy, Star, Twitter, MessageCircle } from "lucide-react"
 import type { DiagnosisResult as DiagnosisResultType } from "../lib/types"
 
 interface DiagnosisResultProps {
@@ -47,52 +47,94 @@ export function DiagnosisResult({ result, onShare }: DiagnosisResultProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4">
       {/* メイン結果カード */}
       <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl overflow-hidden">
         {/* ヘッダー部分 */}
-        <div className={`bg-gradient-to-r ${getScoreColor(result.score)} p-6 text-white text-center relative`}>
+        <div className={`bg-gradient-to-r ${getScoreColor(result.score)} p-5 sm:p-6 text-white text-center relative`}>
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="relative z-10">
-            <div className="text-6xl mb-3">{getScoreEmoji(result.score)}</div>
-            <h2 className="text-3xl font-bold mb-2">{getScoreTitle(result.score)}</h2>
-            <div className="flex items-center justify-center gap-4 mb-2">
-              <div className="text-5xl font-bold">{result.score}</div>
-              <div className="text-xl opacity-90">/ 100%</div>
+            <div className="text-5xl sm:text-6xl mb-2 sm:mb-3">{getScoreEmoji(result.score)}</div>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2 px-2">{getScoreTitle(result.score)}</h2>
+            <div className="flex items-center justify-center gap-3 sm:gap-4 mb-2">
+              <div className="text-4xl sm:text-5xl font-bold">{result.score}</div>
+              <div className="text-lg sm:text-xl opacity-90">/ 100%</div>
             </div>
-            <div className="text-lg font-medium opacity-90">
+            <div className="text-base sm:text-lg font-medium opacity-90 px-2">
               {getScoreMessage(result.score)}
             </div>
           </div>
         </div>
 
         {/* コンテンツ部分 */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* タイプ説明 */}
-          <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-4 mb-6">
-            <h3 className="text-xl font-bold text-purple-800 mb-2 text-center">
+          <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-4 sm:p-5 mb-5 sm:mb-6">
+            <h3 className="text-lg sm:text-xl font-bold text-purple-800 mb-2 text-center px-2">
               {result.type}
             </h3>
-            <p className="text-purple-700 leading-relaxed text-center">
+            <p className="text-sm sm:text-base text-purple-700 leading-relaxed text-center px-2">
               {result.description}
             </p>
           </div>
 
           {/* シェアボタン */}
-          <div className="text-center">
+          <div className="text-center space-y-3">
             <Button
               onClick={onShare}
-              className={`bg-gradient-to-r ${getScoreColor(result.score)} hover:opacity-90 text-white font-bold py-3 px-8 rounded-xl shadow-lg`}
+              className={`w-full bg-gradient-to-r ${getScoreColor(result.score)} hover:opacity-90 text-white font-bold py-4 md:py-5 px-8 rounded-xl text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-300 touch-manipulation min-h-[56px]`}
             >
               <Share2 className="h-5 w-5 mr-2" />
               結果をシェア
             </Button>
+            
+            {/* SNSシェアボタン */}
+            <div className="grid grid-cols-3 gap-2">
+              <Button
+                onClick={() => {
+                  const text = `【AIモテ度診断結果】私のモテ度は${result.score}%でした！${result.type}タイプです✨ ポジティブ度${result.positiveScore}%、社交性${result.socialScore}%、共感力${result.empathyScore}%でした。`
+                  const url = encodeURIComponent(window.location.href)
+                  const tweetText = encodeURIComponent(text)
+                  window.open(`https://twitter.com/intent/tweet?text=${tweetText}&url=${url}`, '_blank')
+                }}
+                variant="outline"
+                className="border-2 border-blue-400 text-blue-600 hover:bg-blue-50 font-bold py-3 rounded-xl touch-manipulation min-h-[48px]"
+              >
+                <Twitter className="h-4 w-4 mr-1" />
+                <span className="text-xs sm:text-sm">Twitter</span>
+              </Button>
+              <Button
+                onClick={() => {
+                  const text = `【AIモテ度診断結果】私のモテ度は${result.score}%でした！${result.type}タイプです✨ ポジティブ度${result.positiveScore}%、社交性${result.socialScore}%、共感力${result.empathyScore}%でした。`
+                  const url = encodeURIComponent(window.location.href)
+                  window.open(`https://social-plugins.line.me/lineit/share?url=${url}&text=${encodeURIComponent(text)}`, '_blank')
+                }}
+                variant="outline"
+                className="border-2 border-green-400 text-green-600 hover:bg-green-50 font-bold py-3 rounded-xl touch-manipulation min-h-[48px]"
+              >
+                <MessageCircle className="h-4 w-4 mr-1" />
+                <span className="text-xs sm:text-sm">LINE</span>
+              </Button>
+              <Button
+                onClick={() => {
+                  const url = encodeURIComponent(window.location.href)
+                  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank')
+                }}
+                variant="outline"
+                className="border-2 border-blue-600 text-blue-700 hover:bg-blue-50 font-bold py-3 rounded-xl touch-manipulation min-h-[48px]"
+              >
+                <span className="text-xs sm:text-sm font-bold">FB</span>
+              </Button>
+            </div>
+            <p className="text-xs text-center text-gray-500 mt-2">
+              友達にも診断してもらって、結果を比較しよう！
+            </p>
           </div>
         </div>
       </Card>
 
       {/* 詳細スコア */}
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         {/* ポジティブ度 */}
         <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-0 shadow-lg p-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-20 h-20 bg-orange-200/30 rounded-full -mr-10 -mt-10"></div>

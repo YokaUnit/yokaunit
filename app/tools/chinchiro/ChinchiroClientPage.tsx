@@ -33,6 +33,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { useMediaQuery } from "@/hooks/use-mobile"
 import { useChinchiroGame } from "./hooks/useChinchiroGame"
 import { Dice } from "./components/Dice"
@@ -131,7 +132,12 @@ function ResultDisplay({ result, resultClass }) {
 }
 
 // チンチロゲームのメインコンポーネント
-export default function ChinchiroClientPage() {
+interface ChinchiroClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function ChinchiroClientPage({ toolImageUrl = null, toolTitle = "3Dチンチロサイコロ" }: ChinchiroClientPageProps) {
   const isMobile = useMediaQuery("(max-width: 768px)")
   const game = useChinchiroGame()
 
@@ -168,6 +174,12 @@ export default function ChinchiroClientPage() {
                 { label: "チンチロ3D", href: "/tools/chinchiro" },
               ]}
             />
+
+            <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+            )}
 
             {/* ヒーローセクション */}
             <div className="text-center mb-8 animate-fade-in">
@@ -489,12 +501,8 @@ export default function ChinchiroClientPage() {
               </TabsContent>
             </Tabs>
 
-            <div className="mt-16">
-              <RelatedTools currentToolSlug="chinchiro" />
-            </div>
-
             {/* SEO記事セクション */}
-            <div className="max-w-4xl mx-auto mt-16">
+            <div className="mt-16">
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">🎲 チンチロ完全ガイド：物理演算・確率論・日本の伝統ゲーム文化</h2>
                 
@@ -830,6 +838,12 @@ export default function ChinchiroClientPage() {
                 </div>
               </div>
             </div>
+            
+            {/* ページ最下部に最新のツール */}
+            <div className="mt-12">
+              <RelatedTools currentToolSlug="chinchiro" />
+            </div>
+          </div>
           </div>
         </main>
 

@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -87,6 +89,8 @@ const breadcrumbItems = [
 
 export default async function BombCardGamePage() {
   const imageUrl = await getToolImageUrl("bombcard")
+  const tool = await getToolBySlug("bombcard")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <div className="min-h-screen flex flex-col relative">
@@ -114,18 +118,23 @@ export default async function BombCardGamePage() {
       <main className="flex-1 relative z-10">
         <div className="container mx-auto px-4 py-6">
           <Breadcrumbs items={breadcrumbItems} />
+          
+          <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+          {/* ツール画像 */}
+          {toolImageUrl && (
+            <div className="mb-6">
+              <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "爆弾カードゲーム"} />
+            </div>
+          )}
+          
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">💣 爆弾カードゲーム</h1>
             <p className="text-gray-600">カードを選んで爆弾を避けよう！最後まで生き残った人の勝利です。</p>
           </div>
           <BombCardGameClient />
-        </div>
-      </main>
-      
-      <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="bombcard" limit={8} />
 
-      {/* SEO記事セクション */}
-      <div className="max-w-4xl mx-auto mt-16">
+          {/* SEO記事セクション */}
+          <div className="mt-16">
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">💣 爆弾カードゲーム完全ガイド：確率論・心理戦・パーティーゲームの極意</h2>
           
@@ -463,9 +472,15 @@ export default async function BombCardGamePage() {
         </div>
       </div>
 
-      <div className="mt-16">
-        <RelatedTools currentToolSlug="bombcard" />
-      </div>
+            {/* 最新のツール */}
+            <div className="mt-12">
+              <RelatedTools currentToolSlug="bombcard" />
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="bombcard" limit={8} />
       
       <ScrollToTop />
       <SiteFooter />

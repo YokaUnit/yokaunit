@@ -7,6 +7,7 @@ import { BackgroundAnimation } from "@/components/background-animation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Trophy, RefreshCw, HelpCircle } from "lucide-react"
@@ -14,7 +15,12 @@ import { useConnect4Game } from "./hooks/useConnect4Game"
 import { GameBoard } from "./components/GameBoard"
 import type { Player } from "./lib/game-logic"
 
-export default function Connect4ClientPage() {
+interface Connect4ClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function Connect4ClientPage({ toolImageUrl = null, toolTitle = "コネクトフォー" }: Connect4ClientPageProps) {
   const { gameState, makeMove, resetGame } = useConnect4Game()
   const [isAnimating, setIsAnimating] = useState(false)
   const [activeCoin, setActiveCoin] = useState<{ player: Player; column: number; row: number } | null>(null)
@@ -120,13 +126,19 @@ export default function Connect4ClientPage() {
               ]}
             />
 
+            <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+            )}
+
             {/* ヒーローセクション */}
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-gray-900 mb-2">コネクトフォー</h1>
               <p className="text-gray-600">スムーズな落下アニメーションで楽しむ4目並べゲーム</p>
             </div>
 
-            <div className="max-w-4xl mx-auto">
+            <div>
               <Card>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
@@ -183,12 +195,9 @@ export default function Connect4ClientPage() {
               </Card>
             </div>
           </div>
-        </main>
 
-        <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="connect4" limit={8} />
-
-        {/* SEO記事 */}
-        <div className="max-w-4xl mx-auto px-4 py-8">
+            {/* SEO記事セクション */}
+            <div className="mt-16">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">
               🎯 コネクトフォー完全ガイド：4つ並べ・4目並べゲーム・戦略・アルゴリズムの科学
@@ -352,7 +361,11 @@ export default function Connect4ClientPage() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
+          </div>
+        </main>
+
+        <CategoryTools category="ゲーム" title="関連ツール（ゲーム）" currentToolSlug="connect4" limit={8} />
 
         <RelatedTools currentToolSlug="connect4" />
       </div>

@@ -10,6 +10,8 @@ import { ScrollToTop } from "@/components/scroll-to-top"
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("password", {
@@ -102,6 +104,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PasswordGeneratorPage() {
   const imageUrl = await getToolImageUrl("password")
+  const tool = await getToolBySlug("password")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <div className="flex min-h-screen flex-col relative">
@@ -137,6 +141,11 @@ export default async function PasswordGeneratorPage() {
           />
 
           <div className="max-w-4xl mx-auto mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "パスワード生成ツール"} />
+            )}
+            
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">🔐 パスワード生成ツール</h1>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">

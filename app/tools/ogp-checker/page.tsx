@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
@@ -109,6 +111,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function OGPCheckerPage() {
   const imageUrl = await getToolImageUrl("ogp-checker")
+  const tool = await getToolBySlug("ogp-checker")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -143,14 +147,20 @@ export default async function OGPCheckerPage() {
                 { label: "OGPチェッカー", href: "/tools/ogp-checker" },
               ]}
             />
+            
+            <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <div className="mb-6">
+                <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "OGPチェッカー"} />
+              </div>
+            )}
+            
             <OGPCheckerClient />
-          </div>
-        </main>
-        <RelatedTools currentToolSlug="ogp-checker" />
-        
-        {/* SEO記事 */}
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+
+            {/* SEO記事セクション */}
+            <div className="mt-16">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">🔍 OGPチェッカー完全ガイド：メタデータ最適化・SNSマーケティング・SEO技術の科学</h2>
             
             <div className="prose max-w-none text-gray-700 space-y-6">
@@ -390,8 +400,16 @@ export default async function OGPCheckerPage() {
                 </div>
               </div>
             </div>
+              </div>
+            </div>
+
+            {/* ページ最下部に最新のツール */}
+            <div className="mt-12">
+              <RelatedTools currentToolSlug="ogp-checker" />
+            </div>
           </div>
-        </div>
+          </div>
+        </main>
         <ScrollToTop />
         <SiteFooter />
       </div>

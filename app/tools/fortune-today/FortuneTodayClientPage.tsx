@@ -15,8 +15,14 @@ import { useFortuneTeller } from "./hooks/useFortuneTeller"
 import { toast } from "@/hooks/use-toast"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 
-export default function FortuneTodayClientPage() {
+interface FortuneTodayClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function FortuneTodayClientPage({ toolImageUrl = null, toolTitle = "今日の運勢" }: FortuneTodayClientPageProps) {
   const {
     step,
     input,
@@ -183,6 +189,11 @@ export default function FortuneTodayClientPage() {
           />
 
           <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+            )}
+            
             {/* ヘッダー */}
             <div className="text-center mb-6 md:mb-8">
               <div className="flex items-center justify-center mb-3 md:mb-4">

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import FortuneTodayClientPage from "./FortuneTodayClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -96,6 +97,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function FortuneTodayPage() {
   const imageUrl = await getToolImageUrl("fortune-today")
+  const tool = await getToolBySlug("fortune-today")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -221,7 +224,7 @@ export default async function FortuneTodayPage() {
       />
 
       <ViewCounter toolSlug="fortune-today" />
-      <FortuneTodayClientPage />
+      <FortuneTodayClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "今日の運勢"} />
       <ScrollToTop />
     </>
   )

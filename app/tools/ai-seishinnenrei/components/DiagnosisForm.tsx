@@ -190,24 +190,24 @@ export function DiagnosisForm({
             <button
               key={option.id}
               onClick={() => onUpdateAnswer(question.id, option.id)}
-              className={`w-full p-3 sm:p-4 text-left rounded-xl border-2 transition-all duration-200 ${
+              className={`w-full p-4 sm:p-5 text-left rounded-xl border-2 transition-all duration-200 touch-manipulation ${
                 currentAnswer === option.id
-                  ? 'border-purple-500 bg-purple-50 shadow-md'
-                  : 'border-gray-200 hover:border-purple-300 hover:bg-purple-25'
+                  ? 'border-purple-500 bg-purple-50 shadow-md scale-[1.02]'
+                  : 'border-gray-200 hover:border-purple-300 hover:bg-purple-25 active:bg-purple-25'
               }`}
             >
               <div className="flex items-center">
-                <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 mr-3 sm:mr-4 flex items-center justify-center ${
+                <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 mr-4 sm:mr-4 flex items-center justify-center flex-shrink-0 ${
                   currentAnswer === option.id
                     ? 'border-purple-500 bg-purple-500'
                     : 'border-gray-300'
                 }`}>
                   {currentAnswer === option.id && (
-                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white"></div>
+                    <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-white"></div>
                   )}
                 </div>
-                <span className={`font-medium text-sm sm:text-base ${
-                  currentAnswer === option.id ? 'text-purple-800' : 'text-gray-700'
+                <span className={`font-medium text-base sm:text-lg leading-relaxed ${
+                  currentAnswer === option.id ? 'text-purple-800 font-semibold' : 'text-gray-700'
                 }`}>
                   {option.text}
                 </span>
@@ -216,33 +216,32 @@ export function DiagnosisForm({
           ))}
         </div>
 
-        <div className="flex justify-between items-center gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
           <Button
             onClick={onPreviousQuestion}
             variant="outline"
             disabled={currentQuestion === 0}
-            className="border-2 border-gray-300 text-gray-600 hover:bg-gray-50 h-10 sm:h-10 h-9 px-3"
+            className="border-2 border-gray-300 text-gray-600 hover:bg-gray-50 py-3 sm:py-2 px-6 touch-manipulation min-h-[48px] sm:min-h-[40px] order-2 sm:order-1"
           >
-            <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+            <ArrowLeft className="h-4 w-4 mr-2 sm:mr-2" />
+            <span className="sm:hidden">前へ</span>
             <span className="hidden sm:inline">前の質問</span>
           </Button>
 
           <Button
             onClick={onNextQuestion}
             disabled={!currentAnswer}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold px-4 sm:px-6 h-10 sm:h-10 h-9"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold px-4 sm:px-6 py-3 sm:py-2 touch-manipulation min-h-[56px] sm:min-h-[44px] text-base sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 order-1 sm:order-2"
           >
             {currentQuestion === questions.length - 1 ? (
               <>
                 <Brain className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">診断完了</span>
-                <span className="sm:hidden">完了</span>
+                <span>診断完了</span>
               </>
             ) : (
               <>
-                <span className="hidden sm:inline">次の質問</span>
-                <span className="sm:hidden">次へ</span>
-                <ArrowRight className="h-4 w-4 ml-1 sm:ml-2" />
+                <span>次の質問</span>
+                <ArrowRight className="h-4 w-4 ml-2" />
               </>
             )}
           </Button>

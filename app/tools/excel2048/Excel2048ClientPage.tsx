@@ -10,13 +10,19 @@ import { ScrollToTop } from "@/components/scroll-to-top"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { useExcel2048Game } from "./hooks/useExcel2048Game"
 import { ExcelInterface } from "./components/ExcelInterface"
 import { GameWindow } from "./components/GameWindow"
 import { FullscreenGame } from "./components/FullscreenGame"
 import { useEffect } from "react"
 
-export default function Excel2048ClientPage() {
+interface Excel2048ClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function Excel2048ClientPage({ toolImageUrl = null, toolTitle = "Excel風2048" }: Excel2048ClientPageProps) {
   const game = useExcel2048Game()
 
   const breadcrumbItems = [
@@ -92,6 +98,10 @@ export default function Excel2048ClientPage() {
             <Breadcrumbs items={breadcrumbItems} />
 
             <div className="max-w-4xl mx-auto mt-6">
+              {/* ツール画像 */}
+              {toolImageUrl && (
+                <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+              )}
               {/* ヘッダー */}
               <div className="text-center mb-8">
                 <div className="flex items-center justify-center mb-4">

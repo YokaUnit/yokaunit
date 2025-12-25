@@ -14,8 +14,14 @@ import { useAIStressCheck } from "./hooks/useAIStressCheck"
 import { toast } from "@/hooks/use-toast"
 import { RelatedTools } from "@/components/related-tools"
 import { CategoryTools } from "@/components/category-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 
-export default function AIStressCheckClientPage() {
+interface AIStressCheckClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function AIStressCheckClientPage({ toolImageUrl = null, toolTitle = "AIストレス耐性診断" }: AIStressCheckClientPageProps) {
   const {
     step,
     answers,
@@ -178,6 +184,11 @@ export default function AIStressCheckClientPage() {
           />
 
           <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+            )}
+            
             {/* ヘッダー */}
             <div className="text-center mb-6 md:mb-8">
               <div className="flex items-center justify-center mb-3 md:mb-4">

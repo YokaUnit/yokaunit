@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import Excel2048ClientPage from "./Excel2048ClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -107,6 +108,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Excel2048Page() {
   const imageUrl = await getToolImageUrl("excel2048")
+  const tool = await getToolBySlug("excel2048")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -129,7 +132,7 @@ export default async function Excel2048Page() {
         }}
       />
       <ViewCounter toolSlug="excel2048" />
-      <Excel2048ClientPage />
+      <Excel2048ClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "Excel風2048"} />
       <ScrollToTop />
     </>
   )

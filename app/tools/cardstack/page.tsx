@@ -3,8 +3,10 @@ import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import CardStackClientPage from "./CardStackClientPage"
 import { webPageStructuredData, gameStructuredData, faqStructuredData } from "./lib/structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 
 export const metadata: Metadata = {
   title: "トランプ山札めくるだけ｜ハイ&ロー・マーク予想・ジョーカーロシアンルーレット",
@@ -108,7 +110,10 @@ const breadcrumbItems = [
   { label: "トランプ山札めくるだけ", href: "/tools/cardstack" },
 ]
 
-export default function CardStackPage() {
+export default async function CardStackPage() {
+  const tool = await getToolBySlug("cardstack")
+  const toolImageUrl = tool?.image_url || null
+  
   return (
     <>
       {/* 構造化データ */}
@@ -139,7 +144,16 @@ export default function CardStackPage() {
             <div className="text-xs sm:text-sm mb-4">
               <Breadcrumbs items={breadcrumbItems} />
             </div>
-                        <div className="text-center mb-4 sm:mb-6">
+            
+            <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <div className="mb-6">
+                <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "トランプ山札めくるだけ"} />
+              </div>
+            )}
+            
+            <div className="text-center mb-4 sm:mb-6">
               <h1 className="text-xl sm:text-4xl font-bold text-gray-900 mb-2 sm:mb-4 leading-tight px-2">
                 🃏 トランプ山札めくるだけ
               </h1>
@@ -151,7 +165,7 @@ export default function CardStackPage() {
             <CardStackClientPage />
             
             {/* SEO用の追加コンテンツ */}
-            <div className="mt-8 max-w-4xl mx-auto">
+            <div className="mt-8">
               <section className="mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">🎮 ゲームモード紹介</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -179,7 +193,7 @@ export default function CardStackPage() {
                       ジョーカーを引いたら負け！54分の2の確率でジョーカーが出るロシアンルーレット。
                     </p>
                   </div>
-      </div>
+                </div>
               </section>
 
               <section className="mb-12">
@@ -219,10 +233,11 @@ export default function CardStackPage() {
                         {keyword}
                       </span>
                     ))}
-      </div>
-        </div>
+                  </div>
+                </div>
               </section>
-        </div>
+            </div>
+          </div>
           </div>
         </main>
         <SiteFooter />

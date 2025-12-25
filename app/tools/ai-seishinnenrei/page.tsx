@@ -1,15 +1,16 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import AiSeishinnenreiClientPage from "./AiSeishinnenreiClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-seishinnenrei", {
-    title: "AI精神年齢診断｜心理年齢を5つの質問で即チェック【無料・登録不要】",
+    title: "【30秒診断】AI精神年齢診断｜5つの質問で心理年齢を即診断【無料・登録不要】",
     description:
-      "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
+      "AIが30秒で診断！5つの質問に答えるだけ。あなたの精神年齢を数値化し、実年齢との差を詳しく分析。登録不要・完全無料・10万人以上が利用中。診断結果をSNSでシェアして友達と比較しよう！",
     keywords:
       "AI精神年齢診断,心理年齢,メンタル年齢,精神年齢,無料診断,心理テスト,年齢診断,AI診断,心理分析,メンタル診断,精神年齢テスト,心理年齢チェック,あなたの心理年齢は何歳,性格診断,自己分析",
     authors: [{ name: "YokaUnit", url: "https://yokaunit.com" }],
@@ -34,17 +35,17 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "ja_JP",
       url: "https://yokaunit.com/tools/ai-seishinnenrei",
       siteName: "YokaUnit",
-      title: "AI精神年齢診断｜心理年齢を5つの質問で即チェック【無料・登録不要】",
+      title: "【30秒診断】AI精神年齢診断｜5つの質問で心理年齢を即診断【無料・登録不要】",
       description:
-        "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
+        "AIが30秒で診断！5つの質問に答えるだけ。あなたの精神年齢を数値化し、実年齢との差を詳しく分析。登録不要・完全無料・10万人以上が利用中。診断結果をSNSでシェアして友達と比較しよう！",
     },
     twitter: {
       card: "summary_large_image",
       site: "@yokaunit",
       creator: "@yokaunit",
-      title: "AI精神年齢診断｜心理年齢を5つの質問で即チェック【無料・登録不要】",
+      title: "【30秒診断】AI精神年齢診断｜5つの質問で心理年齢を即診断【無料・登録不要】",
       description:
-        "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
+        "AIが30秒で診断！5つの質問に答えるだけ。あなたの精神年齢を数値化し、実年齢との差を詳しく分析。登録不要・完全無料・10万人以上が利用中。",
     },
     verification: {
       google: "your-google-verification-code",
@@ -55,6 +56,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AiSeishinnenreiPage() {
   const today = new Date().toISOString().split("T")[0]
   const imageUrl = await getToolImageUrl("ai-seishinnenrei")
+  const tool = await getToolBySlug("ai-seishinnenrei")
+  const toolImageUrl = tool?.image_url || null
 
   const webApplicationLd = {
     "@context": "https://schema.org",
@@ -134,7 +137,7 @@ export default async function AiSeishinnenreiPage() {
         }}
       />
       <ViewCounter toolSlug="ai-seishinnenrei" />
-      <AiSeishinnenreiClientPage />
+      <AiSeishinnenreiClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "AI精神年齢診断"} />
       <ScrollToTop />
     </>
   )

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import RouletteClientPage from "./RouletteClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -75,6 +76,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RoulettePage() {
   const imageUrl = await getToolImageUrl("roulette")
+  const tool = await getToolBySlug("roulette")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -202,7 +205,7 @@ export default async function RoulettePage() {
       />
 
       <ViewCounter toolSlug="roulette" />
-      <RouletteClientPage />
+      <RouletteClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "ルーレットメーカー"} />
       <ScrollToTop />
     </>
   )

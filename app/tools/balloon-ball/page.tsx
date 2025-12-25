@@ -72,6 +72,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BalloonBallPage() {
   const imageUrl = await getToolImageUrl("balloon-ball")
+  const tool = await getToolBySlug("balloon-ball")
+  const toolImageUrl = tool?.image_url || null
   
   // バッジの設定をカスタマイズできます
   const badgeConfig = {
@@ -133,6 +135,14 @@ export default async function BalloonBallPage() {
                 { label: "バルーンバッジアニメーション", href: "/tools/balloon-ball" },
               ]}
             />
+            
+            {/* ツール画像 */}
+            {toolImageUrl && (
+              <div className="mb-6">
+                <ToolHeroImage imageUrl={toolImageUrl} title={tool?.title || "バルーンバッジアニメーション"} />
+              </div>
+            )}
+            
             <div className="mb-6">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">バルーンバッジアニメーション</h1>
               <p className="text-gray-600">

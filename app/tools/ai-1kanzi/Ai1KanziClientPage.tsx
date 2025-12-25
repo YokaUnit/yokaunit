@@ -13,8 +13,14 @@ import { DiagnosisResult as DiagnosisResultComponent } from "./components/Diagno
 import { useAi1KanziDiagnosis } from "./hooks/useAi1KanziDiagnosis"
 import { toast } from "@/hooks/use-toast"
 import { CategoryTools } from "@/components/category-tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 
-export default function Ai1KanziClientPage() {
+interface Ai1KanziClientPageProps {
+  toolImageUrl?: string | null
+  toolTitle?: string
+}
+
+export default function Ai1KanziClientPage({ toolImageUrl = null, toolTitle = "AIが診断！あなたの性格を漢字1文字で表すと？" }: Ai1KanziClientPageProps) {
   const {
     step,
     answers,
@@ -177,6 +183,11 @@ export default function Ai1KanziClientPage() {
           />
 
           <div className="max-w-4xl mx-auto mt-4 md:mt-6">
+          {/* ツール画像 */}
+          {toolImageUrl && (
+            <ToolHeroImage imageUrl={toolImageUrl} title={toolTitle} />
+          )}
+          
           {/* ヘッダー */}
           <div className="text-center mb-6 md:mb-8">
             <div className="flex items-center justify-center mb-3 md:mb-4">

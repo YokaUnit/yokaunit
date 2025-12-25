@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import Connect4ClientPage from "./Connect4ClientPage"
@@ -56,6 +57,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Connect4Page() {
   const imageUrl = await getToolImageUrl("connect4")
+  const tool = await getToolBySlug("connect4")
+  const toolImageUrl = tool?.image_url || null
   
   return (
     <>
@@ -135,7 +138,7 @@ export default async function Connect4Page() {
       />
 
       <ViewCounter toolSlug="connect4" />
-      <Connect4ClientPage />
+      <Connect4ClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "コネクトフォー"} />
       <ScrollToTop />
     </>
   )

@@ -112,7 +112,7 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
           <div className="text-center mb-6 md:mb-8">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 px-2 leading-tight">
               【AI精神年齢診断】あなたの心は何歳？
-              <br className="sm:hidden" />
+              <br className="hidden md:block" />
               <span className="text-xl sm:text-2xl md:text-3xl">実年齢より高い？低い？</span>
             </h1>
             <h2 className="text-base sm:text-lg md:text-xl text-gray-600 mb-3 md:mb-4 px-4 font-semibold">

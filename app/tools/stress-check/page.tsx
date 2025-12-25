@@ -62,8 +62,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function StressCheckPage() {
   const imageUrl = await getToolImageUrl("stress-check")
-  const tool = await getToolBySlug("stress-check")
-  const toolImageUrl = tool?.image_url || null
+  let tool = null
+  let toolImageUrl = null
+  try {
+    tool = await getToolBySlug("stress-check")
+    toolImageUrl = tool?.image_url || null
+  } catch (error) {
+    // ツールがデータベースに存在しない場合はnullを使用
+    console.warn("Tool not found in database, using default values:", error)
+  }
   
   return (
     <>

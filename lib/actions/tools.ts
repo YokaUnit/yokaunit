@@ -101,10 +101,12 @@ export async function getTools(options?: {
 export async function getToolBySlug(slug: string): Promise<Tool | null> {
   const supabase = createServerSupabaseClient()
 
-  const { data, error } = await supabase.from("tools").select("*").eq("slug", slug).eq("is_active", true).single()
+  const { data, error } = await supabase.from("tools").select("*").eq("slug", slug).eq("is_active", true).maybeSingle()
 
   if (error) {
-    throw new Error(`Error fetching tool: ${error.message}`)
+    // エラーが発生した場合はnullを返す（レコードが存在しない場合や複数のレコードがある場合）
+    console.warn(`Error fetching tool with slug "${slug}": ${error.message}`)
+    return null
   }
 
   return data

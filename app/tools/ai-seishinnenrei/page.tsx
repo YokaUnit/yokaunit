@@ -8,11 +8,11 @@ import { ScrollToTop } from "@/components/scroll-to-top"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-seishinnenrei", {
-    title: "【30秒診断】AI精神年齢診断｜5つの質問で心理年齢を即診断【無料・登録不要】",
+      title: "【AI精神年齢診断】あなたの心は何歳？実年齢より高い？低い？【無料】",
     description:
-      "AIが30秒で診断！5つの質問に答えるだけ。あなたの精神年齢を数値化し、実年齢との差を詳しく分析。登録不要・完全無料・10万人以上が利用中。診断結果をSNSでシェアして友達と比較しよう！",
+      "あなたの精神年齢は何歳？AIがチェック！5つの質問に答えるだけで、AIがあなたの精神年齢を分析します。見た目は年相応でも、心の中はまるで子どもだったり、逆に大人びていたり…実年齢との差がわかります！",
     keywords:
-      "AI精神年齢診断,心理年齢,メンタル年齢,精神年齢,無料診断,心理テスト,年齢診断,AI診断,心理分析,メンタル診断,精神年齢テスト,心理年齢チェック,あなたの心理年齢は何歳,性格診断,自己分析",
+      "AI精神年齢診断,AIがチェック,AI診断,精神年齢診断,心理年齢,メンタル年齢,精神年齢,無料診断,心理テスト,年齢診断,心理分析,メンタル診断,精神年齢テスト,心理年齢チェック,あなたの心理年齢は何歳,性格診断,自己分析,心理年齢診断 無料,精神年齢 チェック,メンタル年齢 診断,AI心理テスト,AI性格診断",
     authors: [{ name: "YokaUnit", url: "https://yokaunit.com" }],
     creator: "YokaUnit",
     publisher: "YokaUnit",
@@ -35,17 +35,17 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "ja_JP",
       url: "https://yokaunit.com/tools/ai-seishinnenrei",
       siteName: "YokaUnit",
-      title: "【30秒診断】AI精神年齢診断｜5つの質問で心理年齢を即診断【無料・登録不要】",
+      title: "【AI精神年齢診断】あなたの心は何歳？実年齢より高い？低い？【無料】",
       description:
-        "AIが30秒で診断！5つの質問に答えるだけ。あなたの精神年齢を数値化し、実年齢との差を詳しく分析。登録不要・完全無料・10万人以上が利用中。診断結果をSNSでシェアして友達と比較しよう！",
+        "あなたの精神年齢は何歳？AIがチェック！5つの質問に答えるだけで、AIがあなたの精神年齢を分析します。見た目は年相応でも、心の中はまるで子どもだったり、逆に大人びていたり…実年齢との差がわかります！",
     },
     twitter: {
       card: "summary_large_image",
       site: "@yokaunit",
       creator: "@yokaunit",
-      title: "【30秒診断】AI精神年齢診断｜5つの質問で心理年齢を即診断【無料・登録不要】",
+      title: "【AI精神年齢診断】あなたの心は何歳？実年齢より高い？低い？【無料】",
       description:
-        "AIが30秒で診断！5つの質問に答えるだけ。あなたの精神年齢を数値化し、実年齢との差を詳しく分析。登録不要・完全無料・10万人以上が利用中。",
+        "あなたの精神年齢は何歳？AIがチェック！5つの質問に答えるだけで、AIがあなたの精神年齢を分析します。見た目は年相応でも、心の中はまるで子どもだったり、逆に大人びていたり…実年齢との差がわかります！",
     },
     verification: {
       google: "your-google-verification-code",
@@ -63,19 +63,20 @@ export default async function AiSeishinnenreiPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "AI精神年齢診断",
-    headline: "AI精神年齢診断｜心理年齢を5つの質問で即チェック【無料・登録不要】",
+    headline: "【AI精神年齢診断】あなたの心は何歳？実年齢より高い？低い？",
     description:
-      "たった5つの質問でAIがあなたの心理年齢を即診断！実年齢との差や性格の特徴もわかる完全無料ツール。登録不要・スマホ対応で簡単にチェックできます。",
+      "あなたの精神年齢は何歳？AIがチェック！5つの質問に答えるだけで、AIがあなたの精神年齢を分析します。見た目は年相応でも、心の中はまるで子どもだったり、逆に大人びていたり…実年齢との差がわかります！",
     url: "https://yokaunit.com/tools/ai-seishinnenrei",
     applicationCategory: "LifestyleApplication",
     operatingSystem: "Any",
     browserRequirements: "HTML5, JavaScript",
     offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
     featureList: [
+      "AIがチェック！高精度な精神年齢分析",
       "簡単5つの選択式質問",
-      "AI分析による精神年齢診断",
+      "AIによる精神年齢の数値化",
       "実年齢との詳細比較",
-      "個別化されたアドバイス",
+      "AI分析による個別化されたアドバイス",
       "完全無料・登録不要",
       "スマホ・PC対応",
       "結果シェア機能"

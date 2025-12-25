@@ -76,20 +76,100 @@ export async function analyzeMentalAge(answers: DiagnosisAnswers): Promise<Diagn
     // 平均スコアを計算（5-30の範囲）
     const averageScore = questionCount > 0 ? totalScore / questionCount : 15
     
-    // AI分析結果を組み込んだ精神年齢計算
-    const realAge = answers.age || 25
-    let baseAge = Math.max(12, Math.min(80, averageScore + (realAge * 0.3)))
+    // 回答の一貫性を分析（スコアの分散を計算）
+    const scores: number[] = []
+    questions.forEach(question => {
+      const answer = answers[question.id]
+      if (answer && question.id !== 'age') {
+        const option = question.options.find(opt => opt.id === answer)
+        if (option) {
+          scores.push(option.score)
+        }
+      }
+    })
     
-    // AI感情分析結果による調整
-    if (sentimentAnalysis.label === 'POSITIVE' && sentimentAnalysis.score > 0.7) {
-      baseAge -= 3 // ポジティブな回答は若々しさを示す
-    } else if (sentimentAnalysis.label === 'NEGATIVE' && sentimentAnalysis.score > 0.7) {
-      baseAge += 2 // ネガティブな回答は成熟度を示す
+    // スコアの分散を計算（一貫性の指標）
+    const variance = scores.length > 1 
+      ? scores.reduce((sum, score) => sum + Math.pow(score - averageScore, 2), 0) / scores.length
+      : 0
+    const standardDeviation = Math.sqrt(variance)
+    
+    // 回答パターン分析
+    const highMaturityAnswers = scores.filter(s => s >= 22).length
+    const lowMaturityAnswers = scores.filter(s => s <= 12).length
+    const balancedAnswers = scores.filter(s => s >= 16 && s <= 20).length
+    
+    // AI分析結果を組み込んだ精神年齢計算（幅広い範囲に対応）
+    const realAge = answers.age || 25
+    
+    // スコアを年齢に変換（5-26点を0-100歳にマッピング）
+    // より極端な結果も出るように、非線形マッピングを使用
+    let baseAge: number
+    if (averageScore <= 8) {
+      // 非常に若々しい（0-5歳：赤ちゃん〜幼児）
+      baseAge = averageScore * 0.6
+    } else if (averageScore <= 12) {
+      // 若々しい（6-15歳：小学生〜中学生）
+      baseAge = 5 + (averageScore - 8) * 2.5
+    } else if (averageScore <= 16) {
+      // バランス（16-25歳：高校生〜大学生）
+      baseAge = 15 + (averageScore - 12) * 2.5
+    } else if (averageScore <= 20) {
+      // 成熟（26-40歳：社会人）
+      baseAge = 25 + (averageScore - 16) * 3.75
+    } else if (averageScore <= 24) {
+      // 非常に成熟（41-65歳：中年）
+      baseAge = 40 + (averageScore - 20) * 6.25
+    } else {
+      // 超成熟（66-100歳以上：高齢者〜おじいちゃん）
+      baseAge = 65 + (averageScore - 24) * 17.5
     }
     
-    // ランダム要素を追加して多様性を確保
-    const randomFactor = (Math.random() - 0.5) * 6
-    const mentalAge = Math.round(Math.max(8, Math.min(90, baseAge + randomFactor)))
+    // AI感情分析結果による調整（より大きく）
+    if (sentimentAnalysis.label === 'POSITIVE') {
+      const positiveAdjustment = sentimentAnalysis.score > 0.8 ? -8 : sentimentAnalysis.score > 0.6 ? -5 : -3
+      baseAge += positiveAdjustment
+    } else if (sentimentAnalysis.label === 'NEGATIVE') {
+      const negativeAdjustment = sentimentAnalysis.score > 0.8 ? 8 : sentimentAnalysis.score > 0.6 ? 5 : 3
+      baseAge += negativeAdjustment
+    }
+    
+    // 回答パターンによる調整（より大きく）
+    if (standardDeviation < 2) {
+      // 一貫性が非常に高い場合、平均スコアを重視
+      baseAge = baseAge * 0.6 + (averageScore * 4) * 0.4
+    } else if (standardDeviation < 4) {
+      baseAge = baseAge * 0.8 + (averageScore * 4) * 0.2
+    }
+    
+    // 成熟度の偏りによる調整（より大きく）
+    if (highMaturityAnswers >= 4) {
+      baseAge += 8 // 成熟した回答が非常に多い
+    } else if (highMaturityAnswers >= 3) {
+      baseAge += 5
+    } else if (lowMaturityAnswers >= 4) {
+      baseAge -= 8 // 若々しい回答が非常に多い
+    } else if (lowMaturityAnswers >= 3) {
+      baseAge -= 5
+    }
+    
+    // バランスの取れた回答による調整（実年齢に近づけるが、制限は緩く）
+    if (balancedAnswers >= 3) {
+      baseAge = baseAge * 0.85 + realAge * 0.15
+    }
+    
+    // 実年齢との関係性を考慮した最終調整（制限を緩く）
+    const ageRatio = baseAge / (realAge || 25)
+    if (ageRatio > 2.0) {
+      // 実年齢の2倍以上の場合、少し調整
+      baseAge = baseAge * 0.9
+    } else if (ageRatio < 0.3) {
+      // 実年齢の30%以下の場合、少し調整
+      baseAge = baseAge * 1.1
+    }
+    
+    // 0-100歳以上の範囲に制限（上限は緩く）
+    const mentalAge = Math.round(Math.max(0, Math.min(105, baseAge)))
     
     const ageDifference = mentalAge - realAge
 
@@ -114,116 +194,200 @@ export async function analyzeMentalAge(answers: DiagnosisAnswers): Promise<Diagn
   }
 }
 
-// 精神年齢タイプの動的生成
+// 精神年齢タイプの動的生成（幅広い年齢層に対応）
 function generateMentalAgeType(mentalAge: number, realAge: number, ageDifference: number, averageScore: number): { type: string; description: string; characteristics: string[] } {
   
-  // 年齢差による分類
-  const ageDiffCategory = ageDifference >= 10 ? 'older' : 
-                         ageDifference >= 5 ? 'slightly_older' :
-                         ageDifference <= -10 ? 'younger' :
-                         ageDifference <= -5 ? 'slightly_younger' : 'balanced'
-  
-  // スコアによる特性分類
-  const maturityLevel = averageScore >= 24 ? 'very_mature' :
-                       averageScore >= 20 ? 'mature' :
-                       averageScore >= 16 ? 'balanced' :
-                       averageScore >= 12 ? 'youthful' : 'very_youthful'
+  // 精神年齢による分類（より細かく）
+  let ageCategory: string
+  let typeName: string
+  let description: string
+  let characteristics: string[]
 
-  // タイプ名の要素
-  const ageTypeNames = {
-    older: ['老成', 'ベテラン', 'シニア', '大人', '成熟'],
-    slightly_older: ['おとな', '落ち着き', '安定', '穏やか', '冷静'],
-    balanced: ['バランス', 'ニュートラル', '標準', 'スタンダード', '平均'],
-    slightly_younger: ['フレッシュ', 'ヤング', '若々しい', '活発', 'エネルギッシュ'],
-    younger: ['ピュア', '天真爛漫', '無邪気', 'キッズ', '子ども心']
+  if (mentalAge <= 3) {
+    // 0-3歳：赤ちゃん
+    ageCategory = 'baby'
+    typeName = ['赤ちゃん', 'ベビー', '新生児', '乳児'][mentalAge % 4] + 'タイプ'
+    description = `実年齢${realAge}歳なのに精神年齢${mentalAge}歳！あなたの心はまるで赤ちゃんのように純粋で無邪気です。何も考えずに今を楽しむ、そんな素直な心の持ち主です。`
+    characteristics = ['純粋無垢', '無邪気', '好奇心旺盛']
+  } else if (mentalAge <= 7) {
+    // 4-7歳：幼児
+    ageCategory = 'toddler'
+    typeName = ['幼児', 'キッズ', '子ども', 'チャイルド'][Math.floor(mentalAge) % 4] + 'タイプ'
+    description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若い心を持っています。遊ぶことが大好きで、毎日が新しい発見の連続！そんなワクワクする心の持ち主です。`
+    characteristics = ['遊び好き', '天真爛漫', '明るい']
+  } else if (mentalAge <= 12) {
+    // 8-12歳：小学生
+    ageCategory = 'elementary'
+    typeName = ['小学生', 'スクール', 'ジュニア', 'キッズ'][Math.floor(mentalAge / 2) % 4] + 'タイプ'
+    description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若々しい心です。友達と遊ぶのが大好きで、新しいことを学ぶのが楽しい！そんな好奇心旺盛な心の持ち主です。`
+    characteristics = ['好奇心旺盛', 'フレッシュ', 'エネルギッシュ']
+  } else if (mentalAge <= 15) {
+    // 13-15歳：中学生
+    ageCategory = 'junior_high'
+    typeName = ['中学生', 'ティーン', 'ヤング', 'ジュニア'][Math.floor(mentalAge / 2) % 4] + 'タイプ'
+    description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若い心です。まだまだ成長途中で、いろんなことに興味津々！そんな若々しい心の持ち主です。`
+    characteristics = ['若々しい', '成長中', 'フレッシュ']
+  } else if (mentalAge <= 18) {
+    // 16-18歳：高校生
+    ageCategory = 'high_school'
+    typeName = ['高校生', 'ティーンエイジャー', 'ヤング', 'フレッシュ'][Math.floor(mentalAge / 2) % 4] + 'タイプ'
+    description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若々しい心です。青春真っ只中で、何でもチャレンジしてみたい！そんな前向きな心の持ち主です。`
+    characteristics = ['前向き', 'チャレンジ精神', '若々しい']
+  } else if (mentalAge <= 22) {
+    // 19-22歳：大学生
+    ageCategory = 'college'
+    typeName = ['大学生', 'ヤングアダルト', 'フレッシュ', 'ニュー'][Math.floor(mentalAge / 2) % 4] + 'タイプ'
+    description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若い心です。新しいことに挑戦するのが大好きで、未来への希望に満ちています！そんなエネルギッシュな心の持ち主です。`
+    characteristics = ['エネルギッシュ', 'チャレンジ精神', '希望に満ちている']
+  } else if (mentalAge <= 30) {
+    // 23-30歳：若手社会人
+    ageCategory = 'young_adult'
+    const names = ['若手', 'ヤング', 'フレッシュ', 'ニュー']
+    typeName = names[Math.floor(mentalAge / 2) % 4] + ['アダルト', 'プロ', 'ソサエティ', 'ワーカー'][Math.floor(mentalAge / 3) % 4] + 'タイプ'
+    if (ageDifference >= 5) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も成熟した心です。同世代より大人びた考え方で、周囲から頼られる存在です。`
+      characteristics = ['成熟', '責任感', '信頼性']
+    } else if (ageDifference <= -5) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若々しい心です。まだまだ若々しく、新しいことにチャレンジする意欲に満ちています！`
+      characteristics = ['若々しい', 'チャレンジ精神', 'フレッシュ']
+    } else {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。年相応の自然な魅力を持っています。`
+      characteristics = ['バランス', '適応力', '柔軟性']
+    }
+  } else if (mentalAge <= 40) {
+    // 31-40歳：社会人
+    ageCategory = 'adult'
+    const names = ['アダルト', 'マチュア', 'ステディ', 'ソリッド']
+    typeName = names[Math.floor(mentalAge / 3) % 4] + ['タイプ', 'スタイル', 'マインド', 'パーソナ'][Math.floor(mentalAge / 4) % 4]
+    if (ageDifference >= 10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も大人びた心です。深い洞察力と豊富な経験で、周囲から信頼される存在です。`
+      characteristics = ['深い洞察力', '経験豊富', '信頼性']
+    } else if (ageDifference <= -10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若々しい心です。まだまだ若々しく、エネルギッシュな心の持ち主です！`
+      characteristics = ['若々しい', 'エネルギッシュ', 'フレッシュ']
+    } else {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。安定感と柔軟性を兼ね備えています。`
+      characteristics = ['安定感', '柔軟性', 'バランス']
+    }
+  } else if (mentalAge <= 50) {
+    // 41-50歳：中年
+    ageCategory = 'middle_age'
+    const names = ['ミドル', 'マチュア', 'エキスパート', 'ベテラン']
+    typeName = names[Math.floor(mentalAge / 3) % 4] + ['タイプ', 'スタイル', 'マインド', 'パーソナ'][Math.floor(mentalAge / 4) % 4]
+    if (ageDifference >= 10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も成熟した心です。豊富な人生経験と深い知恵で、周囲の良き相談相手です。`
+      characteristics = ['豊富な経験', '深い知恵', '包容力']
+    } else if (ageDifference <= -10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若々しい心です。まだまだ若々しく、新しいことに挑戦する意欲に満ちています！`
+      characteristics = ['若々しい', 'チャレンジ精神', 'フレッシュ']
+    } else {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。安定感と経験を兼ね備えています。`
+      characteristics = ['安定感', '経験', 'バランス']
+    }
+  } else if (mentalAge <= 65) {
+    // 51-65歳：シニア
+    ageCategory = 'senior'
+    const names = ['シニア', 'ベテラン', 'マスター', 'エキスパート']
+    typeName = names[Math.floor(mentalAge / 4) % 4] + ['タイプ', 'スタイル', 'マインド', 'パーソナ'][Math.floor(mentalAge / 5) % 4]
+    if (ageDifference >= 10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も成熟した心です。人生の達人として、深い洞察力と豊富な経験で周囲を導く存在です。`
+      characteristics = ['人生の達人', '深い洞察力', '豊富な経験']
+    } else if (ageDifference <= -10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若々しい心です。まだまだ若々しく、新しいことに挑戦する意欲に満ちています！`
+      characteristics = ['若々しい', 'チャレンジ精神', 'フレッシュ']
+    } else {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。経験と若々しさを兼ね備えています。`
+      characteristics = ['経験豊富', 'バランス', '安定感']
+    }
+  } else if (mentalAge <= 80) {
+    // 66-80歳：高齢者
+    ageCategory = 'elderly'
+    const names = ['エルダー', 'ベテラン', 'マスター', 'ウィズダム']
+    typeName = names[Math.floor(mentalAge / 5) % 4] + ['タイプ', 'スタイル', 'マインド', 'パーソナ'][Math.floor(mentalAge / 6) % 4]
+    if (ageDifference >= 10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も成熟した心です。人生の大先輩として、深い知恵と豊富な経験で周囲に尊敬される存在です。`
+      characteristics = ['人生の大先輩', '深い知恵', '豊富な経験']
+    } else if (ageDifference <= -10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若々しい心です。まだまだ若々しく、新しいことに挑戦する意欲に満ちています！`
+      characteristics = ['若々しい', 'チャレンジ精神', 'フレッシュ']
+    } else {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。経験と若々しさを兼ね備えています。`
+      characteristics = ['経験豊富', 'バランス', '安定感']
+    }
+  } else {
+    // 81-100歳以上：おじいちゃん・おばあちゃん
+    ageCategory = 'grandparent'
+    const names = ['おじいちゃん', 'おばあちゃん', 'グランドマスター', 'レジェンド']
+    typeName = names[Math.floor(mentalAge / 6) % 4] + ['タイプ', 'スタイル', 'マインド', 'パーソナ'][Math.floor(mentalAge / 7) % 4]
+    if (ageDifference >= 10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も成熟した心です。人生のレジェンドとして、深い知恵と豊富な経験で周囲に尊敬される存在です。`
+      characteristics = ['人生のレジェンド', '深い知恵', '豊富な経験']
+    } else if (ageDifference <= -10) {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢${realAge}歳より${Math.abs(ageDifference)}歳も若々しい心です。まだまだ若々しく、新しいことに挑戦する意欲に満ちています！`
+      characteristics = ['若々しい', 'チャレンジ精神', 'フレッシュ']
+    } else {
+      description = `精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。経験と若々しさを兼ね備えています。`
+      characteristics = ['経験豊富', 'バランス', '安定感']
+    }
   }
 
-  const maturityNames = {
-    very_mature: ['ウィズダム', 'マスター', 'エキスパート', 'プロフェッサー'],
-    mature: ['アダルト', 'マチュア', 'ステディ', 'ソリッド'],
-    balanced: ['ミドル', 'バランス', 'ハーモニー', 'イーブン'],
-    youthful: ['スプリング', 'フレッシュ', 'ライブリー', 'アクティブ'],
-    very_youthful: ['キッズ', 'ピュア', 'イノセント', 'ワンダー']
-  }
-
-  const typeEndings = ['タイプ', 'スタイル', '型', 'パーソナ', 'キャラ', 'マインド']
-
-  // 動的タイプ名生成
-  const ageTypeName = ageTypeNames[ageDiffCategory][mentalAge % ageTypeNames[ageDiffCategory].length]
-  const maturityName = maturityNames[maturityLevel][Math.floor(averageScore) % maturityNames[maturityLevel].length]
-  const ending = typeEndings[Math.abs(ageDifference) % typeEndings.length]
-
-  const type = `${ageTypeName}${maturityName}${ending}`
-
-  // 説明文の生成
-  const descriptions = {
-    older: `実年齢${realAge}歳に対して精神年齢${mentalAge}歳のあなたは、同世代より${Math.abs(ageDifference)}歳も大人びた考え方を持っています。`,
-    slightly_older: `精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳ほど成熟した心の持ち主です。`,
-    balanced: `精神年齢${mentalAge}歳で実年齢とのバランスが取れており、年相応の自然な魅力を持っています。`,
-    slightly_younger: `精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳ほど若々しい心を持っています。`,
-    younger: `実年齢${realAge}歳に対して精神年齢${mentalAge}歳と、${Math.abs(ageDifference)}歳も若い心の持ち主です。`
-  }
-
-  const maturityDescriptions = {
-    very_mature: '深い洞察力と豊富な経験に基づいた判断力を持ち、周囲から信頼される存在です。',
-    mature: '安定した精神力と冷静な判断力を備え、責任感の強い人格です。',
-    balanced: '柔軟性と安定性のバランスが取れた、調和の取れた性格です。',
-    youthful: 'エネルギッシュで好奇心旺盛、新しいことに挑戦する意欲に満ちています。',
-    very_youthful: '純粋で素直な心を持ち、周囲を明るくする天真爛漫な魅力があります。'
-  }
-
-  const description = `${descriptions[ageDiffCategory]}${maturityDescriptions[maturityLevel]}`
-
-  // 特徴リストの生成
-  const characteristicsList = {
-    older: ['深い思慮深さ', '豊富な人生経験', '冷静な判断力', '責任感の強さ', '包容力'],
-    slightly_older: ['落ち着いた雰囲気', '安定感', '信頼性', '慎重さ', '配慮深さ'],
-    balanced: ['バランス感覚', '適応力', '協調性', '柔軟性', '安定性'],
-    slightly_younger: ['若々しい感性', 'フレッシュな発想', '活発さ', '前向きさ', '素直さ'],
-    younger: ['純粋な心', '好奇心旺盛', '天真爛漫', '無邪気さ', '明るさ']
-  }
-
-  const characteristics = characteristicsList[ageDiffCategory].slice(0, 3)
-
-  return { type, description, characteristics }
+  return { type: typeName, description, characteristics }
 }
 
-// AI駆動のアドバイス生成
+// AI駆動のアドバイス生成（年齢層に応じた面白いアドバイス）
 function generateAdvice(mentalAge: number, realAge: number, ageDifference: number, averageScore: number, sentimentAnalysis: any): string {
   const adviceComponents = []
 
-  // 年齢差に基づくアドバイス
-  if (ageDifference >= 10) {
-    adviceComponents.push(`${Math.abs(ageDifference)}歳も大人びた精神年齢は素晴らしい特徴です。この成熟した考え方を活かして、周囲の人たちの良き相談相手になることができるでしょう。`)
-  } else if (ageDifference >= 5) {
-    adviceComponents.push(`実年齢より成熟した精神年齢を持つあなたは、落ち着いた判断力が魅力です。この安定感を大切にしながら、時には年相応の楽しさも忘れずに。`)
-  } else if (ageDifference <= -10) {
-    adviceComponents.push(`${Math.abs(ageDifference)}歳も若い精神年齢は、あなたの大きな魅力です。この若々しい感性と好奇心を大切に、新しいことにどんどん挑戦してください。`)
-  } else if (ageDifference <= -5) {
-    adviceComponents.push(`若々しい精神年齢は、あなたのエネルギーの源です。この新鮮な感性を活かして、創造的な活動や新しい出会いを楽しんでください。`)
+  // 精神年齢に応じたアドバイス
+  if (mentalAge <= 3) {
+    adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、まるで赤ちゃんのように純粋で無邪気！何も考えずに今を楽しむ、そんな素直な心を大切にしてください。`)
+    adviceComponents.push(`この若々しい心は、周囲の人を明るくする大きな魅力です。素直さと好奇心を忘れずに、毎日を楽しんでください。`)
+  } else if (mentalAge <= 7) {
+    adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、遊ぶことが大好きな心の持ち主！新しい発見を楽しみながら、毎日をワクワク過ごしてください。`)
+    adviceComponents.push(`この天真爛漫な心は、周囲の人を笑顔にする力があります。好奇心を大切に、いろんなことにチャレンジしてみてください。`)
+  } else if (mentalAge <= 12) {
+    adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、友達と遊ぶのが大好きな心の持ち主！新しいことを学ぶのが楽しくて仕方ない、そんな好奇心旺盛な心を大切にしてください。`)
+    adviceComponents.push(`このフレッシュな心は、周囲の人にエネルギーを与えます。いろんなことに興味を持って、たくさんの経験を積んでください。`)
+  } else if (mentalAge <= 18) {
+    adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、青春真っ只中の心の持ち主！何でもチャレンジしてみたい、そんな前向きな心を大切にしてください。`)
+    adviceComponents.push(`この若々しいエネルギーは、周囲の人を元気にする力があります。失敗を恐れず、どんどん新しいことに挑戦してください。`)
+  } else if (mentalAge <= 30) {
+    if (ageDifference >= 10) {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳も成熟した心です。この大人びた考え方を活かして、周囲の人たちの良き相談相手になってください。`)
+    } else if (ageDifference <= -10) {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳も若々しい心です。このフレッシュな感性を活かして、新しいことにどんどん挑戦してください。`)
+    } else {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。この自然体の魅力を大切に、さらなる成長を楽しんでください。`)
+    }
+    adviceComponents.push(`この精神年齢を活かして、${mentalAge < realAge ? '新しい趣味や学習' : '人生経験の共有や指導'}に取り組んでみてください。`)
+  } else if (mentalAge <= 50) {
+    if (ageDifference >= 10) {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳も成熟した心です。豊富な人生経験と深い知恵で、周囲の人たちを導く存在になってください。`)
+    } else if (ageDifference <= -10) {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳も若々しい心です。まだまだ若々しく、新しいことに挑戦する意欲に満ちています！`)
+    } else {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。安定感と経験を兼ね備えた、魅力的な人格です。`)
+    }
+    adviceComponents.push(`この精神年齢を活かして、${mentalAge < realAge ? '新しい趣味や学習に挑戦' : '人生経験を若い世代に伝える'}ことをおすすめします。`)
+  } else if (mentalAge <= 80) {
+    if (ageDifference >= 10) {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳も成熟した心です。人生の達人として、深い洞察力と豊富な経験で周囲に尊敬される存在です。`)
+    } else if (ageDifference <= -10) {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳も若々しい心です。まだまだ若々しく、新しいことに挑戦する意欲に満ちています！`)
+    } else {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。経験と若々しさを兼ね備えた、魅力的な人格です。`)
+    }
+    adviceComponents.push(`この精神年齢を活かして、${mentalAge < realAge ? '新しい趣味や学習に挑戦' : '人生の知恵を若い世代に伝える'}ことをおすすめします。`)
   } else {
-    adviceComponents.push(`実年齢と精神年齢のバランスが取れているあなたは、とても自然体で魅力的です。この調和を保ちながら、さらなる成長を楽しんでください。`)
+    if (ageDifference >= 10) {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳も成熟した心です。人生のレジェンドとして、深い知恵と豊富な経験で周囲に尊敬される存在です。`)
+    } else if (ageDifference <= -10) {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢より${Math.abs(ageDifference)}歳も若々しい心です。まだまだ若々しく、新しいことに挑戦する意欲に満ちています！`)
+    } else {
+      adviceComponents.push(`精神年齢${mentalAge}歳のあなたは、実年齢とバランスの取れた心です。経験と若々しさを兼ね備えた、魅力的な人格です。`)
+    }
+    adviceComponents.push(`この精神年齢を活かして、${mentalAge < realAge ? '新しい趣味や学習に挑戦' : '人生の知恵を若い世代に伝える'}ことをおすすめします。`)
   }
-
-  // スコアに基づく具体的アドバイス
-  if (averageScore >= 22) {
-    adviceComponents.push(`高い精神的成熟度を示すあなたには、リーダーシップを発揮する機会を積極的に求めることをお勧めします。`)
-  } else if (averageScore >= 18) {
-    adviceComponents.push(`安定した精神力を持つあなたは、周囲との調和を大切にしながら、自分らしさも表現していきましょう。`)
-  } else if (averageScore >= 14) {
-    adviceComponents.push(`バランスの取れた精神年齢のあなたは、様々な経験を通じてさらなる成長を目指してください。`)
-  } else {
-    adviceComponents.push(`若々しい精神年齢は大きな可能性を秘めています。好奇心を大切に、たくさんの新しい体験を積み重ねていきましょう。`)
-  }
-
-  // 実用的なアドバイス
-  const practicalAdvice = [
-    `精神年齢${mentalAge}歳のあなたには、同世代だけでなく幅広い年齢層との交流がおすすめです。`,
-    `この精神年齢を活かして、${mentalAge < realAge ? '新しい趣味や学習' : '人生経験の共有や指導'}に取り組んでみてください。`,
-    `あなたの精神年齢は、恋愛や友人関係において${mentalAge > realAge ? '安定感と信頼性' : 'フレッシュさと活力'}をもたらすでしょう。`
-  ]
-
-  adviceComponents.push(practicalAdvice[Math.floor(Math.random() * practicalAdvice.length)])
 
   // AI分析結果に基づく追加アドバイス
   if (sentimentAnalysis.label === 'POSITIVE' && sentimentAnalysis.score > 0.7) {

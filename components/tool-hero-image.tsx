@@ -17,7 +17,7 @@ export function ToolHeroImage({ imageUrl, title, className = "" }: ToolHeroImage
   const altText = title ? `${title} - YokaUnit` : "YokaUnit ツール"
 
   return (
-    <div className={`relative w-full aspect-video overflow-hidden rounded-xl sm:rounded-2xl shadow-lg mb-6 md:mb-8 ${className}`}>
+    <div className={`relative w-full aspect-[3/2] overflow-hidden rounded-xl sm:rounded-2xl shadow-lg mb-6 md:mb-8 ${className}`}>
       {imageUrl ? (
         <Image
           src={imageUrl}

@@ -248,10 +248,10 @@ export default async function OGPCheckerPage() {
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-3">画像最適化</h4>
                     <ul className="text-sm text-gray-600 space-y-2">
-                      <li>• <strong>推奨サイズ</strong>: 1200×630px（1.91:1比率）</li>
+                      <li>• <strong>推奨サイズ</strong>: 1536×1024px（3:2比率）</li>
                       <li>• <strong>ファイル形式</strong>: JPG、PNG、WebP</li>
                       <li>• <strong>ファイルサイズ</strong>: 8MB以下</li>
-                      <li>• <strong>アスペクト比</strong>: 1.91:1（Facebook推奨）</li>
+                      <li>• <strong>アスペクト比</strong>: 3:2（1536×1024px）</li>
                     </ul>
                   </div>
                   <div>
@@ -275,15 +275,15 @@ export default async function OGPCheckerPage() {
                   <div className="space-y-3">
                     <div>
                       <h4 className="font-semibold text-gray-900 text-sm">Facebook</h4>
-                      <p className="text-xs text-gray-600">1.91:1比率、1200×630px推奨</p>
+                      <p className="text-xs text-gray-600">3:2比率、1536×1024px推奨</p>
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-900 text-sm">Twitter</h4>
-                      <p className="text-xs text-gray-600">1.91:1比率、1200×630px推奨</p>
+                      <p className="text-xs text-gray-600">3:2比率、1536×1024px推奨</p>
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-900 text-sm">LinkedIn</h4>
-                      <p className="text-xs text-gray-600">1.91:1比率、1200×630px推奨</p>
+                      <p className="text-xs text-gray-600">3:2比率、1536×1024px推奨</p>
                     </div>
                   </div>
                 </div>

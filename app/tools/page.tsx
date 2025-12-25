@@ -435,8 +435,8 @@ export default function ToolsPage() {
                         <Link href={tool.href} className="block">
                           <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:border-blue-200 bg-white hover:translate-y-[-2px]">
                             <div className="relative">
-                              {/* 画像表示部分 - 16:9アスペクト比 */}
-                              <div className="relative aspect-video overflow-hidden bg-gray-100">
+                              {/* 画像表示部分 - 3:2アスペクト比 (1536×1024px) */}
+                              <div className="relative aspect-[3/2] overflow-hidden bg-gray-100">
                                 {tool.image_url ? (
                                   <Image
                                     src={tool.image_url}

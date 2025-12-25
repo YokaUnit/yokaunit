@@ -28,21 +28,42 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
     result,
     isAnalyzing,
     currentQuestion,
+    analysisProgress,
+    questions,
     updateAnswer,
     startDiagnosis,
     resetDiagnosis,
     nextQuestion,
     previousQuestion,
     analyzeMentalAgeLevel,
+    startAnalysis,
   } = useAiSeishinnenreiDiagnosis()
 
   const [copied, setCopied] = useState(false)
 
   const handleShare = async () => {
     const url = window.location.href
+    
     const text = result 
-      ? `【AI精神年齢診断結果】私の精神年齢は${result.mentalAge}歳でした！実年齢${result.realAge}歳との差は${result.ageDifference > 0 ? '+' : ''}${result.ageDifference}歳です。${result.type}タイプでした✨`
-      : "AI精神年齢診断をやってみました！"
+      ? (() => {
+          const diff = Math.abs(result.ageDifference)
+          let message = ""
+          
+          if (result.ageDifference >= 10) {
+            message = `実年齢${result.realAge}歳なのに精神年齢${result.mentalAge}歳！${diff}歳も大人びてるって言われた😅`
+          } else if (result.ageDifference >= 5) {
+            message = `精神年齢診断したら${result.mentalAge}歳だった！実年齢より${diff}歳高いってことは、結構大人びてるってことかな？`
+          } else if (result.ageDifference <= -10) {
+            message = `精神年齢${result.mentalAge}歳だった！実年齢${result.realAge}歳より${diff}歳も若いって、めっちゃ若々しいってこと？笑`
+          } else if (result.ageDifference <= -5) {
+            message = `精神年齢${result.mentalAge}歳！実年齢より${diff}歳若いって、まだまだ若いってことだよね😊`
+          } else {
+            message = `精神年齢${result.mentalAge}歳だった！実年齢${result.realAge}歳とほぼ同じで、バランス取れてる感じ`
+          }
+          
+          return `${message}\n\n${result.type}タイプで、${result.characteristics.slice(0, 2).join('と')}が特徴らしい。\n\nみんなも診断してみて！\n${url}\n\n#AI精神年齢診断 #精神年齢診断 #心理年齢 #yokaunit`
+        })()
+      : `精神年齢診断してみた！5つの質問に答えるだけで、あなたの精神年齢がわかるよ。実年齢より高い？低い？診断してみて！\n\n${url}\n\n#AI精神年齢診断 #yokaunit`
     
     try {
       if (navigator.share) {
@@ -89,25 +110,29 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
           
           {/* ヘッダー */}
           <div className="text-center mb-6 md:mb-8">
-            <div className="flex items-center justify-center mb-3 md:mb-4">
-              <div className="bg-gradient-to-r from-purple-500 to-blue-600 p-3 md:p-4 rounded-3xl shadow-xl">
-                <Brain className="h-8 w-8 md:h-10 md:w-10 text-white" />
-              </div>
-            </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 px-2 leading-tight">【30秒診断】AI精神年齢診断｜5つの質問で心理年齢を即診断</h1>
-            <h2 className="text-base sm:text-lg md:text-xl text-gray-600 mb-3 md:mb-4 px-4">AIがあなたの心理年齢・メンタル年齢を数値化</h2>
-            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4 leading-relaxed">
-              簡単な5つの選択式質問に答えるだけで、AIがあなたの精神年齢を分析し、実年齢との差を詳しく解説します
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 px-2 leading-tight">
+              【AI精神年齢診断】あなたの心は何歳？
+              <br className="sm:hidden" />
+              <span className="text-xl sm:text-2xl md:text-3xl">実年齢より高い？低い？</span>
+            </h1>
+            <h2 className="text-base sm:text-lg md:text-xl text-gray-600 mb-3 md:mb-4 px-4 font-semibold">
+              見た目は年相応でも、心の中はまるで子どもだったり、逆に大人びていたり…
+            </h2>
+            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto px-4 leading-relaxed mb-4">
+              あなたの精神年齢は実際何歳なのか？AIがチェック！5つの質問に答えるだけで、AIがあなたの精神年齢を診断し、実年齢との差がわかります。
             </p>
             <div className="flex flex-wrap justify-center gap-2 mt-4 px-4">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-green-100 text-green-800">
-                ⚡ 30秒で診断完了
-              </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-blue-100 text-blue-800">
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-blue-100 text-blue-800 shadow-sm">
                 💯 完全無料
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-purple-100 text-purple-800">
-                📱 スマホ最適化
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-purple-100 text-purple-800 shadow-sm">
+                📱 スマホ対応
+              </span>
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-pink-100 text-pink-800 shadow-sm">
+                🔒 登録不要
+              </span>
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-green-100 text-green-800 shadow-sm">
+                ⚡ すぐ診断
               </span>
             </div>
           </div>
@@ -116,35 +141,53 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
             <>
               {/* 診断説明カード */}
               <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl p-4 md:p-8 mb-6 md:mb-8">
-                <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">AI精神年齢診断のやり方</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">
+                  <span className="text-2xl md:text-3xl mr-2">🧠</span>
+                  AI精神年齢診断のやり方
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-                  <div className="text-center">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <div className="text-center transform hover:scale-105 transition-transform">
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
                       <span className="text-white text-lg md:text-2xl font-bold">1</span>
                     </div>
-                    <h3 className="font-bold mb-2 text-sm md:text-base">年齢入力</h3>
+                    <h3 className="font-bold mb-2 text-sm md:text-base text-gray-800">年齢入力</h3>
                     <p className="text-xs md:text-sm text-gray-600">まずはあなたの実年齢を入力してください</p>
                   </div>
-                  <div className="text-center">
-                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <div className="text-center transform hover:scale-105 transition-transform">
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
                       <span className="text-white text-lg md:text-2xl font-bold">2</span>
                     </div>
-                    <h3 className="font-bold mb-2 text-sm md:text-base">5つの質問</h3>
+                    <h3 className="font-bold mb-2 text-sm md:text-base text-gray-800">5つの質問</h3>
                     <p className="text-xs md:text-sm text-gray-600">選択式の質問に答えるだけ（約2分）</p>
                   </div>
-                  <div className="text-center">
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <div className="text-center transform hover:scale-105 transition-transform">
+                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
                       <Brain className="h-6 w-6 md:h-8 md:w-8 text-white" />
                     </div>
-                    <h3 className="font-bold mb-2 text-sm md:text-base">AI分析</h3>
+                    <h3 className="font-bold mb-2 text-sm md:text-base text-gray-800">AIが分析</h3>
                     <p className="text-xs md:text-sm text-gray-600">精神年齢と実年齢の差を詳しく分析</p>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4 md:p-6 mb-6 border border-purple-100">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">✨</div>
+                    <div>
+                      <h3 className="font-bold text-gray-800 mb-2">診断の特徴</h3>
+                      <ul className="text-xs md:text-sm text-gray-700 space-y-1">
+                        <li>• <strong>AIが高精度に分析</strong>：あなたの回答から精神年齢を診断</li>
+                        <li>• 実年齢より高い？低い？がわかる</li>
+                        <li>• 診断結果をTwitter・LINE・Facebookでシェア可能</li>
+                        <li>• 完全無料・登録不要・プライバシー保護</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
 
                 <div className="text-center">
                   <Button
                     onClick={startDiagnosis}
-                    className="w-full md:w-auto bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-bold py-4 md:py-5 px-8 md:px-10 rounded-xl text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-300 touch-manipulation min-h-[56px] md:min-h-[64px]"
+                    className="w-full md:w-auto bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-bold py-4 md:py-5 px-8 md:px-10 rounded-xl text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-300 touch-manipulation min-h-[56px] md:min-h-[64px] transform hover:scale-105"
                   >
                     <Brain className="h-5 w-5 md:h-6 md:w-6 mr-2" />
                     <span className="font-extrabold">診断を始める</span>
@@ -170,15 +213,15 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
                       <div className="bg-purple-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
                         <Brain className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </div>
-                      心理的成熟度
+                      心の年齢
                     </h3>
-                    <p className="text-sm md:text-base text-gray-600 mb-4">考え方や価値観、行動パターンから測定される心の年齢です</p>
+                    <p className="text-sm md:text-base text-gray-600 mb-4">考え方や価値観、行動パターンからわかる心の年齢です</p>
                     
                     <h3 className="font-bold text-base md:text-lg mb-3 flex items-center">
                       <div className="bg-blue-500 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-3">
                         <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </div>
-                      実年齢との比較
+                      実年齢との差
                     </h3>
                     <p className="text-sm md:text-base text-gray-600">実年齢より高ければ大人びており、低ければ若々しい心の持ち主です</p>
                   </div>
@@ -191,10 +234,10 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
                     </h3>
                     <div className="bg-gradient-to-r from-green-50 to-blue-50 p-3 md:p-4 rounded-lg">
                       <div className="text-xs md:text-sm text-green-700 space-y-1">
-                        <div>• あなたの精神的な年齢</div>
-                        <div>• 実年齢との差と特徴</div>
-                        <div>• 心理的タイプ診断</div>
-                        <div>• 個別化されたアドバイス</div>
+                        <div>• あなたの精神年齢がわかる</div>
+                        <div>• 実年齢より高い？低い？がわかる</div>
+                        <div>• あなたのタイプがわかる</div>
+                        <div>• あなたに合ったアドバイス</div>
                       </div>
                     </div>
                   </div>
@@ -202,24 +245,6 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
               </Card>
 
               {/* 特徴 */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
-                  <div className="text-xl md:text-2xl mb-2">⚡</div>
-                  <p className="text-xs md:text-sm font-semibold text-gray-700">2分で完了</p>
-                </Card>
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
-                  <div className="text-xl md:text-2xl mb-2">💯</div>
-                  <p className="text-xs md:text-sm font-semibold text-gray-700">完全無料</p>
-                </Card>
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
-                  <div className="text-xl md:text-2xl mb-2">🔒</div>
-                  <p className="text-xs md:text-sm font-semibold text-gray-700">登録不要</p>
-                </Card>
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md p-3 md:p-4 text-center">
-                  <div className="text-xl md:text-2xl mb-2">📱</div>
-                  <p className="text-xs md:text-sm font-semibold text-gray-700">スマホ対応</p>
-                </Card>
-              </div>
             </>
           )}
 
@@ -228,10 +253,12 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
               <DiagnosisForm
                 answers={answers}
                 currentQuestion={currentQuestion}
+                questions={questions}
                 onUpdateAnswer={updateAnswer}
                 onNextQuestion={nextQuestion}
                 onPreviousQuestion={previousQuestion}
                 isAnalyzing={isAnalyzing}
+                onStartAnalysis={startAnalysis}
               />
               
               {/* 診断中も関連ツール（診断）を表示 */}
@@ -269,14 +296,14 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
           <div className="mt-12 space-y-8">
             {/* メイン説明セクション */}
             <section className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">AI精神年齢診断とは？</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">精神年齢診断とは？</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                <strong>AI精神年齢診断</strong>は、心理学的アプローチとAI技術を組み合わせてあなたの精神年齢（心理年齢・メンタル年齢）を分析する無料診断ツールです。
-                わずか5つの選択式質問に答えるだけで、実年齢との差や心理的特徴を詳しく解説します。
+                見た目は年相応でも、心の中はまるで子どもだったり、逆に大人びていたり…あなたの精神年齢は実際何歳なのか？
+                物事の考え方や行動パターン、恋愛の価値観から、本当のあなたの精神年齢を診断します。
               </p>
               <p className="text-gray-700 leading-relaxed">
-                生活スタイル、価値観、コミュニケーション方法などから総合的に判定し、
-                あなたの精神的な成熟度を数値化。登録不要で完全無料、スマホからでも簡単にご利用いただけます。
+                5つの質問に答えるだけで、あなたの精神年齢が実年齢より高いか低いかがわかります。
+                登録不要で完全無料、スマホからでも簡単にご利用いただけます。
               </p>
             </section>
 
@@ -285,19 +312,19 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
               <h2 className="text-2xl font-bold text-gray-800 mb-4">診断の特徴・メリット</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-bold text-lg text-purple-800 mb-3">🧠 高精度AI分析</h3>
+                  <h3 className="font-bold text-lg text-purple-800 mb-3">🧠 AIが高精度に分析</h3>
                   <ul className="text-gray-700 space-y-2 text-sm">
-                    <li>• 心理学的理論に基づく分析</li>
-                    <li>• AI技術による高精度診断</li>
-                    <li>• 実年齢との詳細比較</li>
-                    <li>• 個別化されたタイプ判定</li>
+                    <li>• <strong>AI分析</strong>：あなたの回答から精神年齢を高精度に診断</li>
+                    <li>• 実年齢より高い？低い？がわかる</li>
+                    <li>• あなたのタイプがわかる</li>
+                    <li>• わかりやすい解説とアドバイス</li>
                   </ul>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-blue-800 mb-3">⚡ 簡単・高速</h3>
+                  <h3 className="font-bold text-lg text-blue-800 mb-3">⚡ 簡単・手軽</h3>
                   <ul className="text-gray-700 space-y-2 text-sm">
-                    <li>• わずか5つの選択式質問</li>
-                    <li>• 約2分で診断完了</li>
+                    <li>• 5つの質問に答えるだけ</li>
+                    <li>• すぐに結果がわかる</li>
                     <li>• 完全無料・登録不要</li>
                     <li>• スマホ・PC・タブレット対応</li>
                   </ul>
@@ -307,38 +334,107 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
 
             {/* よくある質問 */}
             <section className="bg-gray-50/80 backdrop-blur-sm rounded-xl p-6 shadow-md">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">よくある質問</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">❓ よくある質問</h2>
               <div className="space-y-4">
-                <div>
-                  <h3 className="font-bold text-gray-800 mb-2">Q. 精神年齢が実年齢と大きく違うのは普通ですか？</h3>
-                  <p className="text-gray-700 text-sm">
-                    A. はい、精神年齢と実年齢に差があるのは一般的です。人生経験や価値観、性格によって精神的成熟度は個人差があります。
-                    大人びている人もいれば、若々しい心を持つ人もいて、それぞれに魅力があります。
+                <details className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow">
+                  <summary className="font-bold cursor-pointer text-gray-800 text-lg mb-3 list-none">
+                    <span className="flex items-center gap-2">
+                      <span className="text-2xl">💭</span>
+                      精神年齢が実年齢と大きく違うのは普通ですか？
+                    </span>
+                  </summary>
+                  <p className="text-gray-700 text-sm mt-3 leading-relaxed pl-8">
+                    はい、精神年齢と実年齢に差があるのは一般的です。人生経験や価値観、性格によって精神的成熟度は個人差があります。
+                    大人びている人もいれば、若々しい心を持つ人もいて、それぞれに魅力があります。実年齢より精神年齢が高い人は、深い洞察力や冷静な判断力を持ち、低い人は好奇心旺盛でフレッシュな発想ができる傾向があります。
                   </p>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-800 mb-2">Q. 精神年齢は変化しますか？</h3>
-                  <p className="text-gray-700 text-sm">
-                    A. 精神年齢は人生経験や環境の変化によって変動します。
+                </details>
+                <details className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow">
+                  <summary className="font-bold cursor-pointer text-gray-800 text-lg mb-3 list-none">
+                    <span className="flex items-center gap-2">
+                      <span className="text-2xl">🔄</span>
+                      精神年齢は変化しますか？
+                    </span>
+                  </summary>
+                  <p className="text-gray-700 text-sm mt-3 leading-relaxed pl-8">
+                    精神年齢は人生経験や環境の変化によって変動します。
                     新しい経験を積んだり、価値観が変わったりすることで、精神年齢も変化していきます。
+                    例えば、大きなライフイベント（結婚、出産、転職など）や、新しい学習、人間関係の変化などが精神年齢に影響を与えることがあります。
+                    定期的に診断を受けることで、自分の成長を実感できるでしょう。
                   </p>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-800 mb-2">Q. 診断結果はどのように活用できますか？</h3>
-                  <p className="text-gray-700 text-sm">
-                    A. 自己理解を深めるツールとして活用できます。人間関係や恋愛、キャリア選択の参考にしたり、
+                </details>
+                <details className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow">
+                  <summary className="font-bold cursor-pointer text-gray-800 text-lg mb-3 list-none">
+                    <span className="flex items-center gap-2">
+                      <span className="text-2xl">💡</span>
+                      診断結果はどのように活用できますか？
+                    </span>
+                  </summary>
+                  <p className="text-gray-700 text-sm mt-3 leading-relaxed pl-8">
+                    自己理解を深めるツールとして活用できます。人間関係や恋愛、キャリア選択の参考にしたり、
                     自分の特徴を理解することで、より良い人生の選択ができるでしょう。
+                    また、友人や家族と結果を共有して比較することで、お互いの理解を深めることもできます。
+                    SNSでシェアして、周りの人と楽しみながら自己分析を深めることもおすすめです。
                   </p>
-                </div>
+                </details>
+                <details className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow">
+                  <summary className="font-bold cursor-pointer text-gray-800 text-lg mb-3 list-none">
+                    <span className="flex items-center gap-2">
+                      <span className="text-2xl">🎯</span>
+                      診断の精度はどのくらいですか？
+                    </span>
+                  </summary>
+                  <p className="text-gray-700 text-sm mt-3 leading-relaxed pl-8">
+                    精神年齢診断は、心理学的理論に基づいた診断システムです。
+                    診断結果は参考値として捉え、自己理解の一助として活用することをお勧めします。
+                    診断時の心理状態や環境によって結果が変動する可能性があるため、複数回診断を受けて平均を取ることで、より正確な傾向を把握できます。
+                  </p>
+                </details>
+                <details className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow">
+                  <summary className="font-bold cursor-pointer text-gray-800 text-lg mb-3 list-none">
+                    <span className="flex items-center gap-2">
+                      <span className="text-2xl">🔒</span>
+                      個人情報は安全ですか？
+                    </span>
+                  </summary>
+                  <p className="text-gray-700 text-sm mt-3 leading-relaxed pl-8">
+                    はい、完全に安全です。診断はすべてブラウザ内で完結し、回答データはサーバーに送信されません。
+                    登録も不要で、個人情報の入力も一切不要です。診断結果はお使いのデバイスにのみ保存され、
+                    シェアするかどうかも完全にあなたの判断に委ねられています。プライバシーを最優先に設計されています。
+                  </p>
+                </details>
+                <details className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow">
+                  <summary className="font-bold cursor-pointer text-gray-800 text-lg mb-3 list-none">
+                    <span className="flex items-center gap-2">
+                      <span className="text-2xl">📱</span>
+                      スマホからでも診断できますか？
+                    </span>
+                  </summary>
+                  <p className="text-gray-700 text-sm mt-3 leading-relaxed pl-8">
+                    はい、スマホ・タブレット・PCのすべてのデバイスからご利用いただけます。
+                    レスポンシブデザインで最適化されており、モバイルでも快適に診断できます。
+                    外出先や通勤中など、いつでもどこでも簡単に診断を受けることができます。
+                    ワンタップで簡単に操作できるよう設計されています。
+                  </p>
+                </details>
               </div>
             </section>
 
             {/* 関連キーワード */}
-            <section className="text-center">
-              <p className="text-xs text-gray-500">
-                <strong>関連キーワード:</strong> AI精神年齢診断 心理年齢 メンタル年齢 精神年齢 無料診断 心理テスト 年齢診断 AI診断 心理分析 
-                メンタル診断 精神年齢テスト 心理年齢チェック 精神的成熟度 心理的年齢 メンタルエイジ
-              </p>
+            <section className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 shadow-md">
+              <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">🏷️ 関連キーワード</h2>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {[
+                  "精神年齢診断", "心理年齢", "メンタル年齢", "精神年齢", "無料診断", 
+                  "心理テスト", "年齢診断", "心理分析", "メンタル診断", 
+                  "精神年齢テスト", "心理年齢チェック", "精神的成熟度", "心理的年齢", 
+                  "メンタルエイジ", "性格診断", "自己分析", "心理年齢診断 無料",
+                  "精神年齢 チェック", "メンタル年齢 診断", "心理年齢 テスト"
+                ].map((keyword) => (
+                  <span key={keyword} className="px-3 py-1.5 bg-white text-gray-700 rounded-full text-xs sm:text-sm font-medium shadow-sm hover:shadow-md transition-shadow cursor-default">
+                    {keyword}
+                  </span>
+                ))}
+              </div>
             </section>
           </div>
           </div>
@@ -348,7 +444,7 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
       {/* SEO記事セクション */}
       <div className="max-w-4xl mx-auto mt-16">
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">🧠 精神年齢・心理年齢完全ガイド：AI診断の科学と心理学</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">🧠 精神年齢・心理年齢完全ガイド</h2>
           
           <div className="prose max-w-none text-gray-700 space-y-6">
             <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
@@ -360,7 +456,7 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
                 精神年齢（Mental Age）は、実年齢とは異なる心理的な成熟度を表す概念です。
                 心理学では「心理年齢」「メンタル年齢」とも呼ばれ、個人の思考パターン、
                 感情の成熟度、価値観、行動特性などを総合的に評価した指標です。
-                近年のAI技術の発達により、従来の心理テストを超えた高度な分析が可能になりました。
+                心理学的理論に基づいた分析により、あなたの精神年齢を数値化できます。
               </p>
               <p className="text-gray-700 leading-relaxed">
                 精神年齢は実年齢と必ずしも一致しません。20代でも精神年齢が40代の人もいれば、
@@ -399,13 +495,13 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
                   </div>
                   
                   <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
-                    <h4 className="font-semibold text-gray-900 mb-2">AI機械学習</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">統計的分析</h4>
                     <p className="text-sm text-gray-600 mb-2">
-                      自然言語処理、感情分析、パターン認識技術を活用。
-                      大規模データセットから学習したモデルによる高精度分析。
+                      回答パターンから感情や価値観を分析。
+                      心理学的指標に基づいた診断結果を提供。
                     </p>
                     <div className="text-xs text-gray-500">
-                      深層学習 → 感情分析 → パターン認識 → 予測モデル
+                      回答分析 → パターン認識 → 心理的評価 → 診断結果
                     </div>
                   </div>
                 </div>
@@ -486,41 +582,41 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
               </h3>
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">自然言語処理</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">回答分析</h4>
                   <div className="text-xs font-mono bg-white p-2 rounded mb-2">
-                    BERT / GPT-3<br/>
-                    感情分析<br/>
-                    意図理解
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    回答テキストから感情、意図、価値観を抽出。
-                    文脈を理解した高度な分析を実現。
-                  </p>
-                </div>
-                
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">機械学習モデル</h4>
-                  <div className="text-xs font-mono bg-white p-2 rounded mb-2">
-                    深層学習<br/>
+                    選択肢分析<br/>
                     パターン認識<br/>
-                    予測分析
+                    傾向把握
                   </div>
                   <p className="text-sm text-gray-600">
-                    大規模データセットから学習したモデル。
-                    個人の回答パターンを高精度で分析。
+                    あなたの回答から感情、価値観、行動傾向を分析。
+                    心理学的指標に基づいて評価します。
                   </p>
                 </div>
                 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">心理学的指標</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">心理学的評価</h4>
                   <div className="text-xs font-mono bg-white p-2 rounded mb-2">
-                    認知発達段階<br/>
-                    感情成熟度<br/>
-                    社会的スキル
+                    成熟度評価<br/>
+                    性格特性分析<br/>
+                    行動パターン
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    心理学的理論に基づく評価システム。
+                    個人の回答パターンから精神年齢を算出。
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">診断結果</h4>
+                  <div className="text-xs font-mono bg-white p-2 rounded mb-2">
+                    精神年齢算出<br/>
+                    実年齢との比較<br/>
+                    特徴の解説
                   </div>
                   <p className="text-sm text-gray-600">
                     心理学理論に基づく評価指標。
-                    科学的根拠のある診断結果を提供。
+                    わかりやすく診断結果を提供。
                   </p>
                 </div>
               </div>
@@ -599,10 +695,10 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
                 </div>
                 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">YokaUnit AI精神年齢診断の特徴</h4>
+                  <h4 className="font-semibold text-gray-900 mb-2">YokaUnit 精神年齢診断の特徴</h4>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• <strong>AI感情分析</strong>: 自然言語処理による高度な感情分析</li>
-                    <li>• <strong>個別化された診断</strong>: 個人の回答パターンに基づく精密分析</li>
+                    <li>• <strong>心理学的分析</strong>: 心理学的理論に基づいた分析</li>
+                    <li>• <strong>個別化された診断</strong>: 個人の回答パターンに基づく診断</li>
                     <li>• <strong>実年齢との比較</strong>: 実年齢との差を詳細に解説</li>
                     <li>• <strong>成長アドバイス</strong>: 診断結果に基づく具体的な改善提案</li>
                     <li>• <strong>プライバシー保護</strong>: ブラウザ内完結でデータ漏洩リスクなし</li>
@@ -666,8 +762,8 @@ export default function AiSeishinnenreiClientPage({ toolImageUrl = null, toolTit
 
             <div className="text-center pt-6 border-t border-gray-200">
               <p className="text-sm text-gray-500">
-                YokaUnitのAI精神年齢診断は、最新の心理学理論とAI技術を融合させた
-                高精度な診断ツールです。この記事が、精神年齢の理解と自己成長に役立てば幸いです。
+                YokaUnitの精神年齢診断は、心理学的理論に基づいた
+                診断ツールです。この記事が、精神年齢の理解と自己成長に役立てば幸いです。
               </p>
               <div className="mt-4 flex justify-center gap-4 text-xs text-gray-400">
                 <span>#精神年齢診断</span>

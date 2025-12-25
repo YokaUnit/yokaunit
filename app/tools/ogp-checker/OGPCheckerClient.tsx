@@ -148,7 +148,7 @@ export function OGPCheckerClient() {
     if (data.image && data.width && data.height) {
       const width = parseInt(data.width)
       const height = parseInt(data.height)
-      if (width >= 1200 && height >= 630) score += 10
+      if (width >= 1536 && height >= 1024) score += 10
     }
     if (data.twitterCard) score += 10
     
@@ -629,11 +629,11 @@ export function OGPCheckerClient() {
                                   </div>
                                   <div className="flex items-center justify-between p-2 bg-white rounded-lg">
                                     <div className="flex items-center gap-2">
-                                      <div className={`w-3 h-3 rounded-full ${metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1200 && parseInt(metaData.height) >= 630 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                      <span className="text-sm font-medium">画像サイズ (1200×630px以上)</span>
+                                      <div className={`w-3 h-3 rounded-full ${metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1536 && parseInt(metaData.height) >= 1024 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                                      <span className="text-sm font-medium">画像サイズ (1536×1024px以上)</span>
                                     </div>
-                                    <span className={`text-sm font-bold ${metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1200 && parseInt(metaData.height) >= 630 ? 'text-green-600' : 'text-yellow-600'}`}>
-                                      {metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1200 && parseInt(metaData.height) >= 630 ? '10点' : '0点'}
+                                    <span className={`text-sm font-bold ${metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1536 && parseInt(metaData.height) >= 1024 ? 'text-green-600' : 'text-yellow-600'}`}>
+                                      {metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1536 && parseInt(metaData.height) >= 1024 ? '10点' : '0点'}
                                     </span>
                                   </div>
                                   <div className="flex items-center justify-between p-2 bg-white rounded-lg">
@@ -1245,12 +1245,12 @@ export function OGPCheckerClient() {
                                   (() => {
                                     const width = parseInt(metaData.width)
                                     const height = parseInt(metaData.height)
-                                    if (width < 1200 || height < 630) {
+                                    if (width < 1536 || height < 1024) {
                                       return (
                                         <div className="p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded">
                                           <p className="text-sm text-yellow-800">
                                             <strong>画像サイズが小さいです</strong><br />
-                                            1200×630px以上を推奨します
+                                            1536×1024px以上を推奨します
                                           </p>
                                         </div>
                                       )

@@ -15,6 +15,12 @@ export interface DiagnosisResult {
   description: string
   advice: string
   characteristics: string[]
+  aiAnalysis?: {
+    sentimentScore: number
+    patternAnalysis: string
+    personalityTraits: string[]
+    confidence: number
+  }
 }
 
 export type DiagnosisStep = "intro" | "questions" | "result"

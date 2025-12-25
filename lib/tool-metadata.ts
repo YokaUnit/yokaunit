@@ -37,8 +37,8 @@ export async function generateToolMetadata(slug: string, defaults: Partial<Metad
       images: [
         {
           url: imageUrl,
-          width: 1200,
-          height: 630,
+          width: 1536,
+          height: 1024,
           alt: tool?.title || (typeof defaults.title === "string" ? defaults.title : "") || "YokaUnit",
         },
       ],

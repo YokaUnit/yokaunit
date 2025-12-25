@@ -95,6 +95,23 @@ export function OGPCheckerClient() {
   const shouldRenderSocialImages = useMemo(() => resultTab === "social", [resultTab])
 
 
+  // URLパラメータから初期URLを読み込み
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const urlParam = params.get('url')
+      if (urlParam) {
+        const decodedUrl = decodeURIComponent(urlParam)
+        setUrl(decodedUrl)
+        // 自動チェック（少し遅延させてUIが準備できてから）
+        setTimeout(() => {
+          checkOGP(decodedUrl)
+        }, 500)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // ローカルストレージから履歴を読み込み
   useEffect(() => {
     const savedHistory = localStorage.getItem('ogp-checker-history')
@@ -317,18 +334,19 @@ export function OGPCheckerClient() {
   }, [results])
 
   const shareResult = useCallback(async (data: OGPMetaData) => {
-    const shareText = `OGPチェック結果: ${data.title || 'タイトルなし'} - ${data.url || ''}`
-    const shareUrl = window.location.href
+    const shareText = `OGPチェック結果: ${data.title || 'タイトルなし'} - SEOスコア: ${calculateSEOScore(data)}/100`
+    const shareUrl = data.url || window.location.href
+    const toolUrl = window.location.href
 
     try {
       if (navigator.share) {
         await navigator.share({
           title: "OGPチェック結果",
           text: shareText,
-          url: shareUrl,
+          url: toolUrl,
         })
       } else {
-        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`)
+        await navigator.clipboard.writeText(`${shareText}\n${toolUrl}`)
         toast({
           title: "結果をコピーしました",
           description: "SNSでシェアして友達と比べてみよう！",
@@ -337,7 +355,24 @@ export function OGPCheckerClient() {
     } catch (error) {
       console.error("Share failed:", error)
     }
-  }, [toast])
+  }, [toast, calculateSEOScore])
+
+  const shareToTwitter = useCallback((data: OGPMetaData) => {
+    const text = encodeURIComponent(`OGPチェック結果: ${data.title || 'タイトルなし'} - SEOスコア: ${calculateSEOScore(data)}/100`)
+    const url = encodeURIComponent(window.location.href)
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank')
+  }, [calculateSEOScore])
+
+  const shareToFacebook = useCallback((data: OGPMetaData) => {
+    const url = encodeURIComponent(window.location.href)
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank')
+  }, [])
+
+  const shareToLine = useCallback((data: OGPMetaData) => {
+    const text = encodeURIComponent(`OGPチェック結果: ${data.title || 'タイトルなし'} - SEOスコア: ${calculateSEOScore(data)}/100`)
+    const url = encodeURIComponent(window.location.href)
+    window.open(`https://social-plugins.line.me/lineit/share?url=${url}&text=${text}`, '_blank')
+  }, [calculateSEOScore])
 
   const exportSingleResult = useCallback((data: OGPMetaData) => {
     const jsonContent = JSON.stringify(data, null, 2)
@@ -387,29 +422,36 @@ export function OGPCheckerClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {/* ヘッダー */}
         <motion.div 
-          className="text-center mb-8"
+          className="text-center mb-6 sm:mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex items-center justify-center mb-4">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-3xl shadow-xl">
-              <Search className="h-10 w-10 text-white" />
+          <div className="flex items-center justify-center mb-3 sm:mb-4">
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 sm:p-4 rounded-2xl sm:rounded-3xl shadow-xl">
+              <Search className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
             </div>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-            OGPチェッカー（無料）
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 px-2 break-words">
+            <span className="block sm:inline">OGPチェッカー（無料）</span>
+            <span className="block sm:inline sm:ml-3 text-lg sm:text-xl md:text-2xl lg:text-3xl">📝ブロガー必見</span>
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-4">
+          <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto mb-3 sm:mb-4 px-2 break-words">
             メタデータ・OGP画像・Twitter Card・Facebook Cardを瞬時にチェック！
-            SEOスコア分析・改善提案・バッチチェック対応
+            <br className="hidden sm:block" />
+            <span className="block sm:inline text-xs sm:text-sm md:text-base text-purple-600 font-semibold">WordPressでも使える・技術知識不要・初心者でも簡単</span>
+            <br className="hidden sm:block" />
+            <span className="block sm:inline">SEOスコア分析・改善提案・バッチチェック対応</span>
           </p>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-2xl mx-auto">
-            <p className="text-sm text-blue-800 text-center">
-              <strong>URLを入力してあなたのWebサイトのOGP設定をチェックしましょう！</strong><br />
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 rounded-lg p-3 sm:p-4 max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm text-blue-900 text-center font-semibold mb-2 break-words px-1">
+              <span className="text-base sm:text-lg">📝</span> <strong>ブロガー必見！</strong> WordPressしか使えない方も、詳しいことがわからない方も大丈夫！
+            </p>
+            <p className="text-xs sm:text-sm text-blue-800 text-center break-words px-1">
+              <strong>URLからチェックしてあなたのWebサイトのOGP設定を確認しましょう！</strong><br />
               無料でメタデータの最適化状況を詳細分析します
             </p>
           </div>
@@ -417,58 +459,92 @@ export function OGPCheckerClient() {
 
         {/* メインコンテンツ */}
         <div className="max-w-6xl mx-auto">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="single" className="flex items-center gap-2">
-                <Search className="h-4 w-4" />
-                単一チェック
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6 sm:mb-8">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 h-auto">
+              <TabsTrigger value="single" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-2.5 min-h-[44px]">
+                <Search className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">単一チェック</span>
+                <span className="xs:hidden">単一</span>
               </TabsTrigger>
-              <TabsTrigger value="batch" className="flex items-center gap-2">
-                <BarChart3 className="h-4 w-4" />
-                バッチチェック
+              <TabsTrigger value="batch" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-2.5 min-h-[44px]">
+                <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">バッチチェック</span>
+                <span className="xs:hidden">バッチ</span>
               </TabsTrigger>
-              <TabsTrigger value="history" className="flex items-center gap-2">
-                <History className="h-4 w-4" />
-                履歴
+              <TabsTrigger value="history" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-2.5 min-h-[44px]">
+                <History className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>履歴</span>
               </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex items-center gap-2">
-                <PieChart className="h-4 w-4" />
-                分析
+              <TabsTrigger value="analytics" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-2.5 min-h-[44px]">
+                <PieChart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>分析</span>
               </TabsTrigger>
             </TabsList>
 
             {/* 単一チェックタブ */}
-            <TabsContent value="single" className="space-y-6">
+            <TabsContent value="single" className="space-y-4 sm:space-y-6">
               <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Search className="h-5 w-5" />
-                    URLをチェック
+                <CardHeader className="px-3 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl">
+                    <Search className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                    <span className="break-words">URLからチェック</span>
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-xs sm:text-sm mt-2 break-words">
                     ウェブサイトのOGPメタデータをチェックしてSEOスコアを分析します
+                    <br className="hidden sm:block" />
+                    <span className="block sm:inline text-xs sm:text-sm text-purple-600 font-semibold">WordPress・技術知識不要・初心者でも簡単</span>
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex gap-2">
+                <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       placeholder="https://example.com"
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && checkOGP(url)}
-                      className="flex-1"
+                      className="flex-1 text-sm sm:text-base min-h-[44px]"
                     />
                     <Button 
                       onClick={() => checkOGP(url)}
                       disabled={loading || !url.trim()}
-                      className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 min-h-[44px] w-full sm:w-auto px-6"
                     >
                       {loading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
                       ) : (
-                        <Search className="h-4 w-4" />
+                        <>
+                          <Search className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
+                          <span className="text-sm sm:text-base">チェック</span>
+                        </>
                       )}
                     </Button>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <div className="bg-blue-500 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-xs font-bold">💡</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-blue-900 mb-1 sm:mb-2 text-xs sm:text-sm break-words">ブックマークレットで簡単チェック</h4>
+                        <p className="text-xs text-blue-800 mb-2 sm:mb-3 break-words">
+                          現在表示中のページをワンクリックでチェックできます。下のボタンをブックマークバーにドラッグ＆ドロップしてください。
+                        </p>
+                        <a
+                          href={`javascript:(function(){window.open('https://yokaunit.com/tools/ogp-checker?url='+encodeURIComponent(window.location.href),'_blank');})();`}
+                          className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-colors min-h-[44px] flex items-center justify-center break-words"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            toast({
+                              title: "ブックマークレット",
+                              description: "このリンクをブックマークバーにドラッグ＆ドロップしてください",
+                            })
+                          }}
+                        >
+                          🔖 <span className="hidden sm:inline">OGPチェッカー（ドラッグしてブックマーク）</span>
+                          <span className="sm:hidden">ブックマークに追加</span>
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -499,104 +575,104 @@ export function OGPCheckerClient() {
                   transition={{ duration: 0.5 }}
                 >
                   <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="flex items-center gap-2">
-                          <CheckCircle className="h-5 w-5 text-green-500" />
-                          チェック結果
+                    <CardHeader className="px-3 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-2">
+                        <CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl">
+                          <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-500 flex-shrink-0" />
+                          <span className="break-words">チェック結果</span>
                         </CardTitle>
-                        <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${getScoreColor(calculateSEOScore(metaData))}`}>
+                        <div className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-1 rounded-full text-xs sm:text-sm ${getScoreColor(calculateSEOScore(metaData))} w-full sm:w-auto justify-center sm:justify-start`}>
                           {getScoreIcon(calculateSEOScore(metaData))}
-                          <span className="font-bold">SEOスコア: {calculateSEOScore(metaData)}/100</span>
-                          <Badge variant="secondary" className="ml-2">
+                          <span className="font-bold break-words">SEO: {calculateSEOScore(metaData)}/100</span>
+                          <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
                             {getScoreText(calculateSEOScore(metaData))}
                           </Badge>
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="px-3 sm:px-6 pb-4 sm:pb-6">
                       <Tabs value={resultTab} onValueChange={setResultTab}>
-                        <TabsList className="grid w-full grid-cols-5">
-                          <TabsTrigger value="overview" className="flex items-center gap-1">
-                            <Eye className="h-3 w-3" />
-                            概要
+                        <TabsList className="grid w-full grid-cols-5 gap-1 h-auto">
+                          <TabsTrigger value="overview" className="flex items-center justify-center gap-1 text-[10px] sm:text-xs py-2 sm:py-2.5 min-h-[44px]">
+                            <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+                            <span className="hidden xs:inline">概要</span>
                           </TabsTrigger>
-                          <TabsTrigger value="preview" className="flex items-center gap-1">
-                            <Monitor className="h-3 w-3" />
-                            プレビュー
+                          <TabsTrigger value="preview" className="flex items-center justify-center gap-1 text-[10px] sm:text-xs py-2 sm:py-2.5 min-h-[44px]">
+                            <Monitor className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+                            <span className="hidden xs:inline">プレビュー</span>
                           </TabsTrigger>
-                          <TabsTrigger value="metadata" className="flex items-center gap-1">
-                            <Layers className="h-3 w-3" />
-                            メタデータ
+                          <TabsTrigger value="metadata" className="flex items-center justify-center gap-1 text-[10px] sm:text-xs py-2 sm:py-2.5 min-h-[44px]">
+                            <Layers className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+                            <span className="hidden xs:inline">メタ</span>
                           </TabsTrigger>
-                          <TabsTrigger value="social" className="flex items-center gap-1">
-                            <Share2 className="h-3 w-3" />
-                            SNS
+                          <TabsTrigger value="social" className="flex items-center justify-center gap-1 text-[10px] sm:text-xs py-2 sm:py-2.5 min-h-[44px]">
+                            <Share2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+                            <span className="hidden xs:inline">SNS</span>
                           </TabsTrigger>
-                          <TabsTrigger value="analysis" className="flex items-center gap-1">
-                            <Target className="h-3 w-3" />
-                            分析
+                          <TabsTrigger value="analysis" className="flex items-center justify-center gap-1 text-[10px] sm:text-xs py-2 sm:py-2.5 min-h-[44px]">
+                            <Target className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+                            <span className="hidden xs:inline">分析</span>
                           </TabsTrigger>
                         </TabsList>
 
-                        <TabsContent value="overview" className="space-y-6">
+                        <TabsContent value="overview" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                           {/* SEOスコア表示 */}
-                          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200">
-                            <div className="flex items-center justify-between mb-4">
-                              <h4 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                                <Target className="h-5 w-5 text-blue-600" />
+                          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 sm:p-6 border border-blue-200">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-2 mb-4">
+                              <h4 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 flex items-center gap-2 break-words">
+                                <Target className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 flex-shrink-0" />
                                 SEOスコア分析
                               </h4>
-                              <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${getScoreColor(calculateSEOScore(metaData))}`}>
+                              <div className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm ${getScoreColor(calculateSEOScore(metaData))} w-full sm:w-auto justify-center sm:justify-start`}>
                                 {getScoreIcon(calculateSEOScore(metaData))}
-                                <span className="font-bold text-lg">{calculateSEOScore(metaData)}/100</span>
-                                <Badge variant="secondary" className="ml-2">
+                                <span className="font-bold text-sm sm:text-base md:text-lg break-words">{calculateSEOScore(metaData)}/100</span>
+                                <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
                                   {getScoreText(calculateSEOScore(metaData))}
                                 </Badge>
                               </div>
                             </div>
                             
                             {/* スコア詳細 */}
-                            <div className="grid md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                               <div>
-                                <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                  <CheckCircle className="h-4 w-4 text-green-600" />
-                                  基本メタデータ (60点)
+                                <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2 text-sm sm:text-base">
+                                  <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600 flex-shrink-0" />
+                                  <span className="break-words">基本メタデータ (60点)</span>
                                 </h5>
-                                <div className="space-y-3">
-                                  <div className="flex items-center justify-between p-2 bg-white rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`w-3 h-3 rounded-full ${metaData.title ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                      <span className="text-sm font-medium">タイトル (og:title)</span>
+                                <div className="space-y-2 sm:space-y-3">
+                                  <div className="flex items-center justify-between p-2 sm:p-2.5 bg-white rounded-lg gap-2">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                                      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${metaData.title ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                                      <span className="text-xs sm:text-sm font-medium break-words">タイトル (og:title)</span>
                                     </div>
-                                    <span className={`text-sm font-bold ${metaData.title ? 'text-green-600' : 'text-red-600'}`}>
+                                    <span className={`text-xs sm:text-sm font-bold flex-shrink-0 ${metaData.title ? 'text-green-600' : 'text-red-600'}`}>
                                       {metaData.title ? '15点' : '0点'}
                                     </span>
                                   </div>
-                                  <div className="flex items-center justify-between p-2 bg-white rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`w-3 h-3 rounded-full ${metaData.description ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                      <span className="text-sm font-medium">説明文 (og:description)</span>
+                                  <div className="flex items-center justify-between p-2 sm:p-2.5 bg-white rounded-lg gap-2">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                                      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${metaData.description ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                                      <span className="text-xs sm:text-sm font-medium break-words">説明文 (og:description)</span>
                                     </div>
-                                    <span className={`text-sm font-bold ${metaData.description ? 'text-green-600' : 'text-red-600'}`}>
+                                    <span className={`text-xs sm:text-sm font-bold flex-shrink-0 ${metaData.description ? 'text-green-600' : 'text-red-600'}`}>
                                       {metaData.description ? '15点' : '0点'}
                                     </span>
                                   </div>
-                                  <div className="flex items-center justify-between p-2 bg-white rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`w-3 h-3 rounded-full ${metaData.image ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                      <span className="text-sm font-medium">画像 (og:image)</span>
+                                  <div className="flex items-center justify-between p-2 sm:p-2.5 bg-white rounded-lg gap-2">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                                      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${metaData.image ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                                      <span className="text-xs sm:text-sm font-medium break-words">画像 (og:image)</span>
                                     </div>
-                                    <span className={`text-sm font-bold ${metaData.image ? 'text-green-600' : 'text-red-600'}`}>
+                                    <span className={`text-xs sm:text-sm font-bold flex-shrink-0 ${metaData.image ? 'text-green-600' : 'text-red-600'}`}>
                                       {metaData.image ? '15点' : '0点'}
                                     </span>
                                   </div>
-                                  <div className="flex items-center justify-between p-2 bg-white rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`w-3 h-3 rounded-full ${metaData.url ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                      <span className="text-sm font-medium">URL (og:url)</span>
+                                  <div className="flex items-center justify-between p-2 sm:p-2.5 bg-white rounded-lg gap-2">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                                      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${metaData.url ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                                      <span className="text-xs sm:text-sm font-medium break-words">URL (og:url)</span>
                                     </div>
-                                    <span className={`text-sm font-bold ${metaData.url ? 'text-green-600' : 'text-red-600'}`}>
+                                    <span className={`text-xs sm:text-sm font-bold flex-shrink-0 ${metaData.url ? 'text-green-600' : 'text-red-600'}`}>
                                       {metaData.url ? '15点' : '0点'}
                                     </span>
                                   </div>
@@ -604,44 +680,44 @@ export function OGPCheckerClient() {
                               </div>
                               
                               <div>
-                                <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                  <Zap className="h-4 w-4 text-yellow-600" />
-                                  品質ボーナス (40点)
+                                <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2 text-sm sm:text-base">
+                                  <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-yellow-600 flex-shrink-0" />
+                                  <span className="break-words">品質ボーナス (40点)</span>
                                 </h5>
-                                <div className="space-y-3">
-                                  <div className="flex items-center justify-between p-2 bg-white rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`w-3 h-3 rounded-full ${metaData.title && metaData.title.length >= 30 && metaData.title.length <= 60 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                      <span className="text-sm font-medium">タイトル長さ (30-60文字)</span>
+                                <div className="space-y-2 sm:space-y-3">
+                                  <div className="flex items-center justify-between p-2 sm:p-2.5 bg-white rounded-lg gap-2">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                                      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${metaData.title && metaData.title.length >= 30 && metaData.title.length <= 60 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                                      <span className="text-xs sm:text-sm font-medium break-words">タイトル長さ (30-60文字)</span>
                                     </div>
-                                    <span className={`text-sm font-bold ${metaData.title && metaData.title.length >= 30 && metaData.title.length <= 60 ? 'text-green-600' : 'text-yellow-600'}`}>
+                                    <span className={`text-xs sm:text-sm font-bold flex-shrink-0 ${metaData.title && metaData.title.length >= 30 && metaData.title.length <= 60 ? 'text-green-600' : 'text-yellow-600'}`}>
                                       {metaData.title && metaData.title.length >= 30 && metaData.title.length <= 60 ? '10点' : '0点'}
                                     </span>
                                   </div>
-                                  <div className="flex items-center justify-between p-2 bg-white rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`w-3 h-3 rounded-full ${metaData.description && metaData.description.length >= 100 && metaData.description.length <= 160 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                      <span className="text-sm font-medium">説明文長さ (100-160文字)</span>
+                                  <div className="flex items-center justify-between p-2 sm:p-2.5 bg-white rounded-lg gap-2">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                                      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${metaData.description && metaData.description.length >= 100 && metaData.description.length <= 160 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                                      <span className="text-xs sm:text-sm font-medium break-words">説明文長さ (100-160文字)</span>
                                     </div>
-                                    <span className={`text-sm font-bold ${metaData.description && metaData.description.length >= 100 && metaData.description.length <= 160 ? 'text-green-600' : 'text-yellow-600'}`}>
+                                    <span className={`text-xs sm:text-sm font-bold flex-shrink-0 ${metaData.description && metaData.description.length >= 100 && metaData.description.length <= 160 ? 'text-green-600' : 'text-yellow-600'}`}>
                                       {metaData.description && metaData.description.length >= 100 && metaData.description.length <= 160 ? '10点' : '0点'}
                                     </span>
                                   </div>
-                                  <div className="flex items-center justify-between p-2 bg-white rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`w-3 h-3 rounded-full ${metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1536 && parseInt(metaData.height) >= 1024 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                      <span className="text-sm font-medium">画像サイズ (1536×1024px以上)</span>
+                                  <div className="flex items-center justify-between p-2 sm:p-2.5 bg-white rounded-lg gap-2">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                                      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1536 && parseInt(metaData.height) >= 1024 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                                      <span className="text-xs sm:text-sm font-medium break-words">画像サイズ (1536×1024px以上)</span>
                                     </div>
-                                    <span className={`text-sm font-bold ${metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1536 && parseInt(metaData.height) >= 1024 ? 'text-green-600' : 'text-yellow-600'}`}>
+                                    <span className={`text-xs sm:text-sm font-bold flex-shrink-0 ${metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1536 && parseInt(metaData.height) >= 1024 ? 'text-green-600' : 'text-yellow-600'}`}>
                                       {metaData.image && metaData.width && metaData.height && parseInt(metaData.width) >= 1536 && parseInt(metaData.height) >= 1024 ? '10点' : '0点'}
                                     </span>
                                   </div>
-                                  <div className="flex items-center justify-between p-2 bg-white rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`w-3 h-3 rounded-full ${metaData.twitterCard ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                      <span className="text-sm font-medium">Twitter Card設定</span>
+                                  <div className="flex items-center justify-between p-2 sm:p-2.5 bg-white rounded-lg gap-2">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                                      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${metaData.twitterCard ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                                      <span className="text-xs sm:text-sm font-medium break-words">Twitter Card設定</span>
                                     </div>
-                                    <span className={`text-sm font-bold ${metaData.twitterCard ? 'text-green-600' : 'text-yellow-600'}`}>
+                                    <span className={`text-xs sm:text-sm font-bold flex-shrink-0 ${metaData.twitterCard ? 'text-green-600' : 'text-yellow-600'}`}>
                                       {metaData.twitterCard ? '10点' : '0点'}
                                     </span>
                                   </div>
@@ -651,91 +727,91 @@ export function OGPCheckerClient() {
                           </div>
 
                           {/* 基本情報 */}
-                          <div className="grid md:grid-cols-2 gap-6">
-                            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-                              <h4 className="font-semibold mb-4 flex items-center gap-2 text-gray-800">
-                                <Globe className="h-5 w-5 text-blue-600" />
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                            <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200 shadow-sm">
+                              <h4 className="font-semibold mb-3 sm:mb-4 flex items-center gap-2 text-gray-800 text-sm sm:text-base">
+                                <Globe className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 flex-shrink-0" />
                                 基本情報
                               </h4>
-                              <div className="space-y-3">
-                                <div className="flex items-start gap-3">
-                                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="space-y-2 sm:space-y-3">
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                                   <div className="flex-1 min-w-0">
-                                    <span className="text-sm text-gray-600 block">URL</span>
-                                    <span className="font-medium text-gray-900 break-all">{metaData.url || "設定されていません"}</span>
+                                    <span className="text-xs sm:text-sm text-gray-600 block mb-0.5">URL</span>
+                                    <span className="font-medium text-gray-900 break-all text-xs sm:text-sm">{metaData.url || "設定されていません"}</span>
                                   </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                                   <div className="flex-1 min-w-0">
-                                    <span className="text-sm text-gray-600 block">サイト名</span>
-                                    <span className="font-medium text-gray-900">{metaData.siteName || "設定されていません"}</span>
+                                    <span className="text-xs sm:text-sm text-gray-600 block mb-0.5">サイト名</span>
+                                    <span className="font-medium text-gray-900 text-xs sm:text-sm break-words">{metaData.siteName || "設定されていません"}</span>
                                   </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                                   <div className="flex-1 min-w-0">
-                                    <span className="text-sm text-gray-600 block">タイプ</span>
-                                    <span className="font-medium text-gray-900">{metaData.type || "設定されていません"}</span>
+                                    <span className="text-xs sm:text-sm text-gray-600 block mb-0.5">タイプ</span>
+                                    <span className="font-medium text-gray-900 text-xs sm:text-sm break-words">{metaData.type || "設定されていません"}</span>
                                   </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                                   <div className="flex-1 min-w-0">
-                                    <span className="text-sm text-gray-600 block">言語</span>
-                                    <span className="font-medium text-gray-900">{metaData.locale || "設定されていません"}</span>
+                                    <span className="text-xs sm:text-sm text-gray-600 block mb-0.5">言語</span>
+                                    <span className="font-medium text-gray-900 text-xs sm:text-sm break-words">{metaData.locale || "設定されていません"}</span>
                                   </div>
                                 </div>
                               </div>
                             </div>
 
-                            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-                              <h4 className="font-semibold mb-4 flex items-center gap-2 text-gray-800">
-                                <Award className="h-5 w-5 text-purple-600" />
+                            <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200 shadow-sm">
+                              <h4 className="font-semibold mb-3 sm:mb-4 flex items-center gap-2 text-gray-800 text-sm sm:text-base">
+                                <Award className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600 flex-shrink-0" />
                                 コンテンツ情報
                               </h4>
-                              <div className="space-y-3">
-                                <div className="flex items-start gap-3">
-                                  <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="space-y-2 sm:space-y-3">
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
                                   <div className="flex-1 min-w-0">
-                                    <span className="text-sm text-gray-600 block">タイトル</span>
-                                    <span className="font-medium text-gray-900">{metaData.title || "設定されていません"}</span>
+                                    <span className="text-xs sm:text-sm text-gray-600 block mb-0.5">タイトル</span>
+                                    <span className="font-medium text-gray-900 text-xs sm:text-sm break-words">{metaData.title || "設定されていません"}</span>
                                     {metaData.title && (
-                                      <span className="text-xs text-gray-500 block mt-1">
+                                      <span className="text-[10px] sm:text-xs text-gray-500 block mt-0.5 sm:mt-1">
                                         {metaData.title.length}文字
                                       </span>
                                     )}
                                   </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                  <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
                                   <div className="flex-1 min-w-0">
-                                    <span className="text-sm text-gray-600 block">説明文</span>
-                                    <span className="font-medium text-gray-900">{metaData.description || "設定されていません"}</span>
+                                    <span className="text-xs sm:text-sm text-gray-600 block mb-0.5">説明文</span>
+                                    <span className="font-medium text-gray-900 text-xs sm:text-sm break-words">{metaData.description || "設定されていません"}</span>
                                     {metaData.description && (
-                                      <span className="text-xs text-gray-500 block mt-1">
+                                      <span className="text-[10px] sm:text-xs text-gray-500 block mt-0.5 sm:mt-1">
                                         {metaData.description.length}文字
                                       </span>
                                     )}
                                   </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                  <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
                                   <div className="flex-1 min-w-0">
-                                    <span className="text-sm text-gray-600 block">画像</span>
-                                    <span className="font-medium text-gray-900">{metaData.image ? "設定済み" : "設定されていません"}</span>
+                                    <span className="text-xs sm:text-sm text-gray-600 block mb-0.5">画像</span>
+                                    <span className="font-medium text-gray-900 text-xs sm:text-sm break-words">{metaData.image ? "設定済み" : "設定されていません"}</span>
                                     {metaData.image && metaData.width && metaData.height && (
-                                      <span className="text-xs text-gray-500 block mt-1">
+                                      <span className="text-[10px] sm:text-xs text-gray-500 block mt-0.5 sm:mt-1">
                                         {metaData.width}×{metaData.height}px
                                       </span>
                                     )}
                                   </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                  <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
                                   <div className="flex-1 min-w-0">
-                                    <span className="text-sm text-gray-600 block">Twitter Card</span>
-                                    <span className="font-medium text-gray-900">{metaData.twitterCard || "設定されていません"}</span>
+                                    <span className="text-xs sm:text-sm text-gray-600 block mb-0.5">Twitter Card</span>
+                                    <span className="font-medium text-gray-900 text-xs sm:text-sm break-words">{metaData.twitterCard || "設定されていません"}</span>
                                   </div>
                                 </div>
                               </div>
@@ -1200,42 +1276,42 @@ export function OGPCheckerClient() {
                                 <Zap className="h-4 w-4" />
                                 改善提案
                               </h4>
-                              <div className="space-y-3">
+                              <div className="space-y-2 sm:space-y-3">
                                 {!metaData.title && (
-                                  <div className="p-3 bg-red-50 border-l-4 border-red-500 rounded">
-                                    <p className="text-sm text-red-800">
+                                  <div className="p-2.5 sm:p-3 bg-red-50 border-l-4 border-red-500 rounded">
+                                    <p className="text-xs sm:text-sm text-red-800 break-words">
                                       <strong>タイトルが設定されていません</strong><br />
                                       og:titleメタタグを追加してください
                                     </p>
                                   </div>
                                 )}
                                 {!metaData.description && (
-                                  <div className="p-3 bg-red-50 border-l-4 border-red-500 rounded">
-                                    <p className="text-sm text-red-800">
+                                  <div className="p-2.5 sm:p-3 bg-red-50 border-l-4 border-red-500 rounded">
+                                    <p className="text-xs sm:text-sm text-red-800 break-words">
                                       <strong>説明文が設定されていません</strong><br />
                                       og:descriptionメタタグを追加してください
                                     </p>
                                   </div>
                                 )}
                                 {!metaData.image && (
-                                  <div className="p-3 bg-red-50 border-l-4 border-red-500 rounded">
-                                    <p className="text-sm text-red-800">
+                                  <div className="p-2.5 sm:p-3 bg-red-50 border-l-4 border-red-500 rounded">
+                                    <p className="text-xs sm:text-sm text-red-800 break-words">
                                       <strong>OGP画像が設定されていません</strong><br />
                                       og:imageメタタグを追加してください
                                     </p>
                                   </div>
                                 )}
                                 {metaData.title && metaData.title.length < 30 && (
-                                  <div className="p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded">
-                                    <p className="text-sm text-yellow-800">
+                                  <div className="p-2.5 sm:p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded">
+                                    <p className="text-xs sm:text-sm text-yellow-800 break-words">
                                       <strong>タイトルが短すぎます</strong><br />
                                       30文字以上60文字以下を推奨します
                                     </p>
                                   </div>
                                 )}
                                 {metaData.description && metaData.description.length < 100 && (
-                                  <div className="p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded">
-                                    <p className="text-sm text-yellow-800">
+                                  <div className="p-2.5 sm:p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded">
+                                    <p className="text-xs sm:text-sm text-yellow-800 break-words">
                                       <strong>説明文が短すぎます</strong><br />
                                       100文字以上160文字以下を推奨します
                                     </p>
@@ -1247,8 +1323,8 @@ export function OGPCheckerClient() {
                                     const height = parseInt(metaData.height)
                                     if (width < 1536 || height < 1024) {
                                       return (
-                                        <div className="p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded">
-                                          <p className="text-sm text-yellow-800">
+                                        <div className="p-2.5 sm:p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded">
+                                          <p className="text-xs sm:text-sm text-yellow-800 break-words">
                                             <strong>画像サイズが小さいです</strong><br />
                                             1536×1024px以上を推奨します
                                           </p>
@@ -1259,8 +1335,8 @@ export function OGPCheckerClient() {
                                   })()
                                 )}
                                 {calculateSEOScore(metaData) >= 80 && (
-                                  <div className="p-3 bg-green-50 border-l-4 border-green-500 rounded">
-                                    <p className="text-sm text-green-800">
+                                  <div className="p-2.5 sm:p-3 bg-green-50 border-l-4 border-green-500 rounded">
+                                    <p className="text-xs sm:text-sm text-green-800 break-words">
                                       <strong>優秀なOGP設定です！</strong><br />
                                       すべての推奨項目が適切に設定されています
                                     </p>
@@ -1270,8 +1346,8 @@ export function OGPCheckerClient() {
                             </div>
 
                             <div>
-                              <h4 className="font-semibold mb-3 flex items-center gap-2">
-                                <Activity className="h-4 w-4" />
+                              <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm sm:text-base">
+                                <Activity className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                                 アクション
                               </h4>
                               <div className="space-y-2">
@@ -1279,37 +1355,63 @@ export function OGPCheckerClient() {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => copyToClipboard(metaData.url || "")}
-                                  className="w-full justify-start"
+                                  className="w-full justify-start min-h-[44px] text-xs sm:text-sm"
                                 >
-                                  <Copy className="h-3 w-3 mr-2" />
-                                  URLをコピー
+                                  <Copy className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                                  <span className="break-words">URLをコピー</span>
                                 </Button>
                                 <Button
                                   variant="outline"
                                   size="sm"
                                   onClick={() => window.open(metaData.url, '_blank')}
-                                  className="w-full justify-start"
+                                  className="w-full justify-start min-h-[44px] text-xs sm:text-sm"
                                 >
-                                  <ExternalLink className="h-3 w-3 mr-2" />
-                                  サイトを開く
+                                  <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                                  <span className="break-words">サイトを開く</span>
                                 </Button>
                                 <Button
                                   variant="outline"
                                   size="sm"
                                   onClick={() => shareResult(metaData)}
-                                  className="w-full justify-start"
+                                  className="w-full justify-start min-h-[44px] text-xs sm:text-sm"
                                 >
-                                  <Share2 className="h-3 w-3 mr-2" />
-                                  結果をシェア
+                                  <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                                  <span className="break-words">結果をシェア</span>
                                 </Button>
+                                <div className="grid grid-cols-3 gap-2">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => shareToTwitter(metaData)}
+                                    className="w-full justify-center bg-blue-50 hover:bg-blue-100 border-blue-200 min-h-[44px] p-0"
+                                  >
+                                    <Twitter className="h-4 w-4 sm:h-5 sm:w-5" />
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => shareToFacebook(metaData)}
+                                    className="w-full justify-center bg-blue-50 hover:bg-blue-100 border-blue-200 min-h-[44px] p-0"
+                                  >
+                                    <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => shareToLine(metaData)}
+                                    className="w-full justify-center bg-green-50 hover:bg-green-100 border-green-200 min-h-[44px] p-0"
+                                  >
+                                    <Share2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                                  </Button>
+                                </div>
                                 <Button
                                   variant="outline"
                                   size="sm"
                                   onClick={() => exportSingleResult(metaData)}
-                                  className="w-full justify-start"
+                                  className="w-full justify-start min-h-[44px] text-xs sm:text-sm"
                                 >
-                                  <Download className="h-3 w-3 mr-2" />
-                                  結果をエクスポート
+                                  <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                                  <span className="break-words">結果をエクスポート</span>
                                 </Button>
                               </div>
                             </div>

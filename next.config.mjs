@@ -21,7 +21,20 @@ const nextConfig = {
     return config
   },
   images: {
-    domains: ['placeholder.svg'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'zphkclbhhouulgfsfawi.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
+    // Supabase Storageからの画像取得がタイムアウトするため、unoptimizedを維持
+    // 代わりに画像サイズを事前に最適化してSupabase Storageにアップロードすることを推奨
     unoptimized: true,
   },
   eslint: {

@@ -107,8 +107,63 @@ export default async function BombCardGamePage() {
             operatingSystem: "Any",
             browserRequirements: "HTML5, JavaScript",
             offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+            featureList: [
+              "複数プレイヤー対応",
+              "シンプルで分かりやすいルール",
+              "緊張感のあるゲームプレイ",
+              "完全無料・登録不要",
+              "スマホ・PC対応",
+              "パーティー・飲み会に最適"
+            ],
+            screenshot: imageUrl,
             image: [imageUrl],
+            author: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
             publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+            datePublished: tool?.created_at || "2024-01-01",
+            dateModified: tool?.updated_at || new Date().toISOString().split("T")[0],
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "爆弾カードゲームは無料で遊べますか？",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "はい、完全無料でお楽しみいただけます。会員登録やアプリのダウンロードも不要で、ブラウザですぐに遊べます。"
+                }
+              },
+              {
+                "@type": "Question",
+                name: "何人が遊べますか？",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "複数人で楽しめるゲームです。プレイヤー数に応じて調整できるため、少人数でも大人数でも楽しめます。"
+                }
+              },
+              {
+                "@type": "Question",
+                name: "スマートフォンでも遊べますか？",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "はい、スマートフォン、タブレット、PCのどの端末でもご利用いただけます。レスポンシブデザインで最適化されています。"
+                }
+              },
+              {
+                "@type": "Question",
+                name: "パーティーや飲み会で使えますか？",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "はい、パーティー、飲み会、イベントなど、様々な場面で楽しめるゲームです。シンプルなルールで、年齢を問わず楽しめます。"
+                }
+              }
+            ]
           }),
         }}
       />

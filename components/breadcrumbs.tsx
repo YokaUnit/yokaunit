@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { ChevronRight, Home } from "lucide-react"
 import { motion } from "framer-motion"
+import { generateBreadcrumbStructuredData } from "@/lib/seo/structured-data"
+import { StructuredDataScript } from "@/components/seo/structured-data-script"
 
 interface BreadcrumbItem {
   label: string
@@ -14,8 +16,18 @@ interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
+  // ホームを含むパンくずリストを作成
+  const allItems = [
+    { name: "ホーム", url: "/" },
+    ...items.map((item) => ({ name: item.label, url: item.href })),
+  ]
+  
+  const structuredData = generateBreadcrumbStructuredData(allItems)
+  
   return (
-    <motion.nav
+    <>
+      <StructuredDataScript data={structuredData} id="breadcrumb-structured-data" />
+      <motion.nav
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -51,5 +63,6 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
         </motion.div>
       ))}
     </motion.nav>
+    </>
   )
 }

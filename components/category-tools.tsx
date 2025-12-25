@@ -205,7 +205,7 @@ export function CategoryTools({
           animate="show"
           className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
         >
-          {tools.map((tool) => (
+          {tools.map((tool, index) => (
             <motion.div key={tool.slug} variants={item}>
               <Link href={tool.href} onClick={() => window.scrollTo(0, 0)}>
                 <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:border-green-200 bg-white hover:translate-y-[-2px]">
@@ -219,6 +219,8 @@ export function CategoryTools({
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                          loading={index < 4 ? "eager" : "lazy"}
+                          priority={index < 4}
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100">

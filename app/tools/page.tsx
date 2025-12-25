@@ -430,7 +430,7 @@ export default function ToolsPage() {
                     animate="show"
                     className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
                   >
-                    {filteredTools.map((tool) => (
+                    {filteredTools.map((tool, index) => (
                       <motion.div key={tool.slug} variants={item}>
                         <Link href={tool.href} className="block">
                           <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:border-blue-200 bg-white hover:translate-y-[-2px]">
@@ -444,6 +444,8 @@ export default function ToolsPage() {
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                                    loading={index < 8 ? "eager" : "lazy"}
+                                    priority={index < 4}
                                   />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">

@@ -6,7 +6,9 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "@/hooks/use-auth"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthHandler } from "@/components/auth/auth-handler"
-import Script from "next/script"; 
+import Script from "next/script"
+import { generateOrganizationStructuredData, generateWebSiteStructuredData } from "@/lib/seo/structured-data"
+import { StructuredDataScriptServer } from "@/components/seo/structured-data-script" 
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -144,6 +146,16 @@ export default function RootLayout({
         <meta name="msapplication-config" content="/browserconfig.xml" />
         {/* Google AdSense 所有権確認用メタタグ */}
         <meta name="google-adsense-account" content="ca-pub-1199182020994691" />
+        {/* 構造化データ: Organization */}
+        <StructuredDataScriptServer 
+          data={generateOrganizationStructuredData()} 
+          id="organization-structured-data" 
+        />
+        {/* 構造化データ: WebSite */}
+        <StructuredDataScriptServer 
+          data={generateWebSiteStructuredData()} 
+          id="website-structured-data" 
+        />
       </head>
       <body className={inter.className}>
         {/* Google Analytics  */}

@@ -107,28 +107,89 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Excel2048Page() {
+  const today = new Date().toISOString().split("T")[0]
   const imageUrl = await getToolImageUrl("excel2048")
   const tool = await getToolBySlug("excel2048")
   const toolImageUrl = tool?.image_url || null
+  
+  const webApplicationLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Excel風2048",
+    description: "Microsoft Excelそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲーム。スプレッドシート風のインターフェースでこっそり2048に挑戦。",
+    url: "https://yokaunit.com/tools/excel2048",
+    applicationCategory: "GameApplication",
+    operatingSystem: "Any",
+    browserRequirements: "HTML5, JavaScript",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
+    featureList: [
+      "Microsoft Excelそっくりの見た目",
+      "2048パズルゲーム",
+      "仕事中でもバレにくいデザイン",
+      "スプレッドシート風インターフェース",
+      "完全無料・登録不要",
+      "スマホ・PC対応",
+      "キーボード操作対応"
+    ],
+    screenshot: imageUrl,
+    image: [imageUrl],
+    author: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+    publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
+    datePublished: tool?.created_at || "2024-01-01",
+    dateModified: tool?.updated_at || today,
+  }
+
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Excel風2048は無料で遊べますか？",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "はい、完全無料でお楽しみいただけます。会員登録やアプリのダウンロードも不要で、ブラウザですぐに遊べます。"
+        }
+      },
+      {
+        "@type": "Question",
+        name: "本当にExcelそっくりに見えますか？",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "はい、Microsoft Excelのスプレッドシート風のデザインを採用しており、一見すると表計算ソフトのように見えます。ただし、実際のExcelではありませんので、その点はご注意ください。"
+        }
+      },
+      {
+        "@type": "Question",
+        name: "スマートフォンでも遊べますか？",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "はい、スマートフォン、タブレット、PCのどの端末でもご利用いただけます。レスポンシブデザインで最適化されています。"
+        }
+      },
+      {
+        "@type": "Question",
+        name: "2048のルールを教えてください",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "同じ数字のタイルを合わせることで、より大きな数字を作っていくパズルゲームです。矢印キーまたはスワイプでタイルを動かし、2048のタイルを作ることが目標です。"
+        }
+      }
+    ]
+  }
   
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-            name: "Excel風2048",
-            description: "Microsoft Excelそっくりな見た目の2048パズルゲーム！仕事中でも上司にバレずにゲームを楽しめる隠しゲーム。",
-            url: "https://yokaunit.com/tools/excel2048",
-            applicationCategory: "GameApplication",
-            operatingSystem: "Any",
-            browserRequirements: "HTML5, JavaScript",
-            offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
-            image: [imageUrl],
-            publisher: { "@type": "Organization", name: "YokaUnit", url: "https://yokaunit.com" },
-          }),
+          __html: JSON.stringify(webApplicationLd),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqLd),
         }}
       />
       <ViewCounter toolSlug="excel2048" />

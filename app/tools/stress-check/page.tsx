@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
 import StressCheckClientPage from "./StressCheckClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"

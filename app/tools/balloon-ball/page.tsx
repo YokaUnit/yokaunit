@@ -1,7 +1,10 @@
 import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
+import { getToolBySlug } from "@/lib/actions/tools"
+import { ToolHeroImage } from "@/components/tool-hero-image"
 import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { RelatedTools } from "@/components/related-tools"
@@ -72,8 +75,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BalloonBallPage() {
   const imageUrl = await getToolImageUrl("balloon-ball")
-  const tool = await getToolBySlug("balloon-ball")
-  const toolImageUrl = tool?.image_url || null
+  let tool = null
+  let toolImageUrl = null
+  try {
+    tool = await getToolBySlug("balloon-ball")
+    toolImageUrl = tool?.image_url || null
+  } catch (error) {
+    // ツールがデータベースに存在しない場合はnullを使用
+    console.warn("Tool not found in database, using default values:", error)
+  }
   
   // バッジの設定をカスタマイズできます
   const badgeConfig = {
@@ -136,6 +146,7 @@ export default async function BalloonBallPage() {
               ]}
             />
             
+            <div className="max-w-4xl mx-auto mt-4 md:mt-6">
             {/* ツール画像 */}
             {toolImageUrl && (
               <div className="mb-6">
@@ -153,79 +164,12 @@ export default async function BalloonBallPage() {
               <ElasticBoxPhysics config={badgeConfig} />
             </div>
           </div>
+          </div>
         </main>
         <RelatedTools currentToolSlug="balloon-ball" />
-
-        {/* SEO記事 */}
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              🎈 バルーンバッジアニメーション完全ガイド：物理エフェクト・インタラクティブデザインの科学
-            </h2>
-
-            <div className="prose max-w-none text-gray-700 space-y-6">
-              <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">🎈</span>
-                  バルーンバッジアニメーションとは
-                </h3>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  バルーンバッジアニメーションは、物理エンジンを使用して風船のような動きを再現するインタラクティブなバッジデザインです。
-                  重力や弾性を考慮したリアルな物理シミュレーションにより、ユーザーがドラッグすると自然な動きで反応します。
-                </p>
-                <p className="text-gray-700 leading-relaxed">
-                  このツールでは、カスタマイズ可能なバッジデザインに物理エフェクトを組み合わせることで、
-                  視覚的に魅力的でインタラクティブな体験を提供します。
-                </p>
-              </div>
-
-              <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">✨</span>
-                  主な機能
-                </h3>
-                <ul className="list-disc list-inside space-y-2 text-gray-700">
-                  <li>物理ベースのバルーンアニメーション</li>
-                  <li>カスタマイズ可能なバッジデザイン</li>
-                  <li>レスポンシブデザイン（モバイル対応）</li>
-                  <li>重力エフェクトと弾性シミュレーション</li>
-                  <li>ドラッグアンドドロップ操作</li>
-                  <li>リアルタイム物理計算</li>
-                </ul>
-              </div>
-
-              <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">🎨</span>
-                  使い方
-                </h3>
-                <ol className="list-decimal list-inside space-y-2 text-gray-700">
-                  <li>バッジをマウスでドラッグして動かすことができます</li>
-                  <li>離すと物理エンジンにより自然な動きで元の位置に戻ります</li>
-                  <li>モバイルデバイスではタッチ操作で同様に操作できます</li>
-                  <li>バッジ内の風船は物理シミュレーションにより動き続けます</li>
-                </ol>
-              </div>
-
-              <div className="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">🔧</span>
-                  技術的な特徴
-                </h3>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  このアニメーションは、Framer Motionを使用した物理シミュレーションと、
-                  React Hooksを活用した状態管理により実現されています。
-                </p>
-                <p className="text-gray-700 leading-relaxed">
-                  重力、弾性、摩擦などの物理法則を考慮した計算により、
-                  リアルな風船の動きを再現しています。
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ScrollToTop />
+        <SiteFooter />
       </div>
-      <ScrollToTop />
     </>
   )
 }

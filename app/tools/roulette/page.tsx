@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "抽選アプリ",
       "ルーレットアプリ",
       "オンラインルーレット",
-      "デジタルルーレット",
+      "webルーレット",
       "抽選システム",
       "ランダム選択",
       "ルーレットゲーム",

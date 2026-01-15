@@ -10,7 +10,7 @@ import { ScrollToTop } from "@/components/scroll-to-top"
 export const metadata: Metadata = {
   title: "当サイトについて | YokaUnit - 日常に役立つ便利ツール集の詳細情報",
   description:
-    "YokaUnit（ヨカユニット）は、パスワード生成・割り勘計算・温泉マップ・ゲームなど、日常や仕事で使える便利なWebツールを無料提供。個人開発者が運営し、ユーザビリティとSEO対策を重視した設計。登録不要・広告控えめで誰でも快適に利用可能。",
+    "YokaUnit（ヨカユニット）は、パスワード生成・割り勘計算・ゲームなど、日常や仕事で使える便利なWebツールを無料提供。個人開発者が運営し、ユーザビリティとSEO対策を重視した設計。登録不要・広告控えめで誰でも快適に利用可能。",
   keywords: [
     "YokaUnit",
     "ヨカユニット",
@@ -21,7 +21,6 @@ export const metadata: Metadata = {
     "個人開発",
     "パスワード生成",
     "割り勘計算",
-    "温泉マップ",
     "ゲーム",
     "登録不要",
     "広告なし",
@@ -296,10 +295,6 @@ export default function AboutPage() {
                     <div className="space-y-3">
                       <h4 className="font-semibold text-gray-900">🏠 生活・おでかけ</h4>
                       <div className="space-y-2">
-                        <div className="border-l-4 border-teal-400 pl-3">
-                          <a href="/tools/onsenmap" className="text-blue-600 hover:underline font-medium">全国温泉マップ</a>
-                          <p className="text-sm text-gray-600">エリアや泉質から温泉を検索。旅行計画に役立つ口コミや設備情報もチェック可能。</p>
-                        </div>
                         <div className="border-l-4 border-pink-400 pl-3">
                           <a href="/tools/fortune-today" className="text-blue-600 hover:underline font-medium">今日の運勢診断</a>
                           <p className="text-sm text-gray-600">質問に答えるだけで、毎日の気分を前向きにしてくれる開運アドバイスをお届け。</p>
@@ -367,14 +362,12 @@ export default function AboutPage() {
                       <ul className="text-sm text-blue-800 space-y-1">
                         <li>• 会社の歓送迎会での割り勘計算</li>
                         <li>• セキュアなパスワード作成でセキュリティ向上</li>
-                        <li>• 出張先での温泉探し・リフレッシュ</li>
                         <li>• チームビルディングでのゲーム活用</li>
                       </ul>
                     </div>
                     <div className="p-4 bg-green-50/80 rounded-lg border border-green-100">
                       <h4 className="font-semibold text-green-900 mb-2">🏠 プライベート</h4>
                       <ul className="text-sm text-green-800 space-y-1">
-                        <li>• 家族旅行での温泉選びと計画立て</li>
                         <li>• 友人との食事会の精算</li>
                         <li>• 各種アカウントのパスワード管理</li>
                         <li>• 休憩時間のゲームでリフレッシュ</li>
@@ -390,7 +383,6 @@ export default function AboutPage() {
                         <p className="italic">"登録不要なのが便利"</p>
                       </div>
                       <div>
-                        <p className="italic">"温泉マップがとても詳しい"</p>
                         <p className="italic">"割り勘が一瞬で終わる"</p>
                         <p className="italic">"デザインがきれい"</p>
                       </div>
@@ -478,10 +470,10 @@ export default function AboutPage() {
                       </ul>
                     </div>
                   </div>
-                  <div className="p-4 bg-green-50/80 rounded-lg border border-green-100">
+                    <div className="p-4 bg-green-50/80 rounded-lg border border-green-100">
                     <h4 className="font-semibold text-green-900 mb-2">✨ 開発中の新機能</h4>
                     <p className="text-sm text-green-800">
-                      現在、QRコード生成ツール、テキスト変換ツール、画像リサイズツールなど、日常的によく使われるツールの開発を進めています。また、既存の温泉マップに口コミ機能や写真投稿機能の追加も検討中です。
+                      現在、QRコード生成ツール、テキスト変換ツール、画像リサイズツールなど、日常的によく使われるツールの開発を進めています。
                     </p>
                   </div>
                 </CardContent>
@@ -658,9 +650,7 @@ export default function AboutPage() {
                         <a href="/tools/warikan" className="block text-blue-600 hover:text-blue-800 hover:underline transition-colors">
                           秒割り（割り勘計算）
                         </a>
-                        <a href="/tools/onsenmap" className="block text-blue-600 hover:text-blue-800 hover:underline transition-colors">
-                          全国温泉マップ
-                        </a>
+                        
                       </div>
                     </div>
                     <div className="space-y-3">

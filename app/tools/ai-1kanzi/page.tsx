@@ -2,9 +2,13 @@ import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { getToolBySlug } from "@/lib/actions/tools"
-import Ai1KanziClientPage from "./Ai1KanziClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import Ai1KanziClientPage from "./Ai1KanziClientPage"
+
+// AIライブラリをサーバー側で実行させないため、edge ランタイム + 動的レンダリングを指定
+export const runtime = "edge"
+export const dynamic = "force-dynamic"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-1kanzi", {
@@ -126,7 +130,10 @@ export default async function Ai1KanziPage() {
         }}
       />
       <ViewCounter toolSlug="ai-1kanzi" />
-      <Ai1KanziClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "AIが診断！あなたの性格を漢字1文字で表すと？"} />
+      <Ai1KanziClientPage
+        toolImageUrl={toolImageUrl}
+        toolTitle={tool?.title || "AIが診断！あなたの性格を漢字1文字で表すと？"}
+      />
       <ScrollToTop />
     </>
   )

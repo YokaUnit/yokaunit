@@ -2,9 +2,13 @@ import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { getToolBySlug } from "@/lib/actions/tools"
-import AiMoteClientPage from "./AiMoteClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import AiMoteClientPage from "./AiMoteClientPage"
+
+// AIライブラリをサーバー側で実行させないため、edge ランタイム + 動的レンダリングを指定
+export const runtime = "edge"
+export const dynamic = "force-dynamic"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-mote", {

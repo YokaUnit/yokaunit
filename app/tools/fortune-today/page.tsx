@@ -6,6 +6,10 @@ import FortuneTodayClientPage from "./FortuneTodayClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
 
+// AIライブラリをサーバー側で実行させないため、edge ランタイム + 動的レンダリングを指定
+export const runtime = "edge"
+export const dynamic = "force-dynamic"
+
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("fortune-today", {
   title: "今日の運勢｜無料占い・星座占い・恋愛運・仕事運・金運 - YokaUnit",

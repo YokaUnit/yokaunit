@@ -2,9 +2,13 @@ import type { Metadata } from "next"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { getToolBySlug } from "@/lib/actions/tools"
-import AiSeishinnenreiClientPage from "./AiSeishinnenreiClientPage"
 import { ViewCounter } from "@/components/view-counter"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import AiSeishinnenreiClientPage from "./AiSeishinnenreiClientPage"
+
+// AIライブラリをサーバー側で実行させないため、edge ランタイム + 動的レンダリングを指定
+export const runtime = "edge"
+export const dynamic = "force-dynamic"
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateToolMetadata("ai-seishinnenrei", {
@@ -57,7 +61,6 @@ export default async function AiSeishinnenreiPage() {
   const today = new Date().toISOString().split("T")[0]
   const imageUrl = await getToolImageUrl("ai-seishinnenrei")
   const tool = await getToolBySlug("ai-seishinnenrei")
-  const toolImageUrl = tool?.image_url || null
 
   const webApplicationLd = {
     "@context": "https://schema.org",
@@ -138,7 +141,10 @@ export default async function AiSeishinnenreiPage() {
         }}
       />
       <ViewCounter toolSlug="ai-seishinnenrei" />
-      <AiSeishinnenreiClientPage toolImageUrl={toolImageUrl} toolTitle={tool?.title || "AI精神年齢診断"} />
+      <AiSeishinnenreiClientPage
+        toolImageUrl={tool?.image_url || null}
+        toolTitle={tool?.title || "AI精神年齢診断"}
+      />
       <ScrollToTop />
     </>
   )

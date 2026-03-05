@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "@/hooks/use-auth"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthHandler } from "@/components/auth/auth-handler"
+import { SupabaseDisabledBanner } from "@/components/supabase-disabled-banner"
 import Script from "next/script"
 import { generateOrganizationStructuredData, generateWebSiteStructuredData } from "@/lib/seo/structured-data"
 import { StructuredDataScriptServer } from "@/components/seo/structured-data-script" 
@@ -174,6 +175,7 @@ export default function RootLayout({
         
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+            <SupabaseDisabledBanner />
             <AuthHandler />
             {children}
             <Toaster />

@@ -1,22 +1,26 @@
 import { createClient } from "@supabase/supabase-js"
 import type { Database } from "@/types/database"
 
-// Environment variables with fallbacks for Next.js
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://zphkclbhhouulgfsfawi.supabase.co"
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwaGtjbGJoaG91dWxnZnNmYXdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMTg5NTAsImV4cCI6MjA2MjY5NDk1MH0.uHVMG9BAg0thmzFqlliTUbI7vJwbPzE_uZGy9q-Lcyw"
+// 利用料で停止した場合や意図的に無効にする場合: NEXT_PUBLIC_SUPABASE_ENABLED=false を設定
+const supabaseEnabled =
+  process.env.NEXT_PUBLIC_SUPABASE_ENABLED !== "false" &&
+  !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+const supabaseUrl = supabaseEnabled
+  ? process.env.NEXT_PUBLIC_SUPABASE_URL!
+  : "https://disabled.supabase.co"
+const supabaseAnonKey = supabaseEnabled
+  ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.disabled"
 
 console.log("🔧 Supabase Config:", {
-  url: supabaseUrl,
+  enabled: supabaseEnabled,
+  url: supabaseEnabled ? supabaseUrl : "(disabled)",
   hasAnonKey: !!supabaseAnonKey,
-  keyLength: supabaseAnonKey?.length,
 })
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error("❌ Missing Supabase environment variables:", { supabaseUrl, hasAnonKey: !!supabaseAnonKey })
-  throw new Error("Missing Supabase environment variables")
-}
+export const isSupabaseEnabled = (): boolean => supabaseEnabled
 
 // シングルトンパターンでSupabaseクライアントを作成
 let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null

@@ -3,20 +3,20 @@ import type { ReactNode } from "react"
 
 export const metadata: Metadata = {
   title: {
-    default: "YokaUnit Beauty - 無料で使える美容診断サイト",
+    default: "診断で見つかる、あなたに合う美容。｜YokaUnit Beauty",
     template: "%s | YokaUnit Beauty",
   },
   description:
-    "YokaUnit Beautyは、肌質診断などの美容診断ツールで「自分に本当に合う美容」が分かる無料の美容専門サイトです。登録不要・完全無料で使えます。",
+    "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要で無料診断できます。",
   openGraph: {
-    title: "YokaUnit Beauty - 無料で使える美容診断サイト",
+    title: "診断で見つかる、あなたに合う美容。｜YokaUnit Beauty",
     description:
-      "肌質診断などの美容診断ツールで「自分に本当に合う美容」が分かる、YokaUnit内の美容専門エリアです。",
+      "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要。",
     url: "https://yokaunit.com/beauty",
     siteName: "YokaUnit Beauty",
     images: [
       {
-        url: "/logo_heart.png",
+        url: "https://yokaunit.com/logo_heart.png",
         width: 800,
         height: 800,
         alt: "YokaUnit Beauty ロゴ",
@@ -27,13 +27,17 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YokaUnit Beauty - 無料で使える美容診断サイト",
+    title: "診断で見つかる、あなたに合う美容。｜YokaUnit Beauty",
     description:
-      "肌質診断などの美容診断ツールで「自分に本当に合う美容」が分かる、YokaUnit内の美容専門エリアです。",
-    images: ["/logo_heart.png"],
+      "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要。",
+    images: ["https://yokaunit.com/logo_heart.png"],
   },
   icons: {
-    icon: [{ url: "/logo_heart.png", sizes: "32x32", type: "image/png" }],
+    icon: [
+      { url: "/logo_heart.png", sizes: "any" },
+      { url: "/logo_heart.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo_heart.png", sizes: "16x16", type: "image/png" },
+    ],
     shortcut: "/logo_heart.png",
     apple: [{ url: "/logo_heart.png", sizes: "180x180", type: "image/png" }],
   },

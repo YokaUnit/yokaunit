@@ -1,3 +1,4 @@
+import { Fragment } from "react"
 import { Metadata } from "next"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BeautyBackgroundAnimation } from "@/app/beauty/_components/beauty-background-animation"
@@ -5,23 +6,32 @@ import { BeautySiteHeader } from "@/app/beauty/_components/beauty-site-header"
 import { BeautySiteFooter } from "@/app/beauty/_components/beauty-site-footer"
 import Link from "next/link"
 import Image from "next/image"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Sparkles, Droplets, Palette, Sparkle, ArrowRight } from "lucide-react"
+import {
+  Droplets,
+  Palette,
+  LayoutGrid,
+  Minus,
+  HelpCircle,
+  FileText,
+  Pipette,
+  ShoppingBag,
+  ArrowRight,
+  ScanLine,
+} from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "YokaUnit Beauty - 無料で使える美容診断・美容ツール集",
+  title: "診断で見つかる、あなたに合う美容。",
   description:
-    "YokaUnit Beautyは、肌質診断・毛穴タイプ診断・パーソナルカラー診断などで「自分に本当に合う美容」が分かる無料の美容診断メディアです。登録不要で、肌・コスメ・ヘアの悩みを診断から解決へ。",
+    "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要で無料診断できます。",
   openGraph: {
-    title: "YokaUnit Beauty - 無料美容診断ポータル",
+    title: "診断で見つかる、あなたに合う美容。｜YokaUnit Beauty",
     description:
-      "肌質診断・毛穴タイプ診断・パーソナルカラー診断など、診断から自分に合う美容が分かる無料ツールを提供する美容専門メディア。",
+      "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要。",
     url: "https://yokaunit.com/beauty",
     siteName: "YokaUnit Beauty",
     images: [
       {
-        url: "/logo_heart.png",
+        url: "https://yokaunit.com/logo_heart.png",
         width: 800,
         height: 800,
         alt: "YokaUnit Beauty ロゴ",
@@ -30,52 +40,103 @@ export const metadata: Metadata = {
     locale: "ja_JP",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "診断で見つかる、あなたに合う美容。｜YokaUnit Beauty",
+    description:
+      "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要。",
+    images: ["https://yokaunit.com/logo_heart.png"],
+  },
   alternates: {
     canonical: "https://yokaunit.com/beauty",
   },
 }
 
-const diagnosisCards = [
-  {
-    href: "/beauty/diagnosis/pore-type",
-    title: "毛穴タイプ診断",
-    label: "イチオシ",
-    description: "黒ずみ・開き・たるみ…毛穴悩みのタイプに合わせたケアの方向性を診断。",
-    icon: <Sparkles className="h-5 w-5 text-rose-500" />,
-    status: "now" as const,
-    image: "/beauty/diagnosis/pore-type.png",
-  },
+// 説明文の一部を太字にする用 { bold: string }、それ以外は string
+const diagnosisTools: {
+  href: string
+  title: string
+  description: (string | { bold: string })[]
+  icon: typeof Droplets
+  available: boolean
+}[] = [
   {
     href: "/beauty/diagnosis/skin-type",
     title: "肌質診断",
-    label: "まずはここから",
-    description: "乾燥肌・脂性肌・混合肌・普通肌…あなたの素肌タイプを1〜2分でチェック。",
-    icon: <Droplets className="h-5 w-5 text-rose-400" />,
-    status: "now" as const,
-    image: "/beauty/diagnosis/skin-type.png.png",
+    description: [
+      "あなたの肌の ",
+      { bold: "水分・皮脂バランス" },
+      " を分析し、最適なスキンケアタイプを診断します。",
+    ],
+    icon: Droplets,
+    available: true,
+  },
+  {
+    href: "/beauty/diagnosis/pore-type",
+    title: "毛穴タイプ診断",
+    description: [
+      "毛穴の状態をもとに、",
+      { bold: "開き・詰まり・たるみなどのタイプ" },
+      " を診断します。",
+    ],
+    icon: ScanLine,
+    available: true,
   },
   {
     href: "/beauty/diagnosis/personal-color",
     title: "パーソナルカラー診断",
-    label: "準備中",
-    description: "似合う色・コスメ・ファッションの方向性が分かるベース診断。",
-    icon: <Palette className="h-5 w-5 text-rose-400" />,
-    status: "coming" as const,
+    description: [
+      "あなたの肌を最もきれいに見せる ",
+      { bold: "似合う色のタイプ" },
+      " を見つけます。",
+    ],
+    icon: Palette,
+    available: false,
+  },
+  {
+    href: "#",
+    title: "顔タイプ診断",
+    description: [
+      "顔のバランスやパーツの印象から ",
+      { bold: "似合うメイクやスタイル" },
+      " を分析します。",
+    ],
+    icon: LayoutGrid,
+    available: false,
+  },
+  {
+    href: "#",
+    title: "髪質診断",
+    description: [
+      "髪の状態や頭皮環境から ",
+      { bold: "最適なヘアケア方法" },
+      " を診断します。",
+    ],
+    icon: Minus,
+    available: false,
   },
 ]
 
-const toolCards = [
+const usageFlowSteps = [
   {
-    href: "/beauty/tools/skincare-routine",
-    title: "スキンケアルーティン診断",
-    description: "今のスキンケアが合っているか、ステップごとにチェック。",
-    status: "coming" as const,
+    title: "診断",
+    description: "AIを活用した一連の分析ステップを完了します。",
+    icon: HelpCircle,
   },
   {
-    href: "/beauty/tools/cosmetic-expiry",
-    title: "コスメ使用期限チェッカー",
-    description: "開封日から、そろそろ替えどきのコスメをチェック。",
-    status: "coming" as const,
+    title: "タイプを知る",
+    description: "あなた独自のプロフィールに基づいた詳細な分析結果を受け取ります。",
+    icon: FileText,
+  },
+  {
+    title: "ケア方法を学ぶ",
+    description: "あなたの肌の状態と目的に合わせた最適なケアステップや手順を確認します。",
+    icon: Pipette,
+  },
+  {
+    title: "自分に合う製品に出会う",
+    description: "あなたのタイプに本当に効果のある、厳選された製品を見つけます。",
+    icon: ShoppingBag,
   },
 ]
 
@@ -87,181 +148,183 @@ export default function BeautyHomePage() {
       <ScrollToTop />
 
       <main className="flex-1 relative">
-        {/* ヒーローセクション */}
+        {/* Hero Section */}
         <section className="bg-white">
-          <div className="container mx-auto px-4 py-8 md:py-12">
-            <div className="rounded-3xl border border-gray-100 bg-white/90 shadow-lg overflow-hidden flex flex-col md:grid md:grid-cols-2">
-              {/* 画像（モバイルは上、PCは左） */}
-              <div className="relative h-52 md:h-80">
-                <Image
-                  src="/beauty/hero-skin.png"
-                  alt="スキンケアをしている女性の頬"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover object-center"
-                  priority
-                />
-              </div>
-              {/* テキスト */}
-              <div className="flex flex-col justify-center gap-4 px-5 py-6 md:px-8 md:py-10 text-center md:text-left">
-                <div className="inline-flex items-center justify-center md:justify-start gap-2 rounded-full bg-gray-50 px-3 py-1 border border-gray-100 w-fit mx-auto md:mx-0">
-                  <Sparkle className="h-4 w-4 text-rose-500" />
-                  <p className="text-[11px] font-semibold tracking-[0.18em] text-gray-600 uppercase">
-                    Beauty Diagnosis
-                  </p>
-                </div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-snug">
-                  診断から、あなた専用の美容が見つかる。
+          <div className="container mx-auto px-4 py-10 md:py-16">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+              {/* Left: Copy + CTA */}
+              <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-4">
+                  診断で見つかる、あなたに合う美容。
                 </h1>
-                <p className="text-xs md:text-sm text-gray-700 max-w-md mx-auto md:mx-0">
-                  毛穴・肌質などを1〜2分で無料チェックして、自分に合ったケアの方向性を知ることができます。
+                <p className="text-sm md:text-base text-gray-600 max-w-lg mx-auto lg:mx-0 mb-2 leading-relaxed">
+                  肌質・毛穴・パーソナルカラーなどを診断し、
+                  <br className="hidden sm:block" />
+                  あなたに合うスキンケアやコスメを見つけられる美容サイト。
                 </p>
-                <div className="flex flex-wrap justify-center md:justify-start gap-2 pt-1">
-                  <Link href="/beauty/diagnosis/pore-type">
-                    <button className="inline-flex items-center rounded-full bg-rose-500 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-rose-600 transition-colors">
-                      毛穴タイプ診断を今すぐはじめる
-                      <ArrowRight className="h-3 w-3 ml-1" />
-                    </button>
+                <p className="text-sm text-gray-500 max-w-lg mx-auto lg:mx-0 mb-8">
+                  Web上で完結。登録不要で今すぐ診断できます。
+                </p>
+                <div className="flex flex-wrap justify-center lg:justify-start gap-3">
+                  <Link
+                    href="/beauty/diagnosis/pore-type"
+                    className="inline-flex items-center rounded-full bg-rose-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-rose-600 transition-colors"
+                  >
+                    無料で診断する
+                    <ArrowRight className="h-4 w-4 ml-2" />
                   </Link>
-                  <Link href="/beauty/diagnosis/skin-type">
-                    <button className="inline-flex items-center rounded-full border border-gray-200 px-3 py-1.5 text-xs md:text-sm text-gray-800 hover:bg-gray-50 transition-colors">
-                      肌質診断もチェックする
-                      <ArrowRight className="h-3 w-3 ml-1" />
-                    </button>
+                  <Link
+                    href="#flow"
+                    className="inline-flex items-center rounded-full border-2 border-rose-500 bg-white px-6 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
+                  >
+                    診断について見る
                   </Link>
+                </div>
+              </div>
+              {/* Right: Image + 99.4% overlay */}
+              <div className="flex-1 w-full max-w-lg order-1 lg:order-2">
+                <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-[4/3] bg-gray-100">
+                  <Image
+                    src="/beauty/hero-skin.png"
+                    alt="スキンケアをしている女性"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover object-center"
+                    priority
+                  />
+                  <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 bg-white rounded-xl shadow-lg px-4 py-3 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-50">
+                      <ScanLine className="h-5 w-5 text-rose-500" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-semibold tracking-wider text-gray-500 uppercase">
+                        ANALYSIS ACCURACY
+                      </p>
+                      <p className="text-xl md:text-2xl font-bold text-gray-900">99.4%</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 診断一覧＋サイドバー */}
-        <section className="container mx-auto px-4 pt-6 pb-10 md:pb-16">
-          <div className="mb-4 md:mb-6">
-            <p className="text-xs font-semibold tracking-[0.18em] text-gray-500 uppercase mb-1">Diagnosis</p>
-            <h2 className="text-base md:text-xl font-bold text-gray-900">
-              あなたに合う美容が分かる診断メニュー
+        {/* 美容診断ツール */}
+        <section className="bg-gray-50/80 py-12 md:py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-center text-xl md:text-2xl font-bold text-gray-900 mb-2">
+              美容診断ツール
             </h2>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-            <div className="lg:col-span-2 space-y-4 md:space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {diagnosisCards.map((card) => (
+            <div className="w-12 h-0.5 bg-rose-500 mx-auto mb-6" />
+            <p className="text-center text-sm text-gray-600 max-w-xl mx-auto mb-10 leading-relaxed">
+              いくつかの質問に答えるだけで、
+              <br />
+              あなたのタイプと最適なケアがわかります。
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+              {diagnosisTools.map((item) => {
+                const Icon = item.icon
+                return (
                   <Link
-                    key={card.href}
-                    href={card.status === "now" ? card.href : "#"}
-                    aria-disabled={card.status === "coming"}
-                    className={card.status === "coming" ? "cursor-not-allowed" : ""}
+                    key={item.title}
+                    href={item.available ? item.href : "#"}
+                    className={`rounded-2xl border border-gray-100 bg-white p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col ${
+                      !item.available ? "pointer-events-none opacity-80" : ""
+                    }`}
                   >
-                    <Card
-                      className={`h-full hover-lift transition-all duration-300 border-gray-100 ${
-                        card.status === "now" ? "bg-white" : "bg-white/90"
-                      }`}
-                    >
-                      {card.image && (
-                        <div className="relative w-full overflow-hidden aspect-[4/3]">
-                          <Image
-                            src={card.image}
-                            alt={card.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-cover"
-                          />
-                        </div>
-                      )}
-                      <CardHeader className="pb-2">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-rose-50">
-                              {card.icon}
-                            </div>
-                            <CardTitle className="text-base md:text-lg text-gray-900">{card.title}</CardTitle>
-                          </div>
-                          <Badge
-                            className={
-                              card.status === "now"
-                                ? "bg-rose-500 text-white text-xs"
-                                : "bg-rose-100 text-rose-500 text-xs"
-                            }
-                          >
-                            {card.label}
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-1">
-                        <p className="text-xs md:text-sm text-gray-700 mb-3">{card.description}</p>
-                        {card.status === "now" ? (
-                          <span className="inline-flex items-center text-[11px] md:text-xs font-medium text-rose-600">
-                            無料診断をはじめる
-                            <ArrowRight className="h-3 w-3 ml-1" />
-                          </span>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-500 mb-4 mx-auto">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-bold text-gray-900 text-center mb-3">{item.title}</h3>
+                    <p className="text-xs text-gray-600 text-center flex-1 leading-relaxed">
+                      {item.description.map((part, i) =>
+                        typeof part === "string" ? (
+                          <Fragment key={i}>{part}</Fragment>
                         ) : (
-                          <span className="inline-flex items-center text-[11px] md:text-xs font-medium text-gray-400">
-                            近日公開予定
+                          <span key={i} className="font-semibold text-gray-900">
+                            {part.bold}
                           </span>
-                        )}
-                      </CardContent>
-                    </Card>
+                        )
+                      )}
+                    </p>
+                    {item.available ? (
+                      <span className="inline-flex items-center justify-center text-rose-600 text-xs font-medium mt-4">
+                        診断する
+                        <ArrowRight className="h-3 w-3 ml-1" />
+                      </span>
+                    ) : (
+                      <span className="text-gray-400 text-xs text-center mt-4">準備中</span>
+                    )}
                   </Link>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ご利用の流れ */}
+        <section id="flow" className="bg-white py-12 md:py-16 scroll-mt-20">
+          <div className="container mx-auto px-4">
+            <h2 className="text-center text-xl md:text-2xl font-bold text-gray-900 mb-2">
+              ご利用の流れ
+            </h2>
+            <div className="w-12 h-0.5 bg-rose-500 mx-auto mb-6" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              {usageFlowSteps.map((step) => {
+                const Icon = step.icon
+                return (
+                  <div
+                    key={step.title}
+                    className="rounded-2xl border border-gray-100 bg-white p-5 md:p-6 shadow-sm flex flex-col"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-500 mb-4 mx-auto">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-bold text-gray-900 text-center mb-2">{step.title}</h3>
+                    <p className="text-xs text-gray-600 text-center">{step.description}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* 診断結果に基づくおすすめ */}
+        <section className="bg-gray-50/80 py-12 md:py-16">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
+              <div className="flex-1">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
+                  診断結果に基づくおすすめ
+                </h2>
+                <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                  私たちの診断は、単に肌質を出すだけではありません。何千もの成分の中からあなたのデータに最適なものをマッチングし、理想の製品をご提案します。
+                </p>
+                <Link
+                  href="#"
+                  className="inline-flex items-center text-rose-600 text-sm font-semibold hover:text-rose-700"
+                >
+                  商品カタログを見る
+                  <ArrowRight className="h-4 w-4 ml-1" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-3 gap-4 w-full lg:max-w-md">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm aspect-[3/4] flex flex-col"
+                  >
+                    <div className="flex-1 bg-gray-100 flex items-center justify-center p-4">
+                      <div className="w-16 h-20 md:w-20 md:h-24 rounded-lg bg-gray-200" />
+                    </div>
+                    <div className="p-3 border-t border-gray-50">
+                      <div className="h-2 bg-gray-100 rounded w-3/4 mb-2" />
+                      <div className="h-2 bg-gray-100 rounded w-1/2" />
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
-
-            <aside className="space-y-4">
-              <div className="rounded-2xl bg-gray-50 border border-gray-100 px-4 py-3 text-xs md:text-sm text-gray-800">
-                <p className="font-semibold mb-1 text-gray-900">このサイトでできること</p>
-                <ul className="space-y-1.5">
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-gray-400" />
-                    <span>毛穴タイプ診断・肌質診断で、自分の肌悩みの「原因タイプ」が分かる</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-gray-400" />
-                    <span>タイプ別のNGケア / OKケアから、今日から変えるべきポイントが見える</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-gray-400" />
-                    <span>今後は、診断タイプに合ったスキンケアルーティンやアイテムも紹介予定</span>
-                  </li>
-                </ul>
-              </div>
-
-              <Card className="bg-white border-gray-100 shadow-sm">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm md:text-base text-gray-900">
-                    美容ツール（近日追加予定）
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {toolCards.map((tool) => (
-                    <div
-                      key={tool.href}
-                      className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5"
-                    >
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <p className="text-xs font-semibold text-gray-800">{tool.title}</p>
-                        <Badge className="bg-rose-100 text-rose-500 text-[10px]">準備中</Badge>
-                      </div>
-                      <p className="text-[11px] text-gray-700 leading-relaxed">{tool.description}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-rose-500 to-pink-500 text-white border-none shadow-lg">
-                <CardContent className="pt-4 pb-4">
-                  <p className="text-xs font-semibold mb-1">Coming soon</p>
-                  <p className="text-sm md:text-base font-bold mb-2">
-                    美容記事で、診断の「理由」も一緒に解説
-                  </p>
-                  <p className="text-[11px] md:text-xs text-rose-50 leading-relaxed">
-                    「なぜこのケアが自分に合うのか？」まで分かる、美容記事エリアを準備中です。
-                    スキンケア・メイク・ヘアケアの3つのカテゴリから少しずつ公開していきます。
-                  </p>
-                </CardContent>
-              </Card>
-            </aside>
           </div>
         </section>
       </main>
@@ -270,4 +333,3 @@ export default function BeautyHomePage() {
     </div>
   )
 }
-

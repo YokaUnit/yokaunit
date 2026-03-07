@@ -8,8 +8,6 @@ import Link from "next/link"
 import Image from "next/image"
 import {
   Droplets,
-  Palette,
-  LayoutGrid,
   Minus,
   HelpCircle,
   FileText,
@@ -17,6 +15,8 @@ import {
   ShoppingBag,
   ArrowRight,
   ScanLine,
+  CircleAlert,
+  ListOrdered,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -61,17 +61,6 @@ const diagnosisTools: {
   available: boolean
 }[] = [
   {
-    href: "/beauty/diagnosis/skin-type",
-    title: "肌質診断",
-    description: [
-      "あなたの肌の ",
-      { bold: "水分・皮脂バランス" },
-      " を分析し、最適なスキンケアタイプを診断します。",
-    ],
-    icon: Droplets,
-    available: true,
-  },
-  {
     href: "/beauty/diagnosis/pore-type",
     title: "毛穴タイプ診断",
     description: [
@@ -83,29 +72,40 @@ const diagnosisTools: {
     available: true,
   },
   {
-    href: "/beauty/diagnosis/personal-color",
-    title: "パーソナルカラー診断",
+    href: "/beauty/diagnosis/acne-type",
+    title: "ニキビタイプ診断",
     description: [
-      "あなたの肌を最もきれいに見せる ",
-      { bold: "似合う色のタイプ" },
-      " を見つけます。",
+      "ニキビの ",
+      { bold: "原因・タイプ" },
+      " を分析し、適したケア方法を診断します。",
     ],
-    icon: Palette,
+    icon: CircleAlert,
     available: false,
   },
   {
-    href: "#",
-    title: "顔タイプ診断",
+    href: "/beauty/diagnosis/skin-type",
+    title: "肌質診断",
     description: [
-      "顔のバランスやパーツの印象から ",
-      { bold: "似合うメイクやスタイル" },
-      " を分析します。",
+      "あなたの肌の ",
+      { bold: "水分・皮脂バランス" },
+      " を分析し、最適なスキンケアタイプを診断します。",
     ],
-    icon: LayoutGrid,
+    icon: Droplets,
+    available: true,
+  },
+  {
+    href: "/beauty/tools/skincare-routine",
+    title: "スキンケアルーティン診断",
+    description: [
+      "あなたの肌に合った ",
+      { bold: "洗顔・保湿・UVケア" },
+      " の順番とアイテムを診断します。",
+    ],
+    icon: ListOrdered,
     available: false,
   },
   {
-    href: "#",
+    href: "/beauty/diagnosis/hair-type",
     title: "髪質診断",
     description: [
       "髪の状態や頭皮環境から ",
@@ -270,13 +270,22 @@ export default function BeautyHomePage() {
             </h2>
             <div className="w-12 h-0.5 bg-rose-500 mx-auto mb-6" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {usageFlowSteps.map((step) => {
+              {usageFlowSteps.map((step, index) => {
                 const Icon = step.icon
                 return (
                   <div
                     key={step.title}
-                    className="rounded-2xl border border-gray-100 bg-white p-5 md:p-6 shadow-sm flex flex-col"
+                    className="relative rounded-2xl border border-gray-100 bg-white p-5 md:p-6 shadow-sm flex flex-col overflow-hidden"
                   >
+                    {/* 番号リボン（左上・細めのリボン） */}
+                    <div
+                      className="absolute left-0 top-0 flex h-10 w-7 items-center justify-center rounded-br-md bg-rose-500 text-xs font-bold text-white"
+                      style={{
+                        boxShadow: "0 1px 3px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.25)",
+                      }}
+                    >
+                      {index + 1}
+                    </div>
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-500 mb-4 mx-auto">
                       <Icon className="h-6 w-6" />
                     </div>

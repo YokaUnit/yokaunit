@@ -20,9 +20,20 @@ import {
 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "診断で見つかる、あなたに合う美容。",
   description:
     "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要で無料診断できます。",
+  keywords: [
+    "美容診断",
+    "肌質診断",
+    "毛穴タイプ診断",
+    "ニキビタイプ診断",
+    "スキンケアルーティン診断",
+    "髪質診断",
+    "スキンケア診断",
+    "コスメ診断",
+    "無料診断ツール",
+    "YokaUnit Beauty",
+  ],
   openGraph: {
     title: "診断で見つかる、あなたに合う美容。｜YokaUnit Beauty",
     description:
@@ -224,15 +235,14 @@ export default function BeautyHomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
               {diagnosisTools.map((item) => {
                 const Icon = item.icon
+                const disabledClasses = !item.available ? "pointer-events-none opacity-70" : ""
                 return (
                   <Link
                     key={item.title}
                     href={item.available ? item.href : "#"}
-                    className={`rounded-2xl border border-gray-100 bg-white p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col ${
-                      !item.available ? "pointer-events-none opacity-80" : ""
-                    }`}
+                    className={`group relative flex flex-col rounded-2xl border border-gray-100 bg-white/95 p-5 md:p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg hover:border-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 ${disabledClasses}`}
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-500 mb-4 mx-auto">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-500 mb-4 mx-auto transition-transform duration-200 group-hover:scale-110 group-hover:bg-rose-100">
                       <Icon className="h-6 w-6" />
                     </div>
                     <h3 className="font-bold text-gray-900 text-center mb-3">{item.title}</h3>
@@ -248,9 +258,9 @@ export default function BeautyHomePage() {
                       )}
                     </p>
                     {item.available ? (
-                      <span className="inline-flex items-center justify-center text-rose-600 text-xs font-medium mt-4">
+                      <span className="inline-flex items-center justify-center text-rose-600 text-xs font-semibold mt-4 transition-colors duration-200 group-hover:text-rose-700">
                         診断する
-                        <ArrowRight className="h-3 w-3 ml-1" />
+                        <ArrowRight className="h-3 w-3 ml-1 transition-transform duration-200 group-hover:translate-x-0.5" />
                       </span>
                     ) : (
                       <span className="text-gray-400 text-xs text-center mt-4">準備中</span>

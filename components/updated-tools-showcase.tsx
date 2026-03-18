@@ -10,7 +10,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
-import { getTools, type Tool } from "@/lib/actions/tools"
+import type { Tool } from "@/lib/types/tool"
 import { toggleFavorite, getUserFavorites } from "@/lib/actions/favorites"
 import { useAuth } from "@/hooks/use-auth"
 import Image from "next/image"
@@ -85,11 +85,13 @@ export function UpdatedToolsShowcase() {
       setLoading(true)
       setError(null)
       try {
-        // getToolsを使用してcreated_atの降順でソート
-        const { tools: updatedToolsData } = await getTools({
-          limit: displayCount + 5, // 多めに取得してからソート
-          userRole: "basic", // プレミアムツールと非公開ツールを除外
-        })
+        const sp = new URLSearchParams()
+        sp.set("limit", String(displayCount + 5))
+        sp.set("sort", "new")
+        sp.set("tab", "all")
+        const res = await fetch(`/api/tools?${sp.toString()}`, { cache: "no-store" })
+        if (!res.ok) throw new Error("ツールの取得に失敗しました")
+        const { tools: updatedToolsData } = (await res.json()) as { tools: Tool[] }
         
         // created_atで降順ソート（最新が先頭）
         const sortedTools = updatedToolsData.sort((a, b) => 
@@ -150,10 +152,13 @@ export function UpdatedToolsShowcase() {
         })
 
         // ツールデータを再取得してlikes_countを更新（最適化）
-        const { tools: updatedToolsData } = await getTools({
-          limit: displayCount + 5, // 多めに取得してからソート
-          userRole: "basic",
-        })
+        const sp = new URLSearchParams()
+        sp.set("limit", String(displayCount + 5))
+        sp.set("sort", "new")
+        sp.set("tab", "all")
+        const res = await fetch(`/api/tools?${sp.toString()}`, { cache: "no-store" })
+        if (!res.ok) throw new Error("ツールの取得に失敗しました")
+        const { tools: updatedToolsData } = (await res.json()) as { tools: Tool[] }
         
         const sortedTools = updatedToolsData.sort((a, b) => 
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime()

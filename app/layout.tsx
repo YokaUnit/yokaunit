@@ -9,7 +9,7 @@ import { AuthHandler } from "@/components/auth/auth-handler"
 import { SupabaseDisabledBanner } from "@/components/supabase-disabled-banner"
 import Script from "next/script"
 import { generateOrganizationStructuredData, generateWebSiteStructuredData } from "@/lib/seo/structured-data"
-import { StructuredDataScriptServer } from "@/components/seo/structured-data-script" 
+import { StructuredDataScriptServer } from "@/components/seo/structured-data-script-server"
 
 const inter = Inter({ subsets: ["latin"] })
 

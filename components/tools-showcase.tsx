@@ -11,7 +11,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
-import { getTools, type Tool } from "@/lib/actions/tools"
+import type { Tool } from "@/lib/types/tool"
 import { toggleFavorite, getUserFavorites } from "@/lib/actions/favorites"
 import { useAuth } from "@/hooks/use-auth"
 import { AuthDebugPanel } from "@/components/auth-debug-panel"
@@ -90,17 +90,25 @@ export function ToolsShowcase() {
       setLoading(true)
       setError(null)
       try {
-        // 並列でデータを取得してパフォーマンス向上
-        const [popularResult, newResult] = await Promise.all([
-          getTools({
-            limit: displayCount,
-            isPopular: true,
-          }),
-          getTools({
-            limit: displayCount + 5, // 多めに取得してからソート
-            userRole: "basic", // プレミアムツールと非公開ツールを除外
+        const buildUrl = (params: Record<string, string | number | undefined>) => {
+          const sp = new URLSearchParams()
+          Object.entries(params).forEach(([k, v]) => {
+            if (v === undefined) return
+            sp.set(k, String(v))
           })
+          return `/api/tools?${sp.toString()}`
+        }
+
+        const [popularRes, newRes] = await Promise.all([
+          fetch(buildUrl({ limit: displayCount, tab: "popular", sort: "popular" }), { cache: "no-store" }),
+          fetch(buildUrl({ limit: displayCount + 5, tab: "all", sort: "new" }), { cache: "no-store" }),
         ])
+
+        if (!popularRes.ok) throw new Error("人気ツールの取得に失敗しました")
+        if (!newRes.ok) throw new Error("新着ツールの取得に失敗しました")
+
+        const popularResult = (await popularRes.json()) as { tools: Tool[] }
+        const newResult = (await newRes.json()) as { tools: Tool[] }
         
         // 新着ツールは created_at で降順ソート（最新が先頭）- いいね数順は使わない
         const sortedNewTools = newResult.tools.sort((a, b) => 

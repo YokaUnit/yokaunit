@@ -14,11 +14,6 @@ const supabaseAnonKey = supabaseEnabled
   ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.disabled"
 
-console.log("🔧 Supabase Config:", {
-  enabled: supabaseEnabled,
-  url: supabaseEnabled ? supabaseUrl : "(disabled)",
-  hasAnonKey: !!supabaseAnonKey,
-})
 
 export const isSupabaseEnabled = (): boolean => supabaseEnabled
 
@@ -27,7 +22,6 @@ let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null
 
 export const supabase = (() => {
   if (!supabaseInstance) {
-    console.log("🔄 Creating new Supabase client instance")
     supabaseInstance = createClient<Database>(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: true, // ブラウザストレージにセッションを保存
@@ -50,8 +44,6 @@ export const supabase = (() => {
         },
       },
     })
-  } else {
-    console.log("♻️ Reusing existing Supabase client instance")
   }
   return supabaseInstance
 })()

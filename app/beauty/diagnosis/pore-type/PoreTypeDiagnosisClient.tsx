@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import Link from "next/link"
 import Image from "next/image"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BeautyBackgroundAnimation } from "@/app/beauty/_components/beauty-background-animation"
@@ -287,6 +288,67 @@ function getCareTips(type: PoreType): { title: string; items: string[] }[] {
   ]
 }
 
+function getQuickPlans(type: PoreType): {
+  threeDay: string[]
+  oneWeek: string[]
+} {
+  switch (type) {
+    case "blackhead":
+      return {
+        threeDay: [
+          "毎日同じタイミングでクレンジングする習慣をつける（夜は必ずメイク・皮脂をオフ）",
+          "ゴシゴシこすらず、30〜40秒かけて指の腹でくるくるなじませてから洗い流す",
+          "洗顔後はすぐに化粧水＋乳液またはクリームで「乾燥ぐすみ」を防ぐ",
+        ],
+        oneWeek: [
+          "週1〜2回だけ、酵素洗顔やマイルドピーリングで角栓をため込まないサイクルを作る",
+          "ビタミンC誘導体入りの美容液をTゾーン中心に取り入れ、皮脂とキメを同時にケア",
+          "毛穴パックや強いスクラブはお休みして、毛穴まわりの赤み・炎症をリセットする期間にする",
+        ],
+      }
+    case "open":
+      return {
+        threeDay: [
+          "朝晩のスキンケアで「化粧水→乳液またはクリーム」の基本保湿をかならず行う",
+          "Tゾーンは皮脂コントロール系の下地や美容液をポイント使いにとどめる",
+          "クレンジング・洗顔は1日2回までにし、さっぱりしすぎるアイテムは一旦お休み",
+        ],
+        oneWeek: [
+          "セラミドやアミノ酸系成分入りの保湿アイテムを取り入れて、インナードライを立て直す",
+          "湯船やホットタオルで血行を促しつつ、こすらないクレンジングに切り替える",
+          "睡眠時間と就寝時間を整え、皮脂バランスが乱れにくい生活リズムを意識する",
+        ],
+      }
+    case "sagging":
+      return {
+        threeDay: [
+          "クレンジング・洗顔・保湿を「下から上へ・こすらない」塗り方に統一する",
+          "日中は必ずUVケアを行い、ほお〜フェイスラインにもていねいに塗り広げる",
+          "夜はハリケア成分（レチノール・ペプチド・ビタミンCなど）入りアイテムを一点投入",
+        ],
+        oneWeek: [
+          "保湿＆ハリケアラインでスキンケアを揃え、同じラインを1週間続けて肌の土台を整える",
+          "スマホを見る角度や姿勢を見直し、「下を向きっぱなしの時間」を減らす",
+          "フェイスラインを引き上げるマッサージは、1日1回・1分以内の“やさしいタッチ”に限定する",
+        ],
+      }
+    case "clogged":
+    default:
+      return {
+        threeDay: [
+          "摩擦の少ないミルク〜ジェルクレンジングに変え、ゴシゴシ洗いをやめる",
+          "洗顔後は化粧水を2〜3回に分けて重ねづけし、「しっとり吸いつく」感覚までうるおす",
+          "ベタつきが気になる部分だけ軽めの乳液、それ以外はクリームで保護する",
+        ],
+        oneWeek: [
+          "週1〜2回、酵素洗顔やマイルドピーリングでごわつきをリセットする習慣をつくる",
+          "ノンコメドジェニック処方のベースメイクに切り替え、日中の毛穴詰まりを増やさない",
+          "乾燥しやすい頬・口周りには、オイルイン美容液やバームで“守りの保湿”を追加する",
+        ],
+      }
+  }
+}
+
 export function PoreTypeDiagnosisClient() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string | undefined>>({})
@@ -369,22 +431,27 @@ export function PoreTypeDiagnosisClient() {
               {!showResult ? (
                 <>
                   <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between gap-3 mb-2">
+                    <div className="flex items-center justify-between gap-3 mb-1">
                       <CardTitle className="text-sm md:text-base text-gray-900">
-                        質問 {currentIndex + 1} / {QUESTIONS.length}
+                        Q{currentIndex + 1} / {QUESTIONS.length}
                       </CardTitle>
                       <span className="text-[11px] text-gray-500">
                         回答済み {answeredCount} / {QUESTIONS.length}
                       </span>
                     </div>
                     <Progress value={progress} className="h-2 bg-gray-100" />
+                    <p className="mt-2 text-[11px] text-gray-500">
+                      すべて選んでも{" "}
+                      <span className="font-semibold text-gray-700">1〜2分</span>
+                      で終わります。
+                    </p>
                   </CardHeader>
                   <CardContent className="space-y-5">
                     <div>
-                      <p className="text-sm md:text-base font-semibold text-gray-900 mb-3">
+                      <p className="text-sm md:text-base font-semibold text-gray-900 mb-4 text-center">
                         {currentQuestion.text}
                       </p>
-                      <div className="space-y-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                         {currentQuestion.options.map((option) => {
                           const selected = answers[currentQuestion.id] === option.id
                           return (
@@ -392,11 +459,12 @@ export function PoreTypeDiagnosisClient() {
                               key={option.id}
                               type="button"
                               onClick={() => handleSelect(currentQuestion.id, option.id)}
-                              className={`w-full text-left rounded-xl border px-3 py-2.5 text-sm md:text-[15px] transition-all duration-200 ${
+                              className={`w-full text-left rounded-xl border px-3 py-3 text-sm md:text-[15px] transition-all duration-200 ${
                                 selected
-                                  ? "border-rose-500 bg-rose-50 text-gray-900 shadow-sm"
-                                  : "border-gray-200 bg-white hover:bg-gray-50 text-gray-800"
+                                  ? "border-rose-400 bg-rose-50 text-gray-900 shadow-sm ring-1 ring-rose-100"
+                                  : "border-gray-200 bg-white hover:bg-rose-50/40 text-gray-800"
                               }`}
+                              aria-pressed={selected}
                             >
                               {option.label}
                             </button>
@@ -463,14 +531,68 @@ export function PoreTypeDiagnosisClient() {
                     </p>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <div className="rounded-2xl bg-gray-50 border border-gray-200 px-4 py-3">
-                      <p className="text-xs font-semibold text-gray-700 mb-1">あなたの毛穴タイプ</p>
+                    {/* 1. タイプサマリー */}
+                    <div className="rounded-2xl bg-gray-50 border border-gray-200 px-4 py-4 md:px-5 md:py-5">
+                      <p className="text-xs font-semibold text-rose-500 mb-1">あなたの毛穴タイプ</p>
                       <p className="text-lg md:text-xl font-bold text-gray-900 mb-1">
                         {getTypeLabel(diagnosis.type)}
                       </p>
-                      <p className="text-xs md:text-sm text-gray-700">{getTypeDescription(diagnosis.type)}</p>
+                      <p className="text-xs md:text-sm text-gray-700 mb-3">
+                        {getTypeDescription(diagnosis.type)}
+                      </p>
+                      <p className="text-xs md:text-sm text-gray-800 bg-white/70 rounded-xl px-3 py-2 inline-block">
+                        <span className="font-semibold">今日からできる一言アドバイス：</span>{" "}
+                        {diagnosis.type === "blackhead" &&
+                          "「取る」よりも「ため込まない」が正解。クレンジングのやさしさと頻度を見直してみましょう。"}
+                        {diagnosis.type === "open" &&
+                          "テカり＝保湿不足サインのことも。まずは“うるおいの土台づくり”から整えるのがおすすめです。"}
+                        {diagnosis.type === "sagging" &&
+                          "ハリ・うるおい・紫外線対策の3本柱で、少しずつ毛穴の向きを引き上げていきましょう。"}
+                        {diagnosis.type === "clogged" &&
+                          "洗いすぎをやめて、保湿とマイルドな角質ケアで“ふっくらやわらかい肌”を目指しましょう。"}
+                      </p>
                     </div>
 
+                    {/* 2. 3日プラン / 1週間プラン */}
+                    {(() => {
+                      const plans = getQuickPlans(diagnosis.type)
+                      return (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                          <div className="rounded-xl border border-rose-100 bg-rose-50/40 px-4 py-3">
+                            <p className="text-xs font-semibold text-rose-600 mb-2">最初の3日間でやること</p>
+                            <ul className="space-y-1.5">
+                              {plans.threeDay.map((item) => (
+                                <li
+                                  key={item}
+                                  className="flex items-start gap-2 text-xs md:text-sm text-gray-800 leading-relaxed"
+                                >
+                                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-rose-400" />
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="rounded-xl border border-gray-200 bg-white px-4 py-3">
+                            <p className="text-xs font-semibold text-gray-900 mb-2">
+                              1週間じっくり整えるケアプラン
+                            </p>
+                            <ul className="space-y-1.5">
+                              {plans.oneWeek.map((item) => (
+                                <li
+                                  key={item}
+                                  className="flex items-start gap-2 text-xs md:text-sm text-gray-800 leading-relaxed"
+                                >
+                                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-gray-400" />
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      )
+                    })()}
+
+                    {/* 3. 詳しいケアポイント */}
                     <div className="space-y-4">
                       {getCareTips(diagnosis.type).map((section) => (
                         <div key={section.title} className="rounded-xl border border-gray-200 bg-white px-4 py-3">
@@ -485,6 +607,58 @@ export function PoreTypeDiagnosisClient() {
                           </ul>
                         </div>
                       ))}
+                    </div>
+
+                    {/* 4. アイテムカテゴリ（アフィリエイト導線用プレースホルダー） */}
+                    <div className="space-y-3">
+                      <p className="text-xs md:text-sm font-semibold text-gray-900">
+                        診断結果に合うアイテムカテゴリ（準備中）
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {[
+                          "クレンジング",
+                          "洗顔料",
+                          "毛穴美容液・ビタミンC",
+                        ].map((label) => (
+                          <div
+                            key={label}
+                            className="rounded-xl border border-gray-100 bg-gray-50/70 px-3 py-3 text-xs md:text-sm text-gray-700 flex flex-col justify-between"
+                          >
+                            <span className="font-semibold text-gray-900 mb-1">{label}</span>
+                            <p className="text-[11px] text-gray-600 mb-2">
+                              {label}の選び方とおすすめアイテムを、毛穴タイプ別に紹介予定です。
+                            </p>
+                            <span className="inline-flex items-center text-[11px] text-gray-400">
+                              準備中
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 5. 次のアクションへの導線 */}
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-3 border-t border-gray-100">
+                      <div className="text-[11px] md:text-xs text-gray-500">
+                        他の診断と組み合わせることで、よりあなたに合った美容プランが見つかります。
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={reset}
+                          className="bg-rose-500 hover:bg-rose-600 text-white text-xs md:text-sm w-full md:w-auto"
+                        >
+                          もう一度診断する
+                        </Button>
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="text-gray-700 border-gray-200 hover:bg-gray-50 text-xs md:text-sm w-full md:w-auto"
+                        >
+                          <Link href="/beauty">YokaUnit Beauty トップへ</Link>
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </>

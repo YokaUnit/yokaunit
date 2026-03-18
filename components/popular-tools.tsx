@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { getTools, type Tool } from "@/lib/actions/tools"
 import { useState, useEffect } from "react"
+import type { Tool } from "@/lib/types/tool"
 
 export function PopularTools() {
   const [popularTools, setPopularTools] = useState<Tool[]>([])
@@ -14,12 +14,10 @@ export function PopularTools() {
   useEffect(() => {
     const fetchPopularTools = async () => {
       try {
-        const { tools } = await getTools({
-          isPopular: true,
-          limit: 20,
-          userRole: "basic", // プレミアムツールと非公開ツールを除外
-        })
-        setPopularTools(tools)
+        const res = await fetch("/api/tools?tab=popular&sort=popular&limit=20&offset=0", { cache: "no-store" })
+        if (!res.ok) throw new Error("人気ツールの取得に失敗しました")
+        const json = (await res.json()) as { tools: Tool[] }
+        setPopularTools(json.tools || [])
       } catch (error) {
         console.error("人気のツール取得エラー:", error)
       } finally {

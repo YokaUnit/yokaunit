@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { getTools, type Tool } from "@/lib/actions/tools"
 import { useEffect, useState } from "react"
+import type { Tool } from "@/lib/types/tool"
 
 export function ViewedTools() {
   const [tools, setTools] = useState<Tool[]>([])
@@ -14,10 +14,10 @@ export function ViewedTools() {
   useEffect(() => {
     const fetchViewed = async () => {
       try {
-        const { tools } = await getTools({ limit: 20, userRole: "basic" })
-        // クライアント側で view_count 降順に並び替え（サーバーRPCがあれば置換可）
-        tools.sort((a, b) => (b.view_count ?? 0) - (a.view_count ?? 0))
-        setTools(tools)
+        const res = await fetch("/api/tools?tab=all&sort=views&limit=20&offset=0", { cache: "no-store" })
+        if (!res.ok) throw new Error("閲覧数順の取得に失敗しました")
+        const json = (await res.json()) as { tools: Tool[] }
+        setTools(json.tools || [])
       } catch (e) {
         console.error("閲覧数順の取得に失敗:", e)
       } finally {

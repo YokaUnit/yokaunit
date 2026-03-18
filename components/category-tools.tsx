@@ -10,7 +10,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
-import { getTools, type Tool } from "@/lib/actions/tools"
+import type { Tool } from "@/lib/types/tool"
 import { toggleFavorite, getUserFavorites } from "@/lib/actions/favorites"
 import { useAuth } from "@/hooks/use-auth"
 import Image from "next/image"
@@ -64,11 +64,15 @@ export function CategoryTools({
       setLoading(true)
       setError(null)
       try {
-        const { tools: toolsData } = await getTools({
-          category,
-          limit: limit + 5, // 現在のツールを除外するため多めに取得
-          userRole: "basic", // プレミアム・非公開を除外
-        })
+        const sp = new URLSearchParams()
+        sp.set("category", category)
+        sp.set("limit", String(limit + 5))
+        sp.set("offset", "0")
+        sp.set("tab", "all")
+        sp.set("sort", "new")
+        const res = await fetch(`/api/tools?${sp.toString()}`, { cache: "no-store" })
+        if (!res.ok) throw new Error("ツールの取得に失敗しました")
+        const { tools: toolsData } = (await res.json()) as { tools: Tool[] }
 
         // RelatedTools/UpdatedToolsShowcase と同じく created_at 降順で確定させる
         const sortedTools = toolsData.sort((a, b) =>

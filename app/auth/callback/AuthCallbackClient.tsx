@@ -34,6 +34,20 @@ export function AuthCallbackClient() {
           description: `${data.session.user.email ?? "ユーザー"}としてログインしました。`,
         })
 
+        // 初回ログイン時など、プロフィール不足ならオンボーディングへ
+        try {
+          const res = await fetch("/api/me", { cache: "no-store" })
+          if (res.ok) {
+            const json = (await res.json()) as { isProfileComplete?: boolean }
+            if (json.isProfileComplete === false) {
+              router.replace(`/onboarding?next=${encodeURIComponent(next)}`)
+              return
+            }
+          }
+        } catch {
+          // ignore and fallback
+        }
+
         router.replace(next)
       } catch (err) {
         console.error("❌ Unexpected error in auth callback (client):", err)

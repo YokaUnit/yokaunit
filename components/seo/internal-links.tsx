@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getTools } from "@/lib/actions/tools"
-import type { Tool } from "@/lib/actions/tools"
+import type { Tool } from "@/lib/types/tool"
 
 interface RelatedToolsProps {
   currentToolSlug: string

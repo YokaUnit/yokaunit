@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { getToolBySlug } from "@/lib/actions/tools"
+import { toProxiedSupabasePublicImageUrl } from "@/lib/image-proxy"
 
 // 相対パスを完全なURLに変換する関数
 function getAbsoluteImageUrl(imageUrl: string | null | undefined): string {
@@ -9,6 +10,10 @@ function getAbsoluteImageUrl(imageUrl: string | null | undefined): string {
   
   // 既に完全なURLの場合はそのまま返す
   if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+    const proxied = toProxiedSupabasePublicImageUrl(imageUrl)
+    if (proxied && proxied.startsWith("/api/image-proxy?")) {
+      return `https://yokaunit.com${proxied}`
+    }
     return imageUrl
   }
   

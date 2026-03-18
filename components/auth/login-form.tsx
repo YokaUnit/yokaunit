@@ -69,7 +69,7 @@ export function LoginForm() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: REDIRECT_URL,
+          redirectTo: `${REDIRECT_URL}?next=${encodeURIComponent("/onboarding")}`,
         },
       })
 

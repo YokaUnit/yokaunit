@@ -2,10 +2,7 @@ import type { Metadata } from "next"
 import type { ReactNode } from "react"
 
 export const metadata: Metadata = {
-  title: {
-    default: "診断で見つかる、あなたに合う美容。｜YokaUnit Beauty",
-    template: "%s | YokaUnit Beauty",
-  },
+  title: "YokaUnit Beauty",
   description:
     "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要で無料診断できます。",
   openGraph: {

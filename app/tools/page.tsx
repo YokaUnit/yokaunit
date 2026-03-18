@@ -16,7 +16,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useToast } from "@/hooks/use-toast"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { ScrollToTop } from "@/components/scroll-to-top"
-import { getTools, getCategories, type Tool } from "@/lib/actions/tools"
+import type { Tool } from "@/lib/types/tool"
 import { getUserFavorites, toggleFavorite } from "@/lib/actions/favorites"
 import { useAuth } from "@/hooks/use-auth"
 import { normalizeSearchQuery } from "@/lib/search-utils"
@@ -56,8 +56,10 @@ export default function ToolsPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const fetchedCategories = await getCategories()
-        setCategories(fetchedCategories)
+        const res = await fetch("/api/categories", { cache: "no-store" })
+        if (!res.ok) throw new Error("カテゴリーの取得に失敗しました")
+        const json = (await res.json()) as { categories: string[] }
+        setCategories(json.categories || [])
       } catch (error) {
         console.error("Error fetching categories:", error)
       }
@@ -72,9 +74,26 @@ export default function ToolsPage() {
       setLoading(true)
       setError(null)
       try {
-        // 全てのツールを一度に取得
-        const { tools: fetchedTools } = await getTools({})
-        setAllTools(fetchedTools)
+        // 全てのツールを取得（API経由でSupabase直叩きを回避）
+        // limit上限があるためページングで吸い上げる
+        const pageSize = 100
+        let offset = 0
+        let all: Tool[] = []
+        let total = Infinity
+
+        while (offset < total) {
+          const res = await fetch(`/api/tools?limit=${pageSize}&offset=${offset}&tab=all&sort=popular`, {
+            cache: "no-store",
+          })
+          if (!res.ok) throw new Error("ツールの取得に失敗しました")
+          const json = (await res.json()) as { tools: Tool[]; total: number; limit: number; offset: number }
+          total = json.total ?? 0
+          all = all.concat(json.tools || [])
+          offset += json.limit ?? pageSize
+          if ((json.tools || []).length === 0) break
+        }
+
+        setAllTools(all)
       } catch (error) {
         console.error("Error fetching tools:", error)
         setError(error instanceof Error ? error.message : "ツールの取得に失敗しました")

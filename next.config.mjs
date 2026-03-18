@@ -33,9 +33,6 @@ const nextConfig = {
         pathname: '/storage/v1/object/public/**',
       },
     ],
-    // Supabase Storageからの画像取得がタイムアウトするため、unoptimizedを維持
-    // 代わりに画像サイズを事前に最適化してSupabase Storageにアップロードすることを推奨
-    unoptimized: true,
   },
   eslint: {
     ignoreDuringBuilds: true,

@@ -37,20 +37,3 @@ export function StructuredDataScript({ data, id = "structured-data" }: Structure
 
   return null
 }
-
-/**
- * Server Component用の構造化データコンポーネント
- */
-export function StructuredDataScriptServer({ data, id = "structured-data" }: StructuredDataScriptProps) {
-  if (!data) return null
-
-  return (
-    <script
-      id={id}
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(data),
-      }}
-    />
-  )
-}

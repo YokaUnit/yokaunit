@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { generateFAQStructuredData } from "@/lib/seo/structured-data"
-import { StructuredDataScriptServer } from "./structured-data-script"
+import { StructuredDataScriptServer } from "./structured-data-script-server"
 
 interface FAQ {
   question: string

@@ -77,31 +77,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       let profileData = await fetchProfile(userId)
 
       if (!profileData) {
-        console.log("📝 Creating new profile for user:", userId)
-
-        // Get user email from current user
-        const userEmail = user?.email || ""
-
-        // Create new profile
-        const { data, error } = await supabase
-          .from("profiles")
-          .insert({
-            id: userId,
-            email: userEmail,
-            username: userEmail.split("@")[0], // Use email prefix as default username
-            role: "basic",
-            is_active: true,
-          })
-          .select()
-          .single()
-
-        if (error) {
-          console.error("❌ Error creating profile:", error)
-          return
-        }
-
-        profileData = data as Profile
-        console.log("✅ Profile created successfully")
+        // RLS有効化後は、クライアントからprofilesへINSERTは原則しない。
+        // プロフィールは auth.users トリガー（handle_new_user）で作成される想定。
+        console.warn("⚠️ Profile not found yet. It should be created by auth trigger. Redirect user to onboarding or retry later.")
+        return
       }
 
       setProfile(profileData)

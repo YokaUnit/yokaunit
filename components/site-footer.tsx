@@ -54,6 +54,15 @@ export function SiteFooter() {
               >
                 <Youtube className="h-6 w-6" />
               </a>
+              <a
+                href="https://note.com/web_hisashi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-emerald-600 transition-colors"
+                aria-label="note"
+              >
+                <FileText className="h-6 w-6" />
+              </a>
             </div>
           </motion.div>
 

@@ -91,7 +91,7 @@ const diagnosisTools: {
       " を分析し、適したケア方法を診断します。",
     ],
     icon: CircleAlert,
-    available: false,
+    available: true,
   },
   {
     href: "/beauty/diagnosis/skin-type",
@@ -113,7 +113,7 @@ const diagnosisTools: {
       " の順番とアイテムを診断します。",
     ],
     icon: ListOrdered,
-    available: false,
+    available: true,
   },
   {
     href: "/beauty/diagnosis/hair-type",
@@ -124,7 +124,7 @@ const diagnosisTools: {
       " を診断します。",
     ],
     icon: Minus,
-    available: false,
+    available: true,
   },
 ]
 
@@ -158,9 +158,9 @@ export default function BeautyHomePage() {
       <BeautyBackgroundAnimation />
       <ScrollToTop />
 
-      <main className="flex-1 relative">
+      <main className="flex-1 relative isolate">
         {/* Hero Section */}
-        <section className="bg-white">
+        <section className="bg-white/70 backdrop-blur-[2px]">
           <div className="container mx-auto px-4 py-10 md:py-16">
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
               {/* Left: Copy + CTA */}
@@ -221,7 +221,7 @@ export default function BeautyHomePage() {
         </section>
 
         {/* 美容診断ツール */}
-        <section className="bg-gray-50/80 py-12 md:py-16">
+        <section id="tools" className="bg-white/60 backdrop-blur-[2px] py-12 md:py-16 scroll-mt-20">
           <div className="container mx-auto px-4">
             <h2 className="text-center text-xl md:text-2xl font-bold text-gray-900 mb-2">
               美容診断ツール
@@ -273,7 +273,7 @@ export default function BeautyHomePage() {
         </section>
 
         {/* ご利用の流れ */}
-        <section id="flow" className="bg-white py-12 md:py-16 scroll-mt-20">
+        <section id="flow" className="bg-white/70 backdrop-blur-[2px] py-12 md:py-16 scroll-mt-20">
           <div className="container mx-auto px-4">
             <h2 className="text-center text-xl md:text-2xl font-bold text-gray-900 mb-2">
               ご利用の流れ
@@ -309,7 +309,7 @@ export default function BeautyHomePage() {
         </section>
 
         {/* 診断結果に基づくおすすめ */}
-        <section className="bg-gray-50/80 py-12 md:py-16">
+        <section className="bg-white/55 backdrop-blur-[2px] py-12 md:py-16">
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
               <div className="flex-1">

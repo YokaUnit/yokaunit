@@ -11,9 +11,8 @@ import { cn } from "@/lib/utils"
 
 const beautyNavigationItems = [
   { href: "/beauty", title: "トップ" },
-  { href: "/beauty/diagnosis/skin-type", title: "肌質診断" },
-  { href: "/beauty/diagnosis", title: "診断一覧（準備中）" },
-  { href: "/beauty/articles", title: "美容記事（準備中）" },
+  { href: "/beauty#tools", title: "診断ツール" },
+  { href: "/beauty/articles", title: "解説記事" },
 ]
 
 export function BeautySiteHeader() {

@@ -61,7 +61,7 @@ export function BeautyBackgroundAnimation() {
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
-          className="absolute rounded-full opacity-15"
+          className="absolute rounded-full opacity-10"
           style={{
             left: particle.x,
             top: particle.y,

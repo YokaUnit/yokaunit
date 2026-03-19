@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BeautyBackgroundAnimation } from "@/app/beauty/_components/beauty-background-animation"
 import { BeautySiteHeader } from "@/app/beauty/_components/beauty-site-header"
@@ -634,6 +635,49 @@ export function SkinTypeDiagnosisClient() {
                 </CardContent>
               )}
             </Card>
+
+            {/* 診断ページ内の解説（SEO本文） */}
+            <section className="mt-10 md:mt-12">
+              <div className="rounded-3xl border border-gray-100 bg-white/85 backdrop-blur-[2px] p-5 md:p-7 shadow-sm">
+                <p className="text-xs font-semibold tracking-wider text-rose-500 mb-2">GUIDE</p>
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                  肌質診断の見方と、肌質別スキンケアの組み立て
+                </h2>
+                <p className="text-sm text-gray-700 leading-relaxed mb-6">
+                  肌質（乾燥・脂性・混合・普通）は、スキンケアの「量」と「優先順位」を決めるための土台です。
+                  まずは毎日ブレない基本（洗顔→保湿→UV）を揃えるだけで、肌は安定しやすくなります。
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-gray-100 bg-white p-4">
+                    <h3 className="text-sm font-bold text-gray-900 mb-2">結論：まず揃える3ステップ</h3>
+                    <ol className="list-decimal pl-5 text-sm text-gray-800 space-y-2 leading-relaxed">
+                      <li>洗顔（落としすぎない）</li>
+                      <li>保湿（化粧水→乳液/クリーム）</li>
+                      <li>UV（毎日）</li>
+                    </ol>
+                  </div>
+                  <div className="rounded-2xl border border-rose-100 bg-rose-50/40 p-4">
+                    <h3 className="text-sm font-bold text-gray-900 mb-2">肌質別：やりがちNG</h3>
+                    <ul className="space-y-2 text-sm text-gray-800 leading-relaxed">
+                      <li><span className="font-semibold">乾燥肌</span>：さっぱり系だけで保湿不足</li>
+                      <li><span className="font-semibold">脂性肌</span>：テカりが怖くて保湿を抜く（逆に皮脂が増える）</li>
+                      <li><span className="font-semibold">混合肌</span>：全顔を同じケアで統一（部分最適が必要）</li>
+                      <li><span className="font-semibold">普通肌</span>：攻めの成分を増やしすぎて刺激に寄る</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-col md:flex-row gap-2">
+                  <Button asChild className="bg-rose-500 hover:bg-rose-600 text-white w-full md:w-auto">
+                    <Link href="/beauty/articles/skin-type">肌質別の解説記事を読む</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full md:w-auto border-gray-200 text-gray-700 hover:bg-gray-50">
+                    <Link href="/beauty/articles">解説記事一覧へ</Link>
+                  </Button>
+                </div>
+              </div>
+            </section>
           </div>
         </section>
       </main>

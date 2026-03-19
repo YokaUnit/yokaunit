@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Instagram, MessageCircle, Youtube } from "lucide-react"
+import { FileText, Instagram, MessageCircle, Youtube } from "lucide-react"
 import { motion } from "framer-motion"
 
 export function SocialRequestBanner() {
@@ -47,6 +47,15 @@ export function SocialRequestBanner() {
             >
               <Youtube className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
               <span>YouTube</span>
+            </a>
+            <a
+              href="https://note.com/web_hisashi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 md:gap-1.5 bg-emerald-600 text-white px-2 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
+            >
+              <FileText className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+              <span>note</span>
             </a>
           </div>
         </CardContent>

@@ -639,9 +639,17 @@ export function PoreTypeDiagnosisClient() {
                     {/* 5. 次のアクションへの導線 */}
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-3 border-t border-gray-100">
                       <div className="text-[11px] md:text-xs text-gray-500">
-                        他の診断と組み合わせることで、よりあなたに合った美容プランが見つかります。
+                        次は「理由」を理解して、ケアを迷わない状態へ。
                       </div>
                       <div className="flex flex-wrap gap-2">
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="text-gray-700 border-gray-200 hover:bg-gray-50 text-xs md:text-sm w-full md:w-auto"
+                        >
+                          <Link href="/beauty/articles/pore-type">解説記事を読む</Link>
+                        </Button>
                         <Button
                           type="button"
                           size="sm"
@@ -679,6 +687,81 @@ export function PoreTypeDiagnosisClient() {
                 </CardContent>
               )}
             </Card>
+
+            {/* 診断ページ内の解説（SEO本文） */}
+            <section className="mt-10 md:mt-12">
+              <div className="rounded-3xl border border-gray-100 bg-white/85 backdrop-blur-[2px] p-5 md:p-7 shadow-sm">
+                <p className="text-xs font-semibold tracking-wider text-rose-500 mb-2">GUIDE</p>
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                  毛穴タイプ診断の見方と、タイプ別ケアの考え方
+                </h2>
+                <p className="text-sm text-gray-700 leading-relaxed mb-6">
+                  毛穴悩みは「黒ずみ」「開き」「たるみ」「詰まり」で原因と優先順位が変わります。
+                  この診断は、あなたの悩みの“傾向”を整理し、今日から迷わずケアできるようにするためのツールです。
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-gray-100 bg-white p-4">
+                    <h3 className="text-sm font-bold text-gray-900 mb-2">結論：まず揃える優先順位</h3>
+                    <ul className="space-y-2 text-sm text-gray-800 leading-relaxed">
+                      <li>
+                        <span className="font-semibold">黒ずみ</span>：やさしいクレンジング＋週1〜2回のマイルド角質ケア
+                      </li>
+                      <li>
+                        <span className="font-semibold">開き</span>：保湿の土台づくり＋皮脂コントロールはポイント使い
+                      </li>
+                      <li>
+                        <span className="font-semibold">たるみ</span>：ハリケア＋UV徹底＋摩擦を減らす
+                      </li>
+                      <li>
+                        <span className="font-semibold">詰まり</span>：洗いすぎ停止＋保湿で角質をやわらげる
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="rounded-2xl border border-rose-100 bg-rose-50/40 p-4">
+                    <h3 className="text-sm font-bold text-gray-900 mb-2">やりがちNG（最優先でやめる）</h3>
+                    <ul className="space-y-2 text-sm text-gray-800 leading-relaxed">
+                      <li>毛穴パック/角栓押し出し/スクラブのやりすぎ</li>
+                      <li>テカりが怖くて保湿を抜く（インナードライ悪化）</li>
+                      <li>クレンジング・洗顔の摩擦（黒ずみ/たるみの原因）</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-6 rounded-2xl border border-gray-100 bg-white p-4">
+                  <h3 className="text-sm font-bold text-gray-900 mb-2">よくある質問</h3>
+                  <div className="space-y-2">
+                    <details className="rounded-xl border border-gray-200 bg-white px-4 py-3">
+                      <summary className="cursor-pointer text-sm font-semibold text-gray-900">
+                        毛穴パックは毎週やっていい？
+                      </summary>
+                      <p className="mt-2 text-sm text-gray-700 leading-relaxed">
+                        基本はおすすめしません。角栓を物理的に抜く刺激で毛穴周りが傷つき、黒ずみ・開きが悪化しやすいです。
+                        週1〜2回の“マイルド角質ケア”に置き換える方が安定しやすいです。
+                      </p>
+                    </details>
+                    <details className="rounded-xl border border-gray-200 bg-white px-4 py-3">
+                      <summary className="cursor-pointer text-sm font-semibold text-gray-900">
+                        黒ずみ毛穴は洗えば洗うほど良くなる？
+                      </summary>
+                      <p className="mt-2 text-sm text-gray-700 leading-relaxed">
+                        逆です。洗いすぎは乾燥→皮脂増加→角栓が溜まりやすくなる流れを作りがち。
+                        大切なのは“落とす強さ”より“ため込まない習慣化”です。
+                      </p>
+                    </details>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-col md:flex-row gap-2">
+                  <Button asChild className="bg-rose-500 hover:bg-rose-600 text-white w-full md:w-auto">
+                    <Link href="/beauty/articles/pore-type">毛穴タイプ解説記事を読む</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full md:w-auto border-gray-200 text-gray-700 hover:bg-gray-50">
+                    <Link href="/beauty/articles">解説記事一覧へ</Link>
+                  </Button>
+                </div>
+              </div>
+            </section>
           </div>
         </section>
       </main>

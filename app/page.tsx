@@ -137,6 +137,49 @@ export default function Home() {
               </div>
             </div>
           </section>
+
+          {/* YokaUnit Store セクション */}
+          <section className="mt-4 rounded-3xl border border-slate-200 bg-white/90 shadow-sm overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              <div className="relative h-32 md:h-full md:col-span-1 bg-gradient-to-br from-slate-50 via-white to-slate-100">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative flex items-center gap-3 px-4 py-3 rounded-full bg-white/80 shadow-sm border border-slate-200">
+                    <Image
+                      src="/Store/logo_store.png"
+                      alt="YokaUnit Store ロゴ"
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                    <span className="text-sm md:text-base font-semibold text-slate-700 tracking-wide">
+                      YokaUnit Store
+                    </span>
+                  </div>
+                </div>
+                <div className="pointer-events-none absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-slate-200/50 blur-2xl" />
+              </div>
+              <div className="md:col-span-2 px-5 py-6 md:px-8 md:py-7 flex flex-col justify-center gap-3">
+                <p className="text-xs font-semibold tracking-[0.18em] text-slate-500 uppercase">
+                  Store
+                </p>
+                <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                  湘南のお店が見つかる、地域特化のストア。
+                </h2>
+                <p className="text-xs md:text-sm text-gray-700">
+                  「YokaUnit Store」は、湘南エリアの飲食・美容・宿泊・遊びなどのお店を、
+                  無料HPやクーポン・診断・特集を通じて“見つけやすく”する地域特化型プラットフォームです。
+                </p>
+                <div className="pt-1">
+                  <a
+                    href="/store"
+                    className="inline-flex items-center rounded-full bg-slate-800 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-slate-900 transition-colors"
+                  >
+                    YokaUnit Store を見る
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
       <ScrollToTop />

@@ -9,19 +9,16 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
-  Users,
-  HeadphonesIcon,
   CheckCircle,
-  Star,
-  TrendingUp,
-  Clock,
-  Award,
-  Target,
-  Code,
-  Smartphone,
-  Globe,
-  Lock,
-  BarChart3,
+  CircleDollarSign,
+  Clock3,
+  MessageSquare,
+  Sparkles,
+  Rocket,
+  ShieldCheck,
+  Store,
+  Briefcase,
+  ArrowRight,
 } from "lucide-react"
 import { motion } from "framer-motion"
 
@@ -50,25 +47,30 @@ export default function CorporatePage() {
             transition={{ duration: 0.8 }}
             className="text-center py-8 mb-8"
           >
-            <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-100">🚀 企業向け専用サービス</Badge>
+            <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-100">
+              小さく始める法人向けプラン
+            </Badge>
             <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">
-              <span className="text-blue-600">売上アップ</span>に直結する
+              高額な制作会社ではなく、
               <br className="md:hidden" />
-              <span className="text-blue-600">UI/SEO特化</span>サイト制作
+              <span className="text-blue-600">最短・低コストで成果を出す</span>選択肢
             </h1>
             <p className="text-sm md:text-base text-gray-600 mb-6 max-w-2xl mx-auto leading-relaxed">
-              YokaUnitは、モバイルファーストのUI設計とSEO最適化で、
-              <br />
-              御社の売上向上を実現する専門チームです。制作から運用まで完全サポート。
+              YokaUnitは「まず1ページ」「まず1機能」から始められる制作チームです。
+              <br className="hidden md:block" />
+              月額2万円台から、LP改善・SEO施策・ミニ開発を実行します。
             </p>
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-3">
               <Button onClick={scrollToContact} size="lg" className="bg-blue-600 hover:bg-blue-700">
-                無料相談を申し込む
+                料金を相談する
+              </Button>
+              <Button onClick={scrollToContact} size="lg" variant="outline">
+                7日お試しを申込む
               </Button>
             </div>
           </motion.section>
 
-          {/* Stats Section */}
+          {/* Key Points */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -77,28 +79,28 @@ export default function CorporatePage() {
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { number: "30+", label: "導入企業数", icon: Users },
-                { number: "98%", label: "顧客満足度", icon: Star },
-                { number: "2営業日", label: "平均対応時間", icon: Clock },
-                { number: "3年", label: "平均継続期間", icon: Award },
-              ].map((stat, index) => (
+                { title: "初期費用0円", label: "月額プラン中心で開始しやすい", icon: CircleDollarSign },
+                { title: "最短72時間", label: "初回改善案をスピード提案", icon: Clock3 },
+                { title: "チャット伴走", label: "気軽に相談できる運用体制", icon: MessageSquare },
+                { title: "1ヶ月単位", label: "縛りが少なく試しやすい", icon: ShieldCheck },
+              ].map((point, index) => (
                 <motion.div
-                  key={stat.label}
+                  key={point.title}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                 >
                   <Card className="p-4 text-center hover:shadow-lg transition-shadow">
-                    <stat.icon className="h-6 w-6 text-blue-500 mx-auto mb-2" />
-                    <div className="text-xl font-bold text-gray-900">{stat.number}</div>
-                    <div className="text-xs text-gray-600">{stat.label}</div>
+                    <point.icon className="h-6 w-6 text-blue-500 mx-auto mb-2" />
+                    <div className="text-base font-bold text-gray-900">{point.title}</div>
+                    <div className="text-xs text-gray-600">{point.label}</div>
                   </Card>
                 </motion.div>
               ))}
             </div>
           </motion.section>
 
-          {/* Services Section */}
+          {/* Differentiation */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -106,105 +108,56 @@ export default function CorporatePage() {
             className="mb-8"
           >
             <div className="text-center mb-6">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">提供サービス</h2>
-              <p className="text-sm text-gray-600">企業様のニーズに合わせた柔軟なソリューション</p>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">大手制作会社との違い</h2>
+              <p className="text-sm text-gray-600">必要な範囲だけ、必要な期間だけ。固定費を抑えて改善できます。</p>
               <p className="text-xs text-blue-600 mt-1">
-                ※価格は目安です。お客様のご要望に応じてカスタマイズいたします
+                ※全プラン、要件が増えない限り月内の追加請求なし
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 {
-                  icon: Code,
-                  title: "カスタム開発",
-                  desc: "御社専用のツール・システム開発",
-                  features: ["要件定義〜運用まで", "既存システム連携", "API開発", "保守運用"],
-                  price: "月額50万円〜",
-                  price_once: "一式150万円〜",
-                  popular: true,
-                  popularType: "人気No.1",
-                  popularColor: "bg-red-500",
+                  icon: Sparkles,
+                  title: "少額スタート",
+                  desc: "高額な一括見積もりではなく、月額2.98万円から運用可能",
+                  features: ["初期費用0円", "最小単位で着手", "予算に合わせて拡張"],
                 },
                 {
-                  icon: Smartphone,
-                  title: "UI/UXデザイン",
-                  desc: "モバイルファーストの美しいデザイン",
-                  features: ["レスポンシブデザイン", "ユーザビリティ重視", "コンバージョン最適化", "保守運用"],
-                  price: "月額25万円〜",
-                  price_once: "一式80万円〜",
-                  popular: true,
-                  popularType: "人気No.2",
-                  popularColor: "bg-orange-500",
+                  icon: Rocket,
+                  title: "実装スピード",
+                  desc: "相談だけで終わらせず、72時間以内に初回アクション",
+                  features: ["改善案を即提示", "着手までが早い", "短サイクルで検証"],
                 },
                 {
-                  icon: TrendingUp,
-                  title: "SEO特化Webサイト",
-                  desc: "売上アップに直結するWebサイト制作",
-                  features: ["SEO最適化", "コンバージョン重視", "アクセス解析導入", "保守運用"],
-                  price: "月額35万円〜",
-                  price_once: "一式150万円〜",
+                  icon: Briefcase,
+                  title: "事業理解で提案",
+                  desc: "美容・店舗・Webサービス向けの導線設計を前提にした提案",
+                  features: ["CV導線の最適化", "運用しやすい設計", "成果に寄せた優先順位"],
                 },
-                {
-                  icon: Globe,
-                  title: "Webシステム開発",
-                  desc: "業務効率化Webアプリ",
-                  features: ["管理画面構築", "ワークフロー", "多言語対応", "保守運用"],
-                  price: "月額40万円〜",
-                  price_once: "一式120万円〜",
-                },
-                {
-                  icon: Lock,
-                  title: "セキュリティ強化",
-                  desc: "情報セキュリティ対策",
-                  features: ["脆弱性診断", "セキュリティ監査", "ISMS構築支援", "保守運用"],
-                  price: "月額20万円〜",
-                  price_once: "一式60万円〜",
-                },
-                {
-                  icon: BarChart3,
-                  title: "DXコンサルティング",
-                  desc: "デジタル変革戦略立案",
-                  features: ["現状分析", "戦略策定", "実行支援", "保守運用"],
-                  price: "月額60万円〜",
-                  price_once: "一式200万円〜",
-                },
-              ].map((service, index) => {
-                const price = service.price_once ? `${service.price} / ${service.price_once}` : service.price
+              ].map((point, index) => {
                 return (
                   <motion.div
-                    key={service.title}
+                    key={point.title}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
                     className="relative"
                   >
-                    {service.popular && (
-                      <Badge className={`absolute -top-2 -right-2 ${service.popularColor} text-white z-10`}>
-                        {service.popularType}
-                      </Badge>
-                    )}
                     <Card className="p-4 h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                       <div className="flex items-center mb-3">
-                        <service.icon className="h-6 w-6 text-blue-500 mr-3" />
-                        <h3 className="font-semibold text-gray-900">{service.title}</h3>
+                        <point.icon className="h-6 w-6 text-blue-500 mr-3" />
+                        <h3 className="font-semibold text-gray-900">{point.title}</h3>
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">{service.desc}</p>
+                      <p className="text-sm text-gray-600 mb-3">{point.desc}</p>
                       <ul className="text-xs space-y-1 mb-4">
-                        {service.features.map((feature, idx) => (
+                        {point.features.map((feature, idx) => (
                           <li key={idx} className="flex items-center">
-                            <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                            <CheckCircle className="h-3 w-3 text-blue-500 mr-2" />
                             {feature}
                           </li>
                         ))}
                       </ul>
-                      <div className="mt-auto">
-                        <div className="text-lg font-bold text-blue-600 mb-1">{price}</div>
-                        <p className="text-xs text-gray-500 mb-2">※ご要望に応じて調整可能</p>
-                        <Button variant="outline" size="sm" className="w-full" onClick={scrollToContact}>
-                          詳細を問い合わせ
-                        </Button>
-                      </div>
                     </Card>
                   </motion.div>
                 )
@@ -212,7 +165,7 @@ export default function CorporatePage() {
             </div>
           </motion.section>
 
-          {/* Why Choose Us */}
+          {/* Pricing */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -221,29 +174,65 @@ export default function CorporatePage() {
           >
             <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100">
               <div className="text-center mb-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-2">YokaUnitが選ばれる理由</h2>
-                <p className="text-sm text-gray-600">多くの企業様から信頼をいただいている理由</p>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">わかりやすい低価格プラン</h2>
+                <p className="text-sm text-gray-600">最初から大きく発注しない前提で設計しています。</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { icon: Smartphone, title: "モバイルファースト", desc: "全デバイス対応の\n美しいレスポンシブ" },
-                  { icon: TrendingUp, title: "SEO最適化", desc: "検索上位表示で\n売上直結" },
-                  { icon: Target, title: "柔軟な対応", desc: "月額・一式両対応\n完全カスタマイズ" },
-                  { icon: HeadphonesIcon, title: "長期サポート", desc: "制作後の保守運用\nまで完全対応" },
-                ].map((reason, index) => (
+                  {
+                    icon: Store,
+                    title: "スターター",
+                    price: "月額 29,800円",
+                    desc: "小さな改善を継続したい方向け",
+                    features: ["LPやフォームの改善 2件/月", "軽微なSEO修正", "チャット相談"],
+                    badge: "人気",
+                  },
+                  {
+                    icon: Rocket,
+                    title: "グロース",
+                    price: "月額 49,800円",
+                    desc: "問い合わせ増加を狙う主力プラン",
+                    features: ["改善 4件/月", "A/Bテスト提案", "レポート提出"],
+                    badge: "おすすめ",
+                  },
+                  {
+                    icon: Briefcase,
+                    title: "制作パートナー",
+                    price: "月額 79,800円",
+                    desc: "小規模開発まで任せたい方向け",
+                    features: ["改善 + ミニ開発", "社内ツール実装", "優先対応"],
+                    badge: "拡張",
+                  },
+                ].map((plan, index) => (
                   <motion.div
-                    key={reason.title}
+                    key={plan.title}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-                    className="text-center"
                   >
-                    <div className="bg-white p-4 rounded-lg shadow-sm">
-                      <reason.icon className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                      <h3 className="font-semibold text-gray-900 mb-1">{reason.title}</h3>
-                      <p className="text-xs text-gray-600 whitespace-pre-line">{reason.desc}</p>
-                    </div>
+                    <Card className="p-4 bg-white h-full border-blue-100">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <plan.icon className="h-5 w-5 text-blue-600" />
+                          <h3 className="font-semibold text-gray-900">{plan.title}</h3>
+                        </div>
+                        <Badge variant="secondary">{plan.badge}</Badge>
+                      </div>
+                      <p className="text-2xl font-bold text-blue-700 mb-1">{plan.price}</p>
+                      <p className="text-xs text-gray-600 mb-3">{plan.desc}</p>
+                      <ul className="text-xs space-y-2 mb-4">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="flex items-center">
+                            <CheckCircle className="h-3 w-3 text-blue-500 mr-2" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                      <Button variant="outline" size="sm" className="w-full" onClick={scrollToContact}>
+                        このプランで相談
+                      </Button>
+                    </Card>
                   </motion.div>
                 ))}
               </div>
@@ -258,14 +247,15 @@ export default function CorporatePage() {
             className="mb-8"
           >
             <Card className="p-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center">
-              <h2 className="text-xl font-bold mb-2">まずは無料相談から始めませんか？</h2>
+              <h2 className="text-xl font-bold mb-2">最短72時間で、最初の改善提案をお返しします</h2>
               <p className="text-sm mb-4 opacity-90">
-                御社の課題をお聞かせください。最適なソリューションをご提案いたします。
-                <br />
-                お見積もりは無料で、ご予算に応じて柔軟に対応いたします。
+                まずは無料ヒアリングで課題を整理し、実施順まで具体化します。
+                <br className="hidden md:block" />
+                「何から手をつけるか分からない」状態を解消するところから始めます。
               </p>
-              <Button variant="secondary" size="lg" onClick={scrollToContact}>
-                今すぐ無料相談
+              <Button variant="secondary" size="lg" onClick={scrollToContact} className="gap-2">
+                無料で相談する
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </Card>
           </motion.section>
@@ -279,7 +269,9 @@ export default function CorporatePage() {
           >
             <div className="text-center mb-6">
               <h2 className="text-xl font-bold text-gray-900 mb-2">お問い合わせ</h2>
-              <p className="text-sm text-gray-600">お気軽にご相談ください。担当者より2営業日以内にご連絡いたします。</p>
+              <p className="text-sm text-gray-600">
+                ご相談内容に応じて、低コストで始められるプランを提案します。2営業日以内に返信します。
+              </p>
             </div>
             <CorporateForm />
           </motion.section>

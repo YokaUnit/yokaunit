@@ -2,7 +2,6 @@ import { ToolsShowcase } from "@/components/tools-showcase"
 import { HeroSection } from "@/components/hero-section"
 import { BackgroundAnimation } from "@/components/background-animation"
 import { CurrentlyBuilding } from "@/components/currently-building"
-// import { AITAFeaturedLink } from "@/components/aita-featured-link"
 import { SocialRequestBanner } from "@/components/social-request-banner"
 import { AdminMessage } from "@/components/admin-message"
 import { CorporateSection } from "@/components/corporate-section"
@@ -82,7 +81,6 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
               <CurrentlyBuilding />
-              {/* <AITAFeaturedLink /> */}
               <ToolsShowcase />
               <UpdatedToolsShowcase />
             </div>
@@ -175,6 +173,46 @@ export default function Home() {
                     className="inline-flex items-center rounded-full bg-slate-800 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-slate-900 transition-colors"
                   >
                     YokaUnit Store を見る
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* YokaUnit Note セクション */}
+          <section className="mt-4 rounded-3xl border border-emerald-100 bg-white/90 shadow-sm overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              <div className="relative h-32 md:h-full md:col-span-1 bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative flex items-center px-4 py-3 rounded-full bg-white/80 shadow-sm border border-emerald-100">
+                    <Image
+                      src="/note/logo_yokaunit+note.png"
+                      alt="YokaUnit Note ロゴ"
+                      width={132}
+                      height={36}
+                      className="h-9 w-auto"
+                    />
+                  </div>
+                </div>
+                <div className="pointer-events-none absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-emerald-100/60 blur-2xl" />
+              </div>
+              <div className="md:col-span-2 px-5 py-6 md:px-8 md:py-7 flex flex-col justify-center gap-3">
+                <p className="text-xs font-semibold tracking-[0.18em] text-emerald-600 uppercase">
+                  Note
+                </p>
+                <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                  面倒を減らし、少ない時間で成果を出すための実践メディア。
+                </h2>
+                <p className="text-xs md:text-sm text-gray-700">
+                  「YokaUnit Note」は、一人開発者の日常と仕事で生まれる課題に向き合い、
+                  実測データと失敗ログを交えた知見を届ける実用メディアです。
+                </p>
+                <div className="pt-1">
+                  <a
+                    href="/note"
+                    className="inline-flex items-center rounded-full bg-emerald-600 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-colors"
+                  >
+                    YokaUnit Note を見る
                   </a>
                 </div>
               </div>

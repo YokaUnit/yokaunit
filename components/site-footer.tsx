@@ -111,6 +111,15 @@ export function SiteFooter() {
                   よくある質問
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/note"
+                  className="text-sm text-gray-600 hover:text-blue-600 transition-colors flex items-center group"
+                >
+                  <FileText className="h-4 w-4 mr-2 text-emerald-500 group-hover:text-emerald-600" />
+                  YokaUnit Note
+                </Link>
+              </li>
             </ul>
           </motion.div>
 

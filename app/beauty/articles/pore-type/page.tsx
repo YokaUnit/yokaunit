@@ -203,7 +203,7 @@ export default function PoreTypeArticlePage() {
     <div className="flex min-h-screen flex-col">
       <BeautySiteHeader />
       <BeautyBackgroundAnimation />
-      <ScrollToTop />
+      <ScrollToTop variant="beauty" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />

@@ -734,7 +734,7 @@ export function PoreTypeDiagnosisClient() {
     <div className="flex min-h-screen flex-col">
       <BeautySiteHeader />
       <BeautyBackgroundAnimation />
-      <ScrollToTop />
+      <ScrollToTop variant="beauty" />
 
       <main className="flex-1">
         <section className="container mx-auto px-4 py-8 md:py-12">

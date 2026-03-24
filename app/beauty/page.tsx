@@ -69,6 +69,8 @@ const diagnosisTools: {
   title: string
   description: (string | { bold: string })[]
   icon: typeof Droplets
+  imageSrc: string
+  imageAlt: string
   available: boolean
 }[] = [
   {
@@ -80,6 +82,8 @@ const diagnosisTools: {
       " を診断します。",
     ],
     icon: ScanLine,
+    imageSrc: "/beauty/scan_image/pore-type-zoom-scan-4x3.webp",
+    imageAlt: "毛穴タイプ診断のスキャンイメージ",
     available: true,
   },
   {
@@ -91,6 +95,8 @@ const diagnosisTools: {
       " を分析し、適したケア方法を診断します。",
     ],
     icon: CircleAlert,
+    imageSrc: "/beauty/scan_image/acne-type-cheek-scan-4x3.webp",
+    imageAlt: "ニキビタイプ診断のスキャンイメージ",
     available: true,
   },
   {
@@ -102,17 +108,8 @@ const diagnosisTools: {
       " を分析し、最適なスキンケアタイプを診断します。",
     ],
     icon: Droplets,
-    available: true,
-  },
-  {
-    href: "/beauty/tools/skincare-routine",
-    title: "スキンケアルーティン診断",
-    description: [
-      "あなたの肌に合った ",
-      { bold: "洗顔・保湿・UVケア" },
-      " の順番とアイテムを診断します。",
-    ],
-    icon: ListOrdered,
+    imageSrc: "/beauty/scan_image/skin-type-tzone-balance-4x3.webp",
+    imageAlt: "肌質診断のスキャンイメージ",
     available: true,
   },
   {
@@ -124,6 +121,21 @@ const diagnosisTools: {
       " を診断します。",
     ],
     icon: Minus,
+    imageSrc: "/beauty/scan_image/hair-type-strand-scan-4x3.webp",
+    imageAlt: "髪質診断のスキャンイメージ",
+    available: true,
+  },
+  {
+    href: "/beauty/tools/skincare-routine",
+    title: "スキンケアルーティン診断",
+    description: [
+      "あなたの肌に合った ",
+      { bold: "洗顔・保湿・UVケア" },
+      " の順番とアイテムを診断します。",
+    ],
+    icon: ListOrdered,
+    imageSrc: "/beauty/scan_image/skincare-routine-step-overlay-4x3.webp",
+    imageAlt: "スキンケアルーティン診断のスキャンイメージ",
     available: true,
   },
 ]
@@ -156,7 +168,7 @@ export default function BeautyHomePage() {
     <div className="flex min-h-screen flex-col">
       <BeautySiteHeader />
       <BeautyBackgroundAnimation />
-      <ScrollToTop />
+      <ScrollToTop variant="beauty" />
 
       <main className="flex-1 relative isolate">
         {/* Hero Section */}
@@ -176,17 +188,17 @@ export default function BeautyHomePage() {
                 <p className="text-sm text-gray-500 max-w-lg mx-auto lg:mx-0 mb-8">
                   Web上で完結。登録不要で今すぐ診断できます。
                 </p>
-                <div className="flex flex-wrap justify-center lg:justify-start gap-3">
+                <div className="flex flex-nowrap justify-center lg:justify-start gap-2 sm:gap-3">
                   <Link
                     href="/beauty/diagnosis/pore-type"
-                    className="inline-flex items-center rounded-full bg-rose-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-rose-600 transition-colors"
+                    className="inline-flex items-center justify-center rounded-full bg-rose-500 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-rose-600 transition-colors sm:px-6 sm:py-3 sm:text-sm"
                   >
                     無料で診断する
-                    <ArrowRight className="h-4 w-4 ml-2" />
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-4 sm:w-4" />
                   </Link>
                   <Link
                     href="#flow"
-                    className="inline-flex items-center rounded-full border-2 border-rose-500 bg-white px-6 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
+                    className="inline-flex items-center justify-center rounded-full border-2 border-rose-500 bg-white px-4 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors sm:px-6 sm:py-3 sm:text-sm"
                   >
                     診断について見る
                   </Link>
@@ -221,7 +233,7 @@ export default function BeautyHomePage() {
         </section>
 
         {/* 美容診断ツール */}
-        <section id="tools" className="bg-white/60 backdrop-blur-[2px] py-12 md:py-16 scroll-mt-20">
+        <section id="tools" className="bg-rose-50/70 backdrop-blur-[2px] py-12 md:py-16 scroll-mt-20">
           <div className="container mx-auto px-4">
             <h2 className="text-center text-xl md:text-2xl font-bold text-gray-900 mb-2">
               美容診断ツール
@@ -242,8 +254,17 @@ export default function BeautyHomePage() {
                     href={item.available ? item.href : "#"}
                     className={`group relative flex flex-col rounded-2xl border border-gray-100 bg-white/95 p-5 md:p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg hover:border-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 ${disabledClasses}`}
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-500 mb-4 mx-auto transition-transform duration-200 group-hover:scale-110 group-hover:bg-rose-100">
-                      <Icon className="h-6 w-6" />
+                    <div className="relative mb-4 w-full overflow-hidden rounded-xl border border-rose-100/70 bg-gray-50 aspect-[4/3]">
+                      <Image
+                        src={item.imageSrc}
+                        alt={item.imageAlt}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 240px"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white/90 text-rose-500 shadow-sm ring-1 ring-rose-100">
+                        <Icon className="h-4 w-4" />
+                      </div>
                     </div>
                     <h3 className="font-bold text-gray-900 text-center mb-3">{item.title}</h3>
                     <p className="text-xs text-gray-600 text-center flex-1 leading-relaxed">
@@ -258,7 +279,7 @@ export default function BeautyHomePage() {
                       )}
                     </p>
                     {item.available ? (
-                      <span className="inline-flex items-center justify-center text-rose-600 text-xs font-semibold mt-4 transition-colors duration-200 group-hover:text-rose-700">
+                      <span className="mt-4 inline-flex items-center justify-center self-center rounded-full border border-rose-200 bg-rose-50 px-4 py-1.5 text-xs font-semibold text-rose-700 transition-all duration-200 group-hover:border-rose-300 group-hover:bg-rose-100 group-hover:text-rose-800">
                         診断する
                         <ArrowRight className="h-3 w-3 ml-1 transition-transform duration-200 group-hover:translate-x-0.5" />
                       </span>
@@ -309,36 +330,44 @@ export default function BeautyHomePage() {
         </section>
 
         {/* 診断結果に基づくおすすめ */}
-        <section className="bg-white/55 backdrop-blur-[2px] py-12 md:py-16">
+        <section className="bg-rose-50/65 backdrop-blur-[2px] py-12 md:py-16">
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
               <div className="flex-1">
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-                  診断結果に基づくおすすめ
+                  診断後のおすすめ導線
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                  私たちの診断は、単に肌質を出すだけではありません。何千もの成分の中からあなたのデータに最適なものをマッチングし、理想の製品をご提案します。
+                  診断でタイプを知ったら、次は「何をやめて、何を足すか」を具体化します。
+                  まずは解説記事で優先順位を整理し、次にアイテムカテゴリを絞って、最後に相性のよい候補を比較。
+                  遠回りしない導線で、買い物の失敗を減らす設計です。
                 </p>
                 <Link
-                  href="#"
+                  href="/beauty/articles"
                   className="inline-flex items-center text-rose-600 text-sm font-semibold hover:text-rose-700"
                 >
-                  商品カタログを見る
+                  解説記事から選び方を見る
                   <ArrowRight className="h-4 w-4 ml-1" />
                 </Link>
               </div>
               <div className="grid grid-cols-3 gap-4 w-full lg:max-w-md">
-                {[1, 2, 3].map((i) => (
+                {[
+                  { title: "1. 理由を知る", body: "タイプ別のNGと優先ケアを把握" },
+                  { title: "2. 候補を絞る", body: "成分・価格帯で迷いを減らす" },
+                  { title: "3. 比較して選ぶ", body: "自分に合う1つを決める" },
+                ].map((item) => (
                   <div
-                    key={i}
+                    key={item.title}
                     className="rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm aspect-[3/4] flex flex-col"
                   >
                     <div className="flex-1 bg-gray-100 flex items-center justify-center p-4">
-                      <div className="w-16 h-20 md:w-20 md:h-24 rounded-lg bg-gray-200" />
+                      <div className="h-20 w-16 rounded-lg bg-white/70 border border-gray-200 flex items-center justify-center text-[10px] text-gray-500 font-semibold md:h-24 md:w-20">
+                        STEP
+                      </div>
                     </div>
                     <div className="p-3 border-t border-gray-50">
-                      <div className="h-2 bg-gray-100 rounded w-3/4 mb-2" />
-                      <div className="h-2 bg-gray-100 rounded w-1/2" />
+                      <p className="text-[11px] font-semibold text-gray-900 leading-tight mb-1">{item.title}</p>
+                      <p className="text-[10px] text-gray-600 leading-relaxed">{item.body}</p>
                     </div>
                   </div>
                 ))}

@@ -36,10 +36,10 @@ export function BeautyBackgroundAnimation() {
   }, [])
 
   useEffect(() => {
-    const particleCount = Math.min(Math.floor(windowSize.width / 40), 30)
+    const particleCount = Math.min(Math.floor(windowSize.width / 32), 42)
 
     const newParticles: Particle[] = []
-    const colors = ["#ffe4e9", "#fecdd3", "#fda4af", "#fb7185", "#f97373"]
+    const colors = ["#fecdd3", "#fda4af", "#fb7185", "#f43f5e", "#e11d48"]
 
     for (let i = 0; i < particleCount; i++) {
       newParticles.push({
@@ -61,13 +61,14 @@ export function BeautyBackgroundAnimation() {
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
-          className="absolute rounded-full opacity-10"
+          className="absolute rounded-full"
           style={{
             left: particle.x,
             top: particle.y,
             width: particle.size,
             height: particle.size,
             backgroundColor: particle.color,
+            opacity: 0.16,
           }}
           animate={{
             x: [0, Math.random() * 100 - 50, Math.random() * 100 - 50, 0],

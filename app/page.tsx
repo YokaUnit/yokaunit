@@ -136,12 +136,55 @@ export default function Home() {
             </div>
           </section>
 
-          {/* YokaUnit Store セクション */}
-          <section className="mt-4 rounded-3xl border border-slate-200 bg-white/90 shadow-sm overflow-hidden">
+          {/* YokaUnit Movies セクション */}
+          <section className="mt-4 rounded-3xl border border-zinc-200 bg-white/90 shadow-sm overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-3">
-              <div className="relative h-32 md:h-full md:col-span-1 bg-gradient-to-br from-slate-50 via-white to-slate-100">
+              <div className="relative h-32 md:h-full md:col-span-1 bg-gradient-to-br from-zinc-100 via-white to-zinc-200">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative flex items-center gap-3 px-4 py-3 rounded-full bg-white/80 shadow-sm border border-slate-200">
+                  <div className="relative flex items-center gap-3 px-4 py-3 rounded-full bg-white/85 shadow-sm border border-zinc-200">
+                    <Image
+                      src="/movies/logo_movies.png"
+                      alt="YokaUnit Movies ロゴ"
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                    <span className="text-sm md:text-base font-semibold text-zinc-800 tracking-wide">
+                      YokaUnit Movies
+                    </span>
+                  </div>
+                </div>
+                <div className="pointer-events-none absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-zinc-300/50 blur-2xl" />
+              </div>
+              <div className="md:col-span-2 px-5 py-6 md:px-8 md:py-7 flex flex-col justify-center gap-3">
+                <p className="text-xs font-semibold tracking-[0.18em] text-zinc-400 uppercase">
+                  映画・ドラマ
+                </p>
+                <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                  配信と評価を、一覧でざっと見る。
+                </h2>
+                <p className="text-xs md:text-sm text-gray-700">
+                  Netflix や Prime など、観たい作品がどのサービスにあるかを並べて確認できます。
+                  Filmarks と映画.com の平均も併記（※デモ用の数値）。
+                </p>
+                <div className="pt-1">
+                  <a
+                    href="/movies"
+                    className="inline-flex items-center rounded-full bg-zinc-900 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-black transition-colors"
+                  >
+                    YokaUnit Movies を見る
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* YokaUnit Store セクション */}
+          <section className="mt-4 rounded-3xl border border-emerald-100 bg-white/90 shadow-sm overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              <div className="relative h-32 md:h-full md:col-span-1 bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative flex items-center gap-3 px-4 py-3 rounded-full bg-white/80 shadow-sm border border-emerald-100">
                     <Image
                       src="/Store/logo_store.png"
                       alt="YokaUnit Store ロゴ"
@@ -149,15 +192,15 @@ export default function Home() {
                       height={32}
                       className="rounded-full"
                     />
-                    <span className="text-sm md:text-base font-semibold text-slate-700 tracking-wide">
+                    <span className="text-sm md:text-base font-semibold text-emerald-800 tracking-wide">
                       YokaUnit Store
                     </span>
                   </div>
                 </div>
-                <div className="pointer-events-none absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-slate-200/50 blur-2xl" />
+                <div className="pointer-events-none absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-emerald-200/50 blur-2xl" />
               </div>
               <div className="md:col-span-2 px-5 py-6 md:px-8 md:py-7 flex flex-col justify-center gap-3">
-                <p className="text-xs font-semibold tracking-[0.18em] text-slate-500 uppercase">
+                <p className="text-xs font-semibold tracking-[0.18em] text-emerald-700 uppercase">
                   Store
                 </p>
                 <h2 className="text-lg md:text-xl font-bold text-gray-900">
@@ -170,7 +213,7 @@ export default function Home() {
                 <div className="pt-1">
                   <a
                     href="/store"
-                    className="inline-flex items-center rounded-full bg-slate-800 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-slate-900 transition-colors"
+                    className="inline-flex items-center rounded-full bg-emerald-800 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-emerald-900 transition-colors"
                   >
                     YokaUnit Store を見る
                   </a>

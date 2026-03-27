@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 
 export const metadata: Metadata = {
+  title: "YokaUnit Beauty｜無料の美容診断ツール（登録不要）",
   description:
     "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要で無料診断できます。",
   keywords: [
@@ -34,6 +35,17 @@ export const metadata: Metadata = {
     "無料診断ツール",
     "YokaUnit Beauty",
   ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: "診断で見つかる、あなたに合う美容。｜YokaUnit Beauty",
     description:
@@ -42,10 +54,10 @@ export const metadata: Metadata = {
     siteName: "YokaUnit Beauty",
     images: [
       {
-        url: "https://yokaunit.com/logo_heart.png",
-        width: 800,
-        height: 800,
-        alt: "YokaUnit Beauty ロゴ",
+        url: "https://yokaunit.com/beauty/hero-skin.png",
+        width: 1200,
+        height: 630,
+        alt: "YokaUnit Beauty｜美容診断ツール",
       },
     ],
     locale: "ja_JP",
@@ -56,7 +68,7 @@ export const metadata: Metadata = {
     title: "診断で見つかる、あなたに合う美容。｜YokaUnit Beauty",
     description:
       "肌質・毛穴・パーソナルカラーなどを診断し、あなたに合うスキンケアやコスメを見つけられる美容サイト。Web上で完結・登録不要。",
-    images: ["https://yokaunit.com/logo_heart.png"],
+    images: ["https://yokaunit.com/beauty/hero-skin.png"],
   },
   alternates: {
     canonical: "https://yokaunit.com/beauty",
@@ -164,11 +176,49 @@ const usageFlowSteps = [
 ]
 
 export default function BeautyHomePage() {
+  const webSiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "YokaUnit Beauty",
+    url: "https://yokaunit.com/beauty",
+    inLanguage: "ja-JP",
+    publisher: {
+      "@type": "Organization",
+      name: "YokaUnit Beauty",
+      logo: { "@type": "ImageObject", url: "https://yokaunit.com/logo_heart.png" },
+    },
+  }
+
+  const webPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "YokaUnit Beauty｜無料の美容診断ツール（登録不要）",
+    url: "https://yokaunit.com/beauty",
+    inLanguage: "ja-JP",
+    isPartOf: { "@type": "WebSite", name: "YokaUnit Beauty", url: "https://yokaunit.com/beauty" },
+    primaryImageOfPage: {
+      "@type": "ImageObject",
+      url: "https://yokaunit.com/beauty/hero-skin.png",
+    },
+    description: metadata.description,
+  }
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "YokaUnit Beauty", item: "https://yokaunit.com/beauty" },
+    ],
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <BeautySiteHeader />
       <BeautyBackgroundAnimation />
       <ScrollToTop variant="beauty" />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
       <main className="flex-1 relative isolate">
         {/* Hero Section */}

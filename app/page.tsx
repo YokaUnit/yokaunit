@@ -139,40 +139,38 @@ export default function Home() {
           {/* YokaUnit Movies セクション */}
           <section className="mt-4 rounded-3xl border border-zinc-200 bg-white/90 shadow-sm overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-3">
-              <div className="relative h-32 md:h-full md:col-span-1 bg-gradient-to-br from-zinc-100 via-white to-zinc-200">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative flex items-center gap-3 px-4 py-3 rounded-full bg-white/85 shadow-sm border border-zinc-200">
-                    <Image
-                      src="/movies/logo_movies.png"
-                      alt="YokaUnit Movies ロゴ"
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                    <span className="text-sm md:text-base font-semibold text-zinc-800 tracking-wide">
-                      YokaUnit Movies
-                    </span>
-                  </div>
+              <div className="relative min-h-[8rem] md:min-h-0 md:h-full md:col-span-1 bg-gradient-to-br from-zinc-100 via-white to-zinc-200">
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 py-6 md:py-8">
+                  <Image
+                    src="/movies/logo_movies.png"
+                    alt="YokaUnit Movies"
+                    width={80}
+                    height={80}
+                    className="h-16 w-16 object-contain sm:h-20 sm:w-20"
+                  />
+                  <span className="text-xs font-semibold tracking-wide text-zinc-600">
+                    YokaUnit Movies
+                  </span>
                 </div>
                 <div className="pointer-events-none absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-zinc-300/50 blur-2xl" />
               </div>
               <div className="md:col-span-2 px-5 py-6 md:px-8 md:py-7 flex flex-col justify-center gap-3">
-                <p className="text-xs font-semibold tracking-[0.18em] text-zinc-400 uppercase">
-                  映画・ドラマ
+                <p className="text-xs font-semibold tracking-[0.2em] text-zinc-500">
+                  配信検索
                 </p>
-                <h2 className="text-lg md:text-xl font-bold text-gray-900">
-                  配信と評価を、一覧でざっと見る。
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 leading-snug">
+                  映画をどのVODで見れるか、一発で検索
                 </h2>
-                <p className="text-xs md:text-sm text-gray-700">
-                  Netflix や Prime など、観たい作品がどのサービスにあるかを並べて確認できます。
-                  Filmarks と映画.com の平均も併記（※デモ用の数値）。
+                <p className="text-xs md:text-sm text-gray-700 leading-relaxed">
+                  Netflix・Prime・U-NEXT など、契約しているサービスに合わせて候補を絞り込み。Filmarks
+                  と映画.com の平均も一覧で確認できます（数値はデモ）。
                 </p>
                 <div className="pt-1">
                   <a
                     href="/movies"
                     className="inline-flex items-center rounded-full bg-zinc-900 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-sm hover:bg-black transition-colors"
                   >
-                    YokaUnit Movies を見る
+                    配信一覧を開く
                   </a>
                 </div>
               </div>

@@ -311,7 +311,7 @@ export function MoviesExperience() {
 
           <aside className={`${glassPanel} order-3 space-y-4 p-3 sm:p-4 lg:order-none`}>
             <div>
-              <h2 className="text-lg font-semibold text-white">今回の3本</h2>
+              <h2 className="text-lg font-semibold text-white">今日のおすすめ</h2>
               <p className="mt-1 text-xs text-slate-500">
                 タップすると右の概要が切り替わります
               </p>

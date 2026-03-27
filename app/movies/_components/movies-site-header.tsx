@@ -21,21 +21,22 @@ export function MoviesSiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#070a12]/85 backdrop-blur-xl">
       <div className="mx-auto max-w-[1700px] px-4 md:px-6 xl:px-8">
-        <div className="flex h-14 items-center justify-between">
-          <Link href="/movies" className="flex min-w-0 max-w-[calc(100%-3rem)] items-center gap-2 sm:gap-2.5">
+        <div className="flex min-h-16 items-center justify-between py-2">
+          <Link href="/movies" className="flex min-w-0 max-w-[calc(100%-3rem)] items-center gap-2.5 sm:gap-3">
             <Image
               src="/movies/logo_movies.png"
               alt="YokaUnit Movies"
-              width={32}
-              height={32}
-              className="h-8 w-8 shrink-0 rounded-lg border border-white/10 object-cover"
+              width={56}
+              height={56}
+              className="h-12 w-12 shrink-0 object-contain sm:h-14 sm:w-14"
+              priority
             />
             <div className="min-w-0 flex-1 leading-tight">
               <span className="block truncate text-[15px] font-bold text-white sm:text-[16px]">
                 YokaUnit Movies
               </span>
               <span className="hidden text-[11px] text-slate-400 sm:block">
-                配信と評価をひと画面に
+                映画をどのVODで見れるか一発で検索
               </span>
             </div>
           </Link>

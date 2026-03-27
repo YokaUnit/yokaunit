@@ -12,6 +12,7 @@ import { UpdatedToolsShowcase } from "@/components/updated-tools-showcase"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import { YokaUnitSeriesSection } from "@/components/yokaunit-series-section"
 import Image from "next/image"
 import type { Metadata } from "next"
 
@@ -93,23 +94,22 @@ export default function Home() {
             </div>
           </div>
 
+          <YokaUnitSeriesSection>
           {/* YokaUnit Beauty セクション */}
-          <section className="mt-4 rounded-3xl border border-rose-100 bg-white/90 shadow-sm overflow-hidden">
+          <section className="rounded-3xl border border-rose-100 bg-white/90 shadow-sm overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-3">
-              <div className="relative h-32 md:h-full md:col-span-1 bg-gradient-to-br from-rose-50 via-white to-rose-100">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative flex items-center gap-3 px-4 py-3 rounded-full bg-white/80 shadow-sm border border-rose-100">
-                    <Image
-                      src="/logo_heart.png"
-                      alt="YokaUnit Beauty ロゴ"
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                    <span className="text-sm md:text-base font-semibold text-rose-600 tracking-wide">
-                      YokaUnit Beauty
-                    </span>
-                  </div>
+              <div className="relative min-h-[8rem] md:min-h-0 md:h-full md:col-span-1 bg-gradient-to-br from-rose-50 via-white to-rose-100">
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 py-6 md:py-8">
+                  <Image
+                    src="/logo_heart.png"
+                    alt="YokaUnit Beauty"
+                    width={80}
+                    height={80}
+                    className="h-16 w-16 object-contain sm:h-20 sm:w-20"
+                  />
+                  <span className="text-sm font-semibold tracking-wide text-rose-700 sm:text-base">
+                    YokaUnit Beauty
+                  </span>
                 </div>
                 <div className="pointer-events-none absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-rose-100/60 blur-2xl" />
               </div>
@@ -118,7 +118,7 @@ export default function Home() {
                   Beauty Diagnosis
                 </p>
                 <h2 className="text-lg md:text-xl font-bold text-gray-900">
-                  診断から、あなた専用の美容が見つかる。
+                  診断から、あなた専用の美容が見つかる
                 </h2>
                 <p className="text-xs md:text-sm text-gray-700">
                   「YokaUnit Beauty」は、肌質・毛穴・パーソナルカラーなどの診断から、自分に本当に合う美容を見つけられる診断ファーストな美容サイトです。
@@ -137,7 +137,7 @@ export default function Home() {
           </section>
 
           {/* YokaUnit Movies セクション */}
-          <section className="mt-4 rounded-3xl border border-zinc-200 bg-white/90 shadow-sm overflow-hidden">
+          <section className="rounded-3xl border border-zinc-200 bg-white/90 shadow-sm overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-3">
               <div className="relative min-h-[8rem] md:min-h-0 md:h-full md:col-span-1 bg-gradient-to-br from-zinc-100 via-white to-zinc-200">
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 py-6 md:py-8">
@@ -148,7 +148,7 @@ export default function Home() {
                     height={80}
                     className="h-16 w-16 object-contain sm:h-20 sm:w-20"
                   />
-                  <span className="text-xs font-semibold tracking-wide text-zinc-600">
+                  <span className="text-sm font-semibold tracking-wide text-zinc-600 sm:text-base">
                     YokaUnit Movies
                   </span>
                 </div>
@@ -178,22 +178,20 @@ export default function Home() {
           </section>
 
           {/* YokaUnit Store セクション */}
-          <section className="mt-4 rounded-3xl border border-emerald-100 bg-white/90 shadow-sm overflow-hidden">
+          <section className="rounded-3xl border border-emerald-100 bg-white/90 shadow-sm overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-3">
-              <div className="relative h-32 md:h-full md:col-span-1 bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative flex items-center gap-3 px-4 py-3 rounded-full bg-white/80 shadow-sm border border-emerald-100">
-                    <Image
-                      src="/Store/logo_store.png"
-                      alt="YokaUnit Store ロゴ"
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                    <span className="text-sm md:text-base font-semibold text-emerald-800 tracking-wide">
-                      YokaUnit Store
-                    </span>
-                  </div>
+              <div className="relative min-h-[8rem] md:min-h-0 md:h-full md:col-span-1 bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 py-6 md:py-8">
+                  <Image
+                    src="/Store/logo_store.png"
+                    alt="YokaUnit Store"
+                    width={80}
+                    height={80}
+                    className="h-16 w-16 object-contain sm:h-20 sm:w-20"
+                  />
+                  <span className="text-sm font-semibold tracking-wide text-emerald-800 sm:text-base">
+                    YokaUnit Store
+                  </span>
                 </div>
                 <div className="pointer-events-none absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-emerald-200/50 blur-2xl" />
               </div>
@@ -202,7 +200,7 @@ export default function Home() {
                   Store
                 </p>
                 <h2 className="text-lg md:text-xl font-bold text-gray-900">
-                  湘南のお店が見つかる、地域特化のストア。
+                  湘南のお店が見つかる、地域特化のストア
                 </h2>
                 <p className="text-xs md:text-sm text-gray-700">
                   「YokaUnit Store」は、湘南エリアの飲食・美容・宿泊・遊びなどのお店を、
@@ -221,19 +219,20 @@ export default function Home() {
           </section>
 
           {/* YokaUnit Note セクション */}
-          <section className="mt-4 rounded-3xl border border-emerald-100 bg-white/90 shadow-sm overflow-hidden">
+          <section className="rounded-3xl border border-emerald-100 bg-white/90 shadow-sm overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-3">
-              <div className="relative h-32 md:h-full md:col-span-1 bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative flex items-center px-4 py-3 rounded-full bg-white/80 shadow-sm border border-emerald-100">
-                    <Image
-                      src="/note/logo_yokaunit+note.png"
-                      alt="YokaUnit Note ロゴ"
-                      width={132}
-                      height={36}
-                      className="h-9 w-auto"
-                    />
-                  </div>
+              <div className="relative min-h-[8rem] md:min-h-0 md:h-full md:col-span-1 bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 py-6 md:py-8">
+                  <Image
+                    src="/note/logo_yokaunit+note.png"
+                    alt="YokaUnit Note"
+                    width={220}
+                    height={60}
+                    className="h-11 w-auto max-w-[min(100%,220px)] object-contain object-center sm:h-12 sm:max-w-[240px]"
+                  />
+                  <span className="text-sm font-semibold tracking-wide text-emerald-800 sm:text-base">
+                    YokaUnit Note
+                  </span>
                 </div>
                 <div className="pointer-events-none absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-emerald-100/60 blur-2xl" />
               </div>
@@ -242,7 +241,7 @@ export default function Home() {
                   Note
                 </p>
                 <h2 className="text-lg md:text-xl font-bold text-gray-900">
-                  面倒を減らし、少ない時間で成果を出すための実践メディア。
+                  面倒を減らし、少ない時間で成果を出した方法まとめ
                 </h2>
                 <p className="text-xs md:text-sm text-gray-700">
                   「YokaUnit Note」は、一人開発者の日常と仕事で生まれる課題に向き合い、
@@ -259,6 +258,7 @@ export default function Home() {
               </div>
             </div>
           </section>
+          </YokaUnitSeriesSection>
         </div>
       </main>
       <ScrollToTop />

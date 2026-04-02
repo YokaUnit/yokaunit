@@ -156,14 +156,14 @@ export default function Home() {
               </div>
               <div className="md:col-span-2 px-5 py-6 md:px-8 md:py-7 flex flex-col justify-center gap-3">
                 <p className="text-xs font-semibold tracking-[0.2em] text-zinc-500">
-                  配信検索
+                  見るか迷うとき
                 </p>
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 leading-snug">
-                  映画をどのVODで見れるか、一発で検索
+                  何を観るか迷ったとき｜配信と評価で候補を絞る
                 </h2>
                 <p className="text-xs md:text-sm text-gray-700 leading-relaxed">
-                  Netflix・Prime・U-NEXT など、契約しているサービスに合わせて候補を絞り込み。Filmarks
-                  と映画.com の平均も一覧で確認できます（数値はデモ）。
+                  今夜・週末の一本が決まらないときに。契約中の Netflix・Prime・U-NEXT
+                  などで観れる作品を絞り、Filmarks と映画.com の平均も一覧（数値はデモ）。
                 </p>
                 <div className="pt-1">
                   <a

@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const moviesNavigationItems = [
-  { href: "/movies", title: "トップ" },
-  { href: "/movies#catalog", title: "作品一覧" },
-  { href: "/movies#services", title: "配信サービス" },
+  { href: "/movies#catalog", title: "配信検索" },
+  { href: "/movies#spotlight", title: "おすすめ診断" },
+  { href: "/movies#catalog", title: "ランキング" },
+  { href: "/note", title: "最新記事" },
 ]
 
 export function MoviesSiteHeader() {
@@ -19,7 +20,7 @@ export function MoviesSiteHeader() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#070a12]/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#06080f]/88 backdrop-blur-xl">
       <div className="mx-auto max-w-[1700px] px-4 md:px-6 xl:px-8">
         <div className="flex min-h-16 items-center justify-between py-2">
           <Link href="/movies" className="flex min-w-0 max-w-[calc(100%-3rem)] items-center gap-2.5 sm:gap-3">
@@ -36,7 +37,7 @@ export function MoviesSiteHeader() {
                 YokaUnit Movies
               </span>
               <span className="hidden text-[11px] text-slate-400 sm:block">
-                映画をどのVODで見れるか一発で検索
+                何を観るか迷ったとき｜配信と評価で候補を絞る
               </span>
             </div>
           </Link>
@@ -44,7 +45,7 @@ export function MoviesSiteHeader() {
           <nav className="hidden items-center space-x-4 md:flex">
             {moviesNavigationItems.map((item) => (
               <Link
-                key={item.href}
+                key={`${item.href}-${item.title}`}
                 href={item.href}
                 className={cn(
                   "group relative text-sm font-medium transition-colors",
@@ -83,12 +84,12 @@ export function MoviesSiteHeader() {
       </div>
 
       {isMenuOpen && (
-        <div className="border-t border-white/10 bg-[#070a12]/95 backdrop-blur-xl md:hidden">
+        <div className="border-t border-white/10 bg-[#06080f]/95 backdrop-blur-xl md:hidden">
           <div className="mx-auto max-w-[1700px] space-y-3 px-4 py-3">
             <nav className="flex flex-col space-y-2">
               {moviesNavigationItems.map((item) => (
                 <Link
-                  key={item.href}
+                  key={`${item.href}-${item.title}`}
                   href={item.href}
                   className="py-1.5 text-sm text-slate-100 transition-colors hover:text-amber-200"
                   onClick={() => setIsMenuOpen(false)}

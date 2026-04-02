@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og"
 export const runtime = "edge"
 
 export const alt =
-  "YokaUnit Movies｜映画をどのVODで見れるか一発で検索"
+  "YokaUnit Movies｜何を観るか迷ったとき｜配信と評価で候補を絞る"
 
 export const size = { width: 1200, height: 630 }
 
@@ -78,14 +78,26 @@ export default async function Image() {
         <div
           style={{
             marginTop: 28,
-            fontSize: 30,
-            color: "#cbd5e1",
+            fontSize: 32,
+            color: "#e2e8f0",
+            lineHeight: 1.4,
+            maxWidth: 920,
+            fontFamily,
+          }}
+        >
+          何を観るか迷ったとき
+        </div>
+        <div
+          style={{
+            marginTop: 16,
+            fontSize: 26,
+            color: "#94a3b8",
             lineHeight: 1.45,
             maxWidth: 920,
             fontFamily,
           }}
         >
-          映画をどのVODで見れるか一発で検索
+          契約中のVODと評価で、候補を絞る（デモ）
         </div>
         <div
           style={{

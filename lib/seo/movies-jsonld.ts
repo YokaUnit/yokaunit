@@ -10,9 +10,11 @@ export function generateMoviesPageJsonLd() {
         "@type": "WebPage",
         "@id": `${MOVIES_URL}#webpage`,
         url: MOVIES_URL,
-        name: "YokaUnit Movies | 映画をどのVODで見れるか一発で検索",
+        name: "YokaUnit Movies | 何を観るか迷ったとき｜配信と評価で候補を絞る",
         description:
-          "契約中のVODに合わせて映画・ドラマを絞り込み。Filmarks・映画.com の評価も一覧で確認できます（掲載の数値はデモ）。",
+          "今夜・週末に何を観るか決まらない人向け。契約中のVODで観れる映画・ドラマを絞り込み、Filmarks・映画.com の平均も一覧できます。見るか迷うときの候補を減らすためのデモ（数値はデモ）。",
+        keywords:
+          "何を観るか迷う,映画 何見るか迷う,映画 決められない,次に観る作品,VOD,Filmarks,映画.com",
         inLanguage: "ja-JP",
         primaryImageOfPage: {
           "@type": "ImageObject",

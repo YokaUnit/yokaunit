@@ -6,13 +6,13 @@ import { Clapperboard, Home, Mail, FileText } from "lucide-react"
 
 export function MoviesSiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-[#05070d]">
+    <footer className="border-t border-white/10 bg-[#06080f]">
       <div className="mx-auto max-w-[1700px] px-3 py-8 sm:px-4 sm:py-10 md:px-6 xl:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
           <div className="space-y-4">
             <Link
               href="/movies"
-              className="group flex items-start gap-3 rounded-lg outline-none ring-offset-2 ring-offset-[#05070d] focus-visible:ring-2 focus-visible:ring-amber-400/60"
+              className="group flex items-start gap-3 rounded-lg outline-none ring-offset-2 ring-offset-[#06080f] focus-visible:ring-2 focus-visible:ring-amber-400/60"
             >
               <Image
                 src="/movies/logo_movies.png"
@@ -26,12 +26,12 @@ export function MoviesSiteFooter() {
                   YokaUnit Movies
                 </p>
                 <p className="mt-1 text-xs text-slate-400">
-                  映画をどのVODで見れるか一発で検索
+                  何を観るか迷ったとき｜配信と評価で候補を絞る
                 </p>
               </div>
             </Link>
             <p className="max-w-md text-sm leading-relaxed text-slate-400">
-              Netflix・Prime・U-NEXT など、契約しているサービスに合わせて候補を絞り込みます。Filmarks・映画.com
+              何を観るか迷ったときに、契約中のVODで観れる作品を絞り込み。Filmarks・映画.com
               の平均も一覧できます。掲載の評価はデモです。
             </p>
           </div>

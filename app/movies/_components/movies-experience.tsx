@@ -6,13 +6,14 @@ import { ChevronDown, Tv } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { contentItems, services, spotlightPicks } from "../_data/mock-data"
 import { recommendLabel } from "../_lib/recommend-label"
+import { moviesGlassPanel } from "../_lib/movies-theme"
 import { MoviesBackground } from "./movies-background"
+import { MoviesHero } from "./movies-hero"
 import { MoviesSiteFooter } from "./movies-site-footer"
 import { MoviesSiteHeader } from "./movies-site-header"
 import { IosStyleSwitch } from "./ios-style-switch"
 
-const glassPanel =
-  "rounded-2xl border border-white/10 bg-slate-950/70 backdrop-blur-xl"
+const glassPanel = moviesGlassPanel
 const shell =
   "relative z-10 mx-auto flex min-h-screen w-full max-w-[1700px] flex-col px-3 py-4 sm:px-4 sm:py-5 md:px-6 md:py-6 xl:px-8"
 const scrollTabs =
@@ -69,33 +70,51 @@ export function MoviesExperience() {
     )
   }
 
-  return (
-    <div className="relative min-h-screen overflow-hidden bg-[#06080f] text-white">
-      <MoviesBackground />
+  function scrollToId(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
 
+  function handleHeroSearch() {
+    scrollToId("catalog")
+  }
+
+  return (
+    <div className="relative min-h-screen bg-[#06080f] text-white">
       <MoviesSiteHeader />
 
-      <main className={shell}>
-        <section className={`${glassPanel} mb-4 p-3 sm:mb-5 sm:p-4 md:p-6`}>
-          <p className="mb-2 text-xs font-medium tracking-[0.22em] text-slate-400">
-            タイトルで探す
-          </p>
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-3">
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="作品名で検索"
-              className="min-h-12 min-w-0 flex-1 rounded-xl border border-white/15 bg-slate-900/70 px-3.5 text-base text-white placeholder:text-slate-500 outline-none transition focus:border-amber-300/60 focus:ring-1 focus:ring-amber-300/30 sm:px-4 sm:text-sm"
-            />
-            <button
-              type="button"
-              className="inline-flex h-12 shrink-0 touch-manipulation items-center justify-center whitespace-nowrap rounded-xl bg-amber-300 px-5 text-sm font-semibold text-black shadow-sm shadow-amber-900/20 transition hover:bg-amber-200 active:bg-amber-400 sm:min-w-[7.5rem] sm:px-6"
-            >
-              検索する
-            </button>
-          </div>
-        </section>
+      <MoviesHero
+        query={query}
+        onQueryChange={setQuery}
+        onSearch={handleHeroSearch}
+        onTagPopular={() => {
+          setMinFilmarks(4.2)
+          setMinEigaCom(4.0)
+          setActiveTab("all")
+          scrollToId("catalog")
+        }}
+        onTagNetflix={() => {
+          setSelectedServices(["netflix"])
+          scrollToId("catalog")
+        }}
+        onTagAction={() => {
+          setActiveTab("movie")
+          setQuery("")
+          scrollToId("catalog")
+        }}
+        onTagRomance={() => {
+          setActiveTab("movie")
+          setQuery("")
+          scrollToId("catalog")
+        }}
+        onTagArticles={() => {
+          window.location.href = "/note"
+        }}
+      />
 
+      <div className="relative overflow-hidden">
+        <MoviesBackground />
+
+        <main className={shell}>
         <section className="grid flex-1 grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-[280px_1fr_340px] 2xl:grid-cols-[320px_1fr_390px]">
           <aside
             id="services"
@@ -310,7 +329,7 @@ export function MoviesExperience() {
           </div>
 
           <aside className={`${glassPanel} order-3 space-y-4 p-3 sm:p-4 lg:order-none`}>
-            <div>
+            <div id="spotlight">
               <h2 className="text-lg font-semibold text-white">今日のおすすめ</h2>
               <p className="mt-1 text-xs text-slate-500">
                 タップすると右の概要が切り替わります
@@ -388,7 +407,7 @@ export function MoviesExperience() {
                   <div className="space-y-2">
                     <button
                       type="button"
-                      className="w-full rounded-lg bg-emerald-500 py-2.5 text-sm font-semibold text-black shadow-sm shadow-emerald-950/40 transition hover:bg-emerald-400"
+                      className="w-full rounded-lg bg-amber-300 py-2.5 text-sm font-semibold text-black shadow-sm shadow-amber-900/30 transition hover:bg-amber-200"
                     >
                       配信を開く（準備中）
                     </button>
@@ -418,6 +437,7 @@ export function MoviesExperience() {
 
       <div className="relative z-10">
         <MoviesSiteFooter />
+      </div>
       </div>
     </div>
   )

@@ -4,10 +4,10 @@ import { StructuredDataScriptServer } from "@/components/seo/structured-data-scr
 import { generateMoviesPageJsonLd } from "@/lib/seo/movies-jsonld"
 
 const pageTitle =
-  "YokaUnit Movies | 映画をどのVODで見れるか一発で検索"
+  "YokaUnit Movies | 何を観るか迷ったとき｜配信と評価で候補を絞る"
 
 const description =
-  "契約中のVODに合わせて映画・ドラマを絞り込み。Filmarks・映画.com の評価も一覧で確認。Netflix・Prime Video・U-NEXT・Hulu・Disney+ などに対応（掲載の数値はデモ）。"
+  "今夜・週末に何を観るか決まらないとき向け。Netflix・Prime・U-NEXT など契約中のVODで観れる映画・ドラマを絞り込み、Filmarks・映画.com の平均も一覧。見るか迷ってる人が候補を減らすためのデモです（数値はデモ）。"
 
 export const metadata: Metadata = {
   title: {
@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   description,
   keywords: [
     "YokaUnit Movies",
+    "何を観るか迷う",
+    "映画 何見るか迷う",
+    "ドラマ おすすめ 迷う",
+    "映画 決められない",
+    "次に観る作品 決めたい",
     "映画 配信",
     "ドラマ 配信",
     "Netflix",
@@ -27,7 +32,8 @@ export const metadata: Metadata = {
     "映画.com",
     "VOD",
     "VOD 検索",
-    "サブスク 映画",
+    "サブスク 何見る",
+    "映画 今夜 何見る",
   ],
   authors: [{ name: "YokaUnit", url: "https://yokaunit.com" }],
   alternates: {
@@ -43,7 +49,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YokaUnit Movies — 映画・ドラマの配信と評価一覧",
+    title: pageTitle,
     description,
     creator: "@yokaunit",
     site: "@yokaunit",

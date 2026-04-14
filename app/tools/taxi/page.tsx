@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import { generateToolMetadata } from "@/lib/tool-metadata"
 import { getToolImageUrl } from "@/lib/tool-structured-data"
 import { getToolBySlug } from "@/lib/actions/tools"
@@ -124,6 +125,30 @@ export default async function TaxiFareToolPage() {
     image: [imageUrl],
   }
 
+  const howToJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "タクシー運賃をスマホで試算する",
+    description: "料金エリアの選択からルート取得・概算表示までの流れです。",
+    step: [
+      {
+        "@type": "HowToStep",
+        name: "料金エリアを選ぶ",
+        text: "利用する都市・地域の料金プリセットを選びます。",
+      },
+      {
+        "@type": "HowToStep",
+        name: "乗車地と目的地を入力する",
+        text: "地名・住所を入力するか、現在地取得やGPS座標に対応します。",
+      },
+      {
+        "@type": "HowToStep",
+        name: "オプションを調整して計算する",
+        text: "迎車・予約・有料道路・深夜割増などを選び、料金の目安を表示します。",
+      },
+    ],
+  }
+
   return (
     <>
       <Script id="taxi-faq-jsonld" type="application/ld+json" strategy="afterInteractive">
@@ -131,6 +156,9 @@ export default async function TaxiFareToolPage() {
       </Script>
       <Script id="taxi-app-jsonld" type="application/ld+json" strategy="afterInteractive">
         {JSON.stringify(appJsonLd)}
+      </Script>
+      <Script id="taxi-howto-jsonld" type="application/ld+json" strategy="afterInteractive">
+        {JSON.stringify(howToJsonLd)}
       </Script>
       <ViewCounter toolSlug="taxi" />
       <SiteHeader />
@@ -198,7 +226,16 @@ export default async function TaxiFareToolPage() {
           </section>
 
           <div data-id="taxi-calculator-root" id="taxi-calculator">
-            <TaxiClient />
+            <Suspense
+              fallback={
+                <div className="mx-auto max-w-5xl animate-pulse space-y-4 px-2 py-8">
+                  <div className="h-40 rounded-3xl bg-slate-200/80" />
+                  <div className="h-64 rounded-3xl bg-slate-100/90" />
+                </div>
+              }
+            >
+              <TaxiClient />
+            </Suspense>
           </div>
           </div>
         </div>

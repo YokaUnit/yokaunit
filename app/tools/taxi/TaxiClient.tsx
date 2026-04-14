@@ -1,6 +1,8 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { toast } from "sonner"
 import {
   calculateTaxiFare,
   type TaxiFareCalculationInput,
@@ -18,19 +20,26 @@ import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { useMediaQuery } from "@/hooks/use-mobile"
+import { cn } from "@/lib/utils"
+import { buildTaxiUrl, parseTaxiUrl } from "./lib/taxi-url-sync"
 
 import {
   ArrowLeftRight,
   BarChart3,
   Car,
+  ChevronDown,
   Clock,
   Coins,
+  Copy,
   Gauge,
   Loader2,
   LocateFixed,
   MapPin,
   Navigation,
   Receipt,
+  Share2,
   Sparkles,
   Ticket,
   Users,
@@ -108,6 +117,14 @@ export default function TaxiClient() {
   })
   const [roundingUnit, setRoundingUnit] = useState(10)
   const [passengers, setPassengers] = useState(1)
+  const [mobileOptionsOpen, setMobileOptionsOpen] = useState(false)
+
+  const isMobile = useMediaQuery("(max-width: 767px)")
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const urlHydrated = useRef(false)
+  const resultAnchorRef = useRef<HTMLDivElement>(null)
 
   const activePreset =
     selectedPresetId === "custom"
@@ -327,6 +344,25 @@ export default function TaxiClient() {
     }
 
     setHasCalculated(true)
+
+    const qs = buildTaxiUrl({
+      presetId: selectedPresetId,
+      origin: originQuery,
+      destination: destinationQuery,
+      useTollRoads,
+      isLateNight,
+      usePickup,
+      useReservation,
+    })
+    router.replace(`${pathname}?${qs}`, { scroll: false })
+
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      window.requestAnimationFrame(() => {
+        setTimeout(() => {
+          resultAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+        }, 80)
+      })
+    }
   }
 
   const handleToggleToll = (checked: boolean) => {
@@ -349,40 +385,40 @@ export default function TaxiClient() {
     setHasCalculated(false)
   }
 
-const handleToggleReservation = (checked: boolean) => {
-  setUseReservation(checked)
-  setExtras((prev) => ({
-    ...prev,
-    reservationFee:
-      checked && activePreset?.reservationFeeRange
-        ? Math.round((activePreset.reservationFeeRange[0] + activePreset.reservationFeeRange[1]) / 2)
-        : checked
-          ? prev.reservationFee || 300
-          : 0,
-  }))
-  setHasCalculated(false)
-}
-
-useEffect(() => {
-  if (usePickup) {
-    setExtras((prev) => ({
-      ...prev,
-      pickupFee:
-        activePreset?.pickupFeeRange
-          ? Math.round((activePreset.pickupFeeRange[0] + activePreset.pickupFeeRange[1]) / 2)
-          : prev.pickupFee || 400,
-    }))
-  }
-  if (useReservation) {
+  const handleToggleReservation = (checked: boolean) => {
+    setUseReservation(checked)
     setExtras((prev) => ({
       ...prev,
       reservationFee:
-        activePreset?.reservationFeeRange
+        checked && activePreset?.reservationFeeRange
           ? Math.round((activePreset.reservationFeeRange[0] + activePreset.reservationFeeRange[1]) / 2)
-          : prev.reservationFee || 300,
+          : checked
+            ? prev.reservationFee || 300
+            : 0,
     }))
+    setHasCalculated(false)
   }
-}, [activePreset, usePickup, useReservation])
+
+  useEffect(() => {
+    if (usePickup) {
+      setExtras((prev) => ({
+        ...prev,
+        pickupFee:
+          activePreset?.pickupFeeRange
+            ? Math.round((activePreset.pickupFeeRange[0] + activePreset.pickupFeeRange[1]) / 2)
+            : prev.pickupFee || 400,
+      }))
+    }
+    if (useReservation) {
+      setExtras((prev) => ({
+        ...prev,
+        reservationFee:
+          activePreset?.reservationFeeRange
+            ? Math.round((activePreset.reservationFeeRange[0] + activePreset.reservationFeeRange[1]) / 2)
+            : prev.reservationFee || 300,
+      }))
+    }
+  }, [activePreset, usePickup, useReservation])
 
   const resetAll = () => {
     setOriginMode("manual")
@@ -415,22 +451,162 @@ useEffect(() => {
     setRoundingUnit(10)
     setPassengers(1)
     setCustomPreset({ ...DEFAULT_CUSTOM_PRESET })
+    setSelectedPresetId(TAXI_FARE_PRESETS[0]?.id ?? "tokyo")
     setHasCalculated(false)
+    router.replace(pathname, { scroll: false })
+  }
+
+  useEffect(() => {
+    if (urlHydrated.current) return
+    const parsed = parseTaxiUrl(searchParams)
+    urlHydrated.current = true
+    if (!parsed) return
+    if (
+      parsed.presetId &&
+      (TAXI_FARE_PRESETS.some((x) => x.id === parsed.presetId) || parsed.presetId === "custom")
+    ) {
+      setSelectedPresetId(parsed.presetId)
+    }
+    if (parsed.origin !== undefined) setOriginQuery(parsed.origin)
+    if (parsed.destination !== undefined) setDestinationQuery(parsed.destination)
+    if (parsed.useTollRoads !== undefined) {
+      setUseTollRoads(parsed.useTollRoads)
+      setRouteInfo(null)
+    }
+    if (parsed.isLateNight !== undefined) setIsLateNight(parsed.isLateNight)
+    if (parsed.usePickup !== undefined) setUsePickup(parsed.usePickup)
+    if (parsed.useReservation !== undefined) setUseReservation(parsed.useReservation)
+  }, [searchParams])
+
+  const shareUrl = useMemo(() => {
+    if (typeof window === "undefined") return ""
+    const qs = buildTaxiUrl({
+      presetId: selectedPresetId,
+      origin: originQuery,
+      destination: destinationQuery,
+      useTollRoads,
+      isLateNight,
+      usePickup,
+      useReservation,
+    })
+    return `${window.location.origin}${pathname}?${qs}`
+  }, [
+    selectedPresetId,
+    originQuery,
+    destinationQuery,
+    useTollRoads,
+    isLateNight,
+    usePickup,
+    useReservation,
+    pathname,
+  ])
+
+  const copyShareSummary = async () => {
+    const routeLine =
+      routeInfo && routeInfo.originName && routeInfo.destinationName
+        ? `${routeInfo.originName} → ${routeInfo.destinationName}（約 ${routeInfo.distanceKm.toFixed(1)}km）`
+        : `距離 ${distanceKm.toFixed(1)}km ／ 所要 ${rideMinutes}分`
+    const text = [
+      "【YokaUnit タクシー運賃の目安】",
+      `${formatCurrency(breakdown.totalAfterRounding)}（${passengers}人・${activePreset.label}）`,
+      routeLine,
+      "※渋滞・ルート・事業者により実額と異なります。",
+      shareUrl,
+    ].join("\n")
+    try {
+      await navigator.clipboard.writeText(text)
+      toast.success("試算結果をコピーしました")
+    } catch {
+      toast.error("コピーに失敗しました")
+    }
+  }
+
+  const copyUrlOnly = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      toast.success("共有用URLをコピーしました")
+    } catch {
+      toast.error("コピーに失敗しました")
+    }
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-1 sm:px-0">
-      <Card className="border border-blue-100 shadow-lg">
-        <CardHeader className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <Car className="h-6 w-6 text-blue-500" />
-            タクシー運賃計算ツール
-          </CardTitle>
-          <CardDescription>
-            乗車地と目的地を入力して「検索」→「タクシー料金を計算する」のシンプルステップ。必要な方だけ詳細設定を開いて調整できます。
-          </CardDescription>
+    <div
+      className={cn(
+        "mx-auto flex w-full max-w-5xl flex-col gap-6 px-1 sm:px-0",
+        isMobile && "pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))]",
+      )}
+    >
+      {/* モバイル: 最上部に信頼・注意（指で触れる第一画面） */}
+      <div
+        className={cn(
+          "rounded-2xl border border-amber-200/90 bg-amber-50/95 px-4 py-3 text-xs leading-relaxed text-amber-950 shadow-sm md:hidden",
+        )}
+      >
+        <p className="font-semibold text-amber-900">表示はあくまで目安です</p>
+        <p className="mt-1 text-amber-900/90">
+          ルートは地図の推計値で、リアルタイム渋滞や事業者・メーター実走行とは一致しない場合があります。確定運賃は配車時にご確認ください。
+        </p>
+      </div>
+
+      <Card className="border border-blue-100 shadow-lg md:rounded-3xl">
+        <CardHeader
+          className={cn(
+            "space-y-2 px-4 pt-5 sm:px-6 sm:pt-6",
+            isMobile && "border-b border-blue-100/80 bg-gradient-to-br from-white to-blue-50/50 pb-4",
+          )}
+        >
+          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+            <div>
+              <CardTitle
+                className={cn("flex items-center gap-2 text-slate-900", isMobile ? "text-xl" : "text-2xl")}
+              >
+                <Car className={cn("text-blue-500", isMobile ? "h-6 w-6" : "h-6 w-6")} />
+                タクシー運賃計算
+              </CardTitle>
+              <CardDescription className={cn(isMobile ? "mt-2 text-sm leading-relaxed" : "mt-1")}>
+                {isMobile
+                  ? "①エリア → ②乗車地・行き先 → ③計算。オプションは折りたたみできます。"
+                  : "乗車地と目的地を入力してルート取得→料金試算。必要な方だけ詳細設定を開いて調整できます。"}
+              </CardDescription>
+            </div>
+            {!isMobile && (
+              <div className="max-w-md rounded-2xl border border-slate-200 bg-slate-50/90 px-4 py-2 text-[11px] leading-relaxed text-slate-600">
+                ルート・料金はシミュレーションの参考値です。公共ルートAPIの推計のため、現場のメーター・確定運賿とは異なることがあります。
+              </div>
+            )}
+          </div>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className={cn("space-y-6", isMobile ? "px-3 pb-4 sm:px-6" : "")}>
+          {/* 料金エリア（プリセット）— ユーザー需要で最優先に配置 */}
+          <section className="space-y-2">
+            <Label className="text-sm font-semibold text-slate-800">料金エリア</Label>
+            <Select
+              value={selectedPresetId}
+              onValueChange={(value) => {
+                setSelectedPresetId(value)
+                setHasCalculated(false)
+              }}
+            >
+              <SelectTrigger
+                className={cn("w-full border-blue-200 bg-white text-left font-medium", isMobile ? "h-14 text-base" : "h-12")}
+              >
+                <SelectValue placeholder="地域を選択" />
+              </SelectTrigger>
+              <SelectContent>
+                {TAXI_FARE_PRESETS.map((preset) => (
+                  <SelectItem key={preset.id} value={preset.id} className="text-left">
+                    {preset.label}
+                  </SelectItem>
+                ))}
+                <SelectItem value="custom">カスタム料金を入力</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-[11px] leading-relaxed text-slate-500">
+              国交省・運輸局の届出に基づく代表モデルです。料金改定時期は事業者・地域ごとに異なります。
+            </p>
+          </section>
+
           <section className="space-y-4">
             <div className="space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -533,69 +709,116 @@ useEffect(() => {
               </div>
             )}
 
-            <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 space-y-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">検索条件</p>
-                <p className="text-[11px] text-slate-500">
-                  距離と料金に含めたいオプションを選択してください。
-                </p>
+            {isMobile ? (
+              <Collapsible open={mobileOptionsOpen} onOpenChange={setMobileOptionsOpen}>
+                <CollapsibleTrigger className="flex w-full min-h-[52px] items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-semibold text-slate-800 shadow-sm active:bg-slate-50">
+                  <span>オプション（迎車・予約・高速・深夜）</span>
+                  <ChevronDown
+                    className={cn("h-5 w-5 shrink-0 text-slate-500 transition-transform", mobileOptionsOpen && "rotate-180")}
+                  />
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-4 pt-3">
+                  <p className="text-[11px] text-slate-500">距離と料金に含めたい条件を選べます。</p>
+                  <div className="grid gap-3">
+                    <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-3 shadow-sm">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-sm font-medium text-slate-800">迎車</p>
+                        <Switch checked={usePickup} onCheckedChange={handleTogglePickup} />
+                      </div>
+                      <p className="mt-1 text-[11px] text-slate-500">迎車料金の目安を加算</p>
+                    </div>
+                    <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3 shadow-sm">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-sm font-medium text-slate-800">予約・指名</p>
+                        <Switch checked={useReservation} onCheckedChange={handleToggleReservation} />
+                      </div>
+                      <p className="mt-1 text-[11px] text-slate-500">予約料の目安を加算</p>
+                    </div>
+                    <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3 shadow-sm">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-sm font-medium text-slate-800">有料道路ルート</p>
+                        <Switch checked={useTollRoads} onCheckedChange={handleToggleToll} />
+                      </div>
+                      <p className="mt-1 text-[11px] text-slate-500">高速優先で距離を算出</p>
+                    </div>
+                    <div className="rounded-xl border border-amber-100 bg-amber-50/60 p-3 shadow-sm">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-sm font-medium text-slate-800">深夜割増</p>
+                        <Switch checked={isLateNight} onCheckedChange={setIsLateNight} />
+                      </div>
+                      <p className="mt-1 text-[11px] text-slate-500">22:00〜翌5:00の目安</p>
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            ) : (
+              <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 space-y-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">検索条件</p>
+                  <p className="text-[11px] text-slate-500">
+                    距離と料金に含めたいオプションを選択してください。
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-3 shadow-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-medium text-slate-800">迎車サービス（送迎）</p>
+                      <Switch checked={usePickup} onCheckedChange={handleTogglePickup} />
+                    </div>
+                    <p className="mt-1 text-[11px] text-slate-500">
+                      迎車料金の目安（プリセット値または400円）を自動で加算します。
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3 shadow-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-medium text-slate-800">予約料（アプリ指名など）</p>
+                      <Switch checked={useReservation} onCheckedChange={handleToggleReservation} />
+                    </div>
+                    <p className="mt-1 text-[11px] text-slate-500">
+                      予約・指名料の目安（プリセット値または300円）を自動で加算します。
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3 shadow-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-medium text-slate-800">有料道路を使用する ※1</p>
+                      <Switch checked={useTollRoads} onCheckedChange={handleToggleToll} />
+                    </div>
+                    <p className="mt-1 text-[11px] text-slate-500">
+                      距離計算では高速道路を含む推奨ルートを優先します。
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-amber-100 bg-amber-50/60 p-3 shadow-sm sm:col-span-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-medium text-slate-800">深夜割増 (22:00〜翌5:00) ※2</p>
+                      <Switch checked={isLateNight} onCheckedChange={setIsLateNight} />
+                    </div>
+                    <p className="mt-1 text-[11px] text-slate-500">
+                      割増は計算結果に自動反映されます。地域により適用時間が異なる場合があります。
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-3 shadow-sm">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-medium text-slate-800">迎車サービス（送迎）</p>
-                    <Switch checked={usePickup} onCheckedChange={handleTogglePickup} />
-                  </div>
-                  <p className="mt-1 text-[11px] text-slate-500">
-                    迎車料金の目安（プリセット値または400円）を自動で加算します。
-                  </p>
-                </div>
-                <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3 shadow-sm">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-medium text-slate-800">予約料（アプリ指名など）</p>
-                    <Switch checked={useReservation} onCheckedChange={handleToggleReservation} />
-                  </div>
-                  <p className="mt-1 text-[11px] text-slate-500">
-                    予約・指名料の目安（プリセット値または300円）を自動で加算します。
-                  </p>
-                </div>
-                <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3 shadow-sm">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-medium text-slate-800">有料道路を使用する ※1</p>
-                    <Switch checked={useTollRoads} onCheckedChange={handleToggleToll} />
-                  </div>
-                  <p className="mt-1 text-[11px] text-slate-500">
-                    距離計算では高速道路を含む推奨ルートを優先します。
-                  </p>
-                </div>
-                <div className="rounded-xl border border-amber-100 bg-amber-50/60 p-3 shadow-sm sm:col-span-2">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-medium text-slate-800">深夜割増 (22:00〜翌5:00) ※2</p>
-                    <Switch checked={isLateNight} onCheckedChange={setIsLateNight} />
-                  </div>
-                  <p className="mt-1 text-[11px] text-slate-500">
-                    割増は計算結果に自動反映されます。地域により適用時間が異なる場合があります。
-                  </p>
-                </div>
-              </div>
-            </div>
+            )}
 
-            <div className="grid gap-3 md:grid-cols-[1fr_auto]">
+            <div
+              className={cn("grid gap-3 md:grid-cols-[1fr_auto]", isMobile && "grid-cols-2 gap-4")}
+            >
               <div className="space-y-2">
                 <Label className="text-xs font-semibold uppercase tracking-wide text-slate-600">乗車人数</Label>
                 <Input
                   type="number"
                   min={1}
                   max={6}
+                  inputMode="numeric"
                   value={passengers}
                   onChange={(event) => setPassengers(clampNumber(Number(event.target.value), 1, 6))}
-                  className="h-12 text-lg"
+                  className={cn("text-lg", isMobile ? "h-14 min-h-[56px]" : "h-12")}
                 />
               </div>
               <div className="space-y-2">
                 <Label className="text-xs font-semibold uppercase tracking-wide text-slate-600">端数処理</Label>
                 <Select value={roundingUnit.toString()} onValueChange={(value) => setRoundingUnit(Number(value))}>
-                  <SelectTrigger className="h-12">
+                  <SelectTrigger className={cn(isMobile ? "h-14 min-h-[56px] text-base" : "h-12")}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -607,7 +830,13 @@ useEffect(() => {
               </div>
             </div>
 
-            <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:gap-3">
+            {isMobile && (
+              <p className="text-center text-[11px] text-slate-500">
+                下の固定ボタンから「ルート取得 → 料金計算」できます（親指が届く位置）
+              </p>
+            )}
+
+            <div className="hidden flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:gap-3 md:flex">
               <Button
                 className="bg-blue-600 text-white hover:bg-blue-700"
                 onClick={handleCalculate}
@@ -869,23 +1098,56 @@ useEffect(() => {
       </Card>
 
       {hasCalculated && (
-        <div className="space-y-6">
+        <div ref={resultAnchorRef} id="taxi-fare-result" className="space-y-6 scroll-mt-[calc(5rem+env(safe-area-inset-bottom))]">
           <Card className="border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-blue-100 shadow-xl">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between text-2xl text-blue-900">
-                <span>タクシー料金の目安</span>
-                <Badge variant="outline" className="bg-white/70 border-blue-200 text-blue-700">
-                  計算済み
-                </Badge>
-              </CardTitle>
-              <CardDescription>
-                入力条件に基づく概算料金です。実際の請求額とは異なる場合があります。
-              </CardDescription>
+            <CardHeader className="space-y-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="flex flex-wrap items-center gap-2 text-xl text-blue-900 sm:text-2xl">
+                    <span>タクシー料金の目安</span>
+                    <Badge variant="outline" className="bg-white/70 border-blue-200 text-blue-700">
+                      計算済み
+                    </Badge>
+                  </CardTitle>
+                  <CardDescription className="mt-2">
+                    入力条件に基づく概算料金です。実際の請求額とは異なる場合があります。
+                  </CardDescription>
+                </div>
+                <div className="flex w-full flex-shrink-0 flex-wrap gap-2 sm:w-auto sm:justify-end">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="min-h-[44px] flex-1 gap-2 sm:flex-initial"
+                    onClick={copyShareSummary}
+                  >
+                    <Copy className="h-4 w-4" />
+                    結果をコピー
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="min-h-[44px] flex-1 gap-2 sm:flex-initial"
+                    onClick={copyUrlOnly}
+                  >
+                    <Share2 className="h-4 w-4" />
+                    共有URL
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="text-center space-y-1">
-                <p className="text-sm font-semibold text-blue-600 uppercase tracking-[0.2em]">TOTAL</p>
-                <p className="text-5xl font-bold text-blue-900">{formatCurrency(breakdown.totalAfterRounding)}</p>
+              <div className="space-y-1 text-center">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">TOTAL</p>
+                <p
+                  className={cn(
+                    "font-bold tabular-nums tracking-tight text-blue-900",
+                    isMobile ? "text-4xl leading-tight" : "text-5xl",
+                  )}
+                >
+                  {formatCurrency(breakdown.totalAfterRounding)}
+                </p>
                 <p className="text-xs text-blue-700">
                   （端数処理：{roundingUnit === 1 ? "なし" : `${roundingUnit.toLocaleString()}円単位`}）
                 </p>
@@ -1036,6 +1298,51 @@ useEffect(() => {
           </Card>
         </div>
       )}
+
+      {/* モバイル専用: 親指で押しやすい固定CTA + 計算後は目安をチラ見せ */}
+      <div
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 md:hidden"
+        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+        aria-hidden={false}
+      >
+        <div className="pointer-events-auto border-t border-slate-200/90 bg-white/95 px-3 pb-3 pt-2 shadow-[0_-8px_32px_rgba(15,23,42,0.12)] backdrop-blur-md">
+          {hasCalculated && (
+            <div className="mb-2 flex items-center justify-between gap-2 px-1">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-slate-500">試算</span>
+              <span className="text-lg font-bold tabular-nums text-blue-700">
+                {formatCurrency(breakdown.totalAfterRounding)}
+              </span>
+              <button
+                type="button"
+                className="text-xs font-semibold text-blue-600 underline-offset-2 hover:underline"
+                onClick={() => resultAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              >
+                内訳へ
+              </button>
+            </div>
+          )}
+          <Button
+            type="button"
+            className="h-14 w-full rounded-2xl bg-blue-600 text-base font-semibold text-white shadow-lg hover:bg-blue-700"
+            onClick={handleCalculate}
+            disabled={routeLoading || (originMode === "current" && (currentLocationLoading || !originQuery))}
+          >
+            {routeLoading ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                計算中...
+              </>
+            ) : hasCalculated ? (
+              "条件を変えて再計算"
+            ) : (
+              <>
+                <Calculator className="mr-2 h-5 w-5" />
+                タクシー料金を計算する
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }

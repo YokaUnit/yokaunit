@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/supabase"
 import type { Tool } from "@/lib/types/tool"
+import { mapToolWithProxiedImage, mapToolsWithProxiedImages } from "@/lib/image-proxy"
 
 export async function getTools(options?: {
   category?: string
@@ -72,7 +73,7 @@ export async function getTools(options?: {
   }
 
   return {
-    tools: data || [],
+    tools: mapToolsWithProxiedImages((data || []) as Tool[]),
     total: count || 0,
   }
 }
@@ -88,7 +89,7 @@ export async function getToolBySlug(slug: string): Promise<Tool | null> {
     return null
   }
 
-  return data
+  return mapToolWithProxiedImage(data as Tool)
 }
 
 export async function getLatestTools(limit: number = 15): Promise<Tool[]> {
@@ -107,7 +108,7 @@ export async function getLatestTools(limit: number = 15): Promise<Tool[]> {
     throw new Error(`Error fetching latest tools: ${error.message}`)
   }
 
-  return data || []
+  return mapToolsWithProxiedImages((data || []) as Tool[])
 }
 
 export async function getCategories(): Promise<string[]> {

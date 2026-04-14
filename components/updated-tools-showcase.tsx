@@ -20,7 +20,6 @@ export function UpdatedToolsShowcase() {
   const [displayCount, setDisplayCount] = useState(12)
   const [updatedTools, setUpdatedTools] = useState<Tool[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const { toast } = useToast()
   const { isLoggedIn } = useAuth()
@@ -83,7 +82,6 @@ export function UpdatedToolsShowcase() {
   useEffect(() => {
     const fetchUpdatedTools = async () => {
       setLoading(true)
-      setError(null)
       try {
         const sp = new URLSearchParams()
         sp.set("limit", String(displayCount + 5))
@@ -102,12 +100,7 @@ export function UpdatedToolsShowcase() {
         setUpdatedTools(sortedTools.slice(0, displayCount))
       } catch (error) {
         console.error("Error fetching updated tools:", error)
-        setError(error instanceof Error ? error.message : "ツールの取得に失敗しました")
-        toast({
-          title: "エラー",
-          description: "ツールの取得に失敗しました",
-          variant: "destructive",
-        })
+        setUpdatedTools([])
       } finally {
         setLoading(false)
       }
@@ -119,7 +112,7 @@ export function UpdatedToolsShowcase() {
     }, 100) // RelatedToolsと同じ100msに統一
 
     return () => clearTimeout(timeoutId)
-  }, [displayCount, toast])
+  }, [displayCount])
 
   const toggleFavoriteHandler = async (e: React.MouseEvent, toolSlug: string) => {
     e.preventDefault()
@@ -207,28 +200,6 @@ export function UpdatedToolsShowcase() {
           {Array.from({ length: displayCount }).map((_, i) => (
             <div key={i} className="bg-gray-200 animate-pulse rounded-lg aspect-[3/2]"></div>
           ))}
-        </div>
-      </section>
-    )
-  }
-
-  if (error) {
-    return (
-      <section className="mt-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-            <Clock className="h-5 w-5 mr-2 text-green-600" />
-            最新のツール
-          </h2>
-          <Link href="/tools" className="text-sm text-blue-600 hover:underline flex items-center">
-            もっと見る <ArrowRight className="ml-1 h-3 w-3" />
-          </Link>
-        </div>
-        <div className="text-center py-8">
-          <p className="text-gray-500">データの読み込みに失敗しました</p>
-          <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
-            再読み込み
-          </Button>
         </div>
       </section>
     )

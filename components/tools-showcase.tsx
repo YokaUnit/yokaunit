@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -24,7 +24,6 @@ export function ToolsShowcase() {
   const [popularTools, setPopularTools] = useState<Tool[]>([])
   const [newTools, setNewTools] = useState<Tool[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const { toast } = useToast()
   const { isLoggedIn } = useAuth()
@@ -84,11 +83,12 @@ export function ToolsShowcase() {
     fetchFavorites()
   }, [isLoggedIn])
 
-  // 人気ツールと新着ツールを両方取得（デバウンス付き）
-  useEffect(() => {
-    const fetchAllTools = async () => {
-      setLoading(true)
-      setError(null)
+  const loadTools = useCallback(
+    async (options?: { showLoading?: boolean }) => {
+      const showLoading = options?.showLoading !== false
+      if (showLoading) {
+        setLoading(true)
+      }
       try {
         const buildUrl = (params: Record<string, string | number | undefined>) => {
           const sp = new URLSearchParams()
@@ -109,34 +109,31 @@ export function ToolsShowcase() {
 
         const popularResult = (await popularRes.json()) as { tools: Tool[] }
         const newResult = (await newRes.json()) as { tools: Tool[] }
-        
-        // 新着ツールは created_at で降順ソート（最新が先頭）- いいね数順は使わない
-        const sortedNewTools = newResult.tools.sort((a, b) => 
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+
+        const sortedNewTools = newResult.tools.sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
         )
-        
+
         setPopularTools(popularResult.tools)
-        setNewTools(sortedNewTools.slice(0, displayCount)) // 指定された数まで制限
+        setNewTools(sortedNewTools.slice(0, displayCount))
       } catch (error) {
         console.error("Error fetching tools:", error)
-        setError(error instanceof Error ? error.message : "ツールの取得に失敗しました")
-        toast({
-          title: "エラー",
-          description: "ツールの取得に失敗しました",
-          variant: "destructive",
-        })
+        setPopularTools([])
+        setNewTools([])
       } finally {
-        setLoading(false)
+        if (showLoading) setLoading(false)
       }
-    }
+    },
+    [displayCount],
+  )
 
-    // デバウンス処理
+  // 人気ツールと新着ツールを両方取得（デバウンス付き）
+  useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchAllTools()
+      loadTools({ showLoading: true })
     }, 100)
-
     return () => clearTimeout(timeoutId)
-  }, [displayCount, toast])
+  }, [loadTools])
 
   const toggleFavoriteHandler = async (e: React.MouseEvent, toolSlug: string) => {
     e.preventDefault()
@@ -168,25 +165,7 @@ export function ToolsShowcase() {
             : "マイページのお気に入りリストから削除されました",
         })
 
-        // ツールデータを再取得してlikes_countを更新（並列処理）
-        const [updatedPopularResult, updatedNewResult] = await Promise.all([
-          getTools({
-            limit: displayCount,
-            isPopular: true,
-          }),
-          getTools({
-            limit: displayCount + 5, // 多めに取得してからソート
-            userRole: "basic", // プレミアムツールと非公開ツールを除外
-          })
-        ])
-        
-        // 新着ツールは created_at で降順ソート（最新が先頭）- いいね数順は使わない
-        const sortedNewTools = updatedNewResult.tools.sort((a, b) => 
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        )
-        
-        setPopularTools(updatedPopularResult.tools)
-        setNewTools(sortedNewTools.slice(0, displayCount)) // 指定された数まで制限
+        await loadTools({ showLoading: false })
       }
     } catch (error) {
       toast({
@@ -228,25 +207,6 @@ export function ToolsShowcase() {
           {Array.from({ length: displayCount }).map((_, i) => (
             <div key={i} className="bg-gray-200 animate-pulse rounded-lg aspect-[3/2]"></div>
           ))}
-        </div>
-      </section>
-    )
-  }
-
-  if (error) {
-    return (
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">ツール一覧</h2>
-          <Link href="/tools" className="text-sm text-blue-600 hover:underline flex items-center">
-            もっと見る <ArrowRight className="ml-1 h-3 w-3" />
-          </Link>
-        </div>
-        <div className="text-center py-8">
-          <p className="text-gray-500">データの読み込みに失敗しました</p>
-          <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
-            再読み込み
-          </Button>
         </div>
       </section>
     )

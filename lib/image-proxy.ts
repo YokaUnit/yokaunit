@@ -1,3 +1,8 @@
+import type { Tool } from "@/lib/types/tool"
+
+const SITE_ORIGIN = "https://yokaunit.com"
+const DEFAULT_OGP_IMAGE = `${SITE_ORIGIN}/ogp/yokaunit-common.png`
+
 const SUPABASE_PUBLIC_STORAGE_PATH_PREFIX = "/storage/v1/object/public/"
 
 /**
@@ -33,5 +38,31 @@ export function toProxiedSupabasePublicImageUrl(imageUrl: string | null | undefi
   qp.set("bucket", bucket)
   qp.set("path", objectPath)
   return `/api/image-proxy?${qp.toString()}`
+}
+
+/** DB から返った tool 行の image_url を常にサイト内プロキシ URL に揃える（二重適用は冪等） */
+export function mapToolWithProxiedImage(tool: Tool | null): Tool | null {
+  if (!tool) return null
+  return { ...tool, image_url: toProxiedSupabasePublicImageUrl(tool.image_url) }
+}
+
+export function mapToolsWithProxiedImages(tools: Tool[]): Tool[] {
+  return tools.map((t) => ({ ...t, image_url: toProxiedSupabasePublicImageUrl(t.image_url) }))
+}
+
+/**
+ * OGP / Twitter / JSON-LD 用。
+ * 相対プロキシ URL・生の Supabase Storage URL のどちらでも yokaunit.com 上の絶対 URL に揃える。
+ */
+export function absoluteToolImageUrlForMetadata(imageUrl: string | null | undefined): string {
+  if (!imageUrl) return DEFAULT_OGP_IMAGE
+  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+    const proxied = toProxiedSupabasePublicImageUrl(imageUrl)
+    if (proxied && proxied.startsWith("/api/image-proxy?")) {
+      return `${SITE_ORIGIN}${proxied}`
+    }
+    return imageUrl
+  }
+  return imageUrl.startsWith("/") ? `${SITE_ORIGIN}${imageUrl}` : `${SITE_ORIGIN}/${imageUrl}`
 }
 

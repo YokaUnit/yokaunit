@@ -1,25 +1,5 @@
 import type { Tool } from "@/lib/types/tool"
-import { toProxiedSupabasePublicImageUrl } from "@/lib/image-proxy"
-
-// 相対パスを完全なURLに変換する関数
-function getAbsoluteImageUrl(imageUrl: string | null | undefined): string {
-  if (!imageUrl) {
-    return "https://yokaunit.com/ogp/yokaunit-common.png"
-  }
-  
-  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
-    const proxied = toProxiedSupabasePublicImageUrl(imageUrl)
-    if (proxied && proxied.startsWith("/api/image-proxy?")) {
-      return `https://yokaunit.com${proxied}`
-    }
-    return imageUrl
-  }
-  
-  const baseUrl = "https://yokaunit.com"
-  return imageUrl.startsWith("/") 
-    ? `${baseUrl}${imageUrl}` 
-    : `${baseUrl}/${imageUrl}`
-}
+import { absoluteToolImageUrlForMetadata } from "@/lib/image-proxy"
 
 /**
  * ツールのWebApplication構造化データを生成
@@ -37,7 +17,7 @@ export function generateWebApplicationStructuredData(
     return null
   }
 
-  const imageUrl = getAbsoluteImageUrl(tool.image_url)
+  const imageUrl = absoluteToolImageUrlForMetadata(tool.image_url)
   const toolUrl = `https://yokaunit.com${tool.href}`
 
   return {
@@ -168,8 +148,8 @@ export function generateArticleStructuredData(options: {
     "@type": "Article",
     headline: options.headline,
     description: options.description,
-    image: options.imageUrl 
-      ? getAbsoluteImageUrl(options.imageUrl)
+    image: options.imageUrl
+      ? absoluteToolImageUrlForMetadata(options.imageUrl)
       : "https://yokaunit.com/ogp/yokaunit-common.png",
     datePublished: options.datePublished,
     dateModified: options.dateModified || options.datePublished,

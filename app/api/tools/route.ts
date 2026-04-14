@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createServerSupabaseClient } from "@/lib/supabase-server"
-import { toProxiedSupabasePublicImageUrl } from "@/lib/image-proxy"
+import { mapToolsWithProxiedImages } from "@/lib/image-proxy"
+import type { Tool } from "@/lib/types/tool"
 
 type Sort = "popular" | "new" | "name" | "views"
 
@@ -64,10 +65,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  const tools = (data || []).map((t: any) => ({
-    ...t,
-    image_url: toProxiedSupabasePublicImageUrl(t.image_url),
-  }))
+  const tools = mapToolsWithProxiedImages((data || []) as Tool[])
 
   const res = NextResponse.json({
     tools,
